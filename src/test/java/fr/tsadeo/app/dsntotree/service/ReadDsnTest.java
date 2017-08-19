@@ -18,7 +18,7 @@ import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 public class ReadDsnTest extends AbstractTest implements IJdbcDaoTest {
 
     private final static IDataDsnDao dao = new JdbcDataDsnDao();
-    private static ReadDsn readDsnService = ServiceFactory.getReadDsnService();
+    private static ReadDsnFromFileService readDsnService = ServiceFactory.getReadDsnFromFileService();
     private static DsnService dsnService = ServiceFactory.getDsnService();
 
     @Test

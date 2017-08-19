@@ -10,7 +10,7 @@ import fr.tsadeo.app.dsntotree.util.IConstants;
 
 public class WriteDsnTest extends AbstractTest implements IConstants {
 
-	private static ReadDsn readService = new ReadDsn();
+	private static ReadDsnFromFileService readService = new ReadDsnFromFileService();
 	private static WriteDsn writeService = new WriteDsn();
 
 	@Test

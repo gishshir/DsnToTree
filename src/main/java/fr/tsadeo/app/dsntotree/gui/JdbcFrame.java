@@ -138,7 +138,7 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
 
         if (this.message != null && this.listDatas != null) {
 
-            Dsn dsn = ServiceFactory.getReadDsnService().buildTreeFromDatas(this.message.getName(), listDatas);
+            Dsn dsn = ServiceFactory.getReadDsnFromDatasService().buildTreeFromDatas(this.message.getName(), listDatas);
 
             this.mainActionListener.actionShowDsnTreeWithConfirmation(dsn);
         }

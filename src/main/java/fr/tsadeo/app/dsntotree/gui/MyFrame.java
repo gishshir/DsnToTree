@@ -230,7 +230,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 
 		try {
 
-			this.dsn = ServiceFactory.getReadDsnService().buildTreeFromFile(file);
+			this.dsn = ServiceFactory.getReadDsnFromFileService().buildTreeFromFile(file);
 			this.actionShowDsnTree(dsn);
 		} catch (Exception e) {
 			textArea.setText("ERROR: " + e.getMessage());

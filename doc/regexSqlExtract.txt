@@ -1,0 +1,7 @@
+
+CHRONOMESS         ID BLOC   SEQ_BLOC BLOC_SUP    SEQ_SUP CODERUBRIQUE VALUE  
+
+sans bloc superieur
+^[\s]*[\d]*[\s]*[\d]*[\s]*([\d]{2})[\s]*([\d]{1,2})[\s]*([\d]{2}.[\d]{3})[\s]*([\w\d\s.@]*)$
+avec bloc superieur
+^[\s]*[\d]*[\s]*[\d]*[\s]*([\d]{2})[\s]*([\d]{1,2})[\s]*([\d]{2})[\s]*([\d]{1,2})[\s]*([\d]{2}.[\d]{3})[\s]*([\w\d\s.@]*)$

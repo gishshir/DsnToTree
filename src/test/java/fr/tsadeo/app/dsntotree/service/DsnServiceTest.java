@@ -13,7 +13,7 @@ import fr.tsadeo.app.dsntotree.model.ItemBloc;
 
 public class DsnServiceTest extends AbstractTest{
 	
-	private static ReadDsn readDsnService = ServiceFactory.getReadDsnService();
+	private static ReadDsnFromFileService readDsnService = ServiceFactory.getReadDsnFromFileService();
 	private static final DsnService service = ServiceFactory.getDsnService();
 	
 	@Test

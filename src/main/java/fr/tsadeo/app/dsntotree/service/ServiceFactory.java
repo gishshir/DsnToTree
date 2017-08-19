@@ -2,16 +2,23 @@ package fr.tsadeo.app.dsntotree.service;
 
 public class ServiceFactory {
 
-    private static ReadDsn readDsnService;
+    private static ReadDsnFromFileService readDsnFromFileService;
+    private static ReadDsnFromDatasService readDsnFromDatasService;
     private static WriteDsn writeDsnService;
     private static DsnService dsnService;
     
-    public static ReadDsn getReadDsnService() {
-    	
-    	if (readDsnService == null) {
-    		readDsnService = new ReadDsn();
+    public static ReadDsnFromDatasService getReadDsnFromDatasService() {
+    	if(readDsnFromDatasService == null) {
+    		readDsnFromDatasService = new ReadDsnFromDatasService();
     	}
-    	return readDsnService;
+    	return readDsnFromDatasService;
+    }
+    public static ReadDsnFromFileService getReadDsnFromFileService() {
+    	
+    	if (readDsnFromFileService == null) {
+    		readDsnFromFileService = new ReadDsnFromFileService();
+    	}
+    	return readDsnFromFileService;
     }
     
     public static WriteDsn getWriteDsnService () {
