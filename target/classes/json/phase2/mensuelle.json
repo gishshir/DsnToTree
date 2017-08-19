@@ -1,0 +1,171 @@
+{
+	"bloc": "",
+	"sousBlocs": [
+		{
+			"bloc": "96",
+			"cardinalite": "TOUS",
+			"actif": "true",
+			"sousBlocs": []
+		},
+		{
+			"bloc": "06",
+			"cardinalite": "UN",
+			"actif": "true",
+			"sousBlocs": [
+				{
+					"bloc": "11",
+					"cardinalite": "UN",
+					"actif": "true",
+					"sousBlocs": [
+						{
+							"bloc": "15",
+							"cardinalite": "TOUS",
+							"actif": "true",
+							"sousBlocs": []
+						},
+						{
+							"bloc": "20",
+							"cardinalite": "TOUS",
+							"actif": "true",
+							"sousBlocs": []
+						},
+						{
+							"bloc": "22",
+							"cardinalite": "TOUS",
+							"actif": "true",
+							"sousBlocs": [
+								{
+									"bloc": "23",
+									"cardinalite": "TOUS",
+									"actif": "true",
+									"sousBlocs": []
+								}
+							]
+						},
+						{
+							"bloc": "30",
+							"cardinalite": "TOUS",
+							"actif": "true",
+							"sousBlocs": [
+								{
+									"bloc": "31",
+									"cardinalite": "TOUS",
+									"actif": "true",
+									"sousBlocs": []
+								},
+								{
+									"bloc": "40",
+									"cardinalite": "AU_MOINS_UN",
+									"actif": "true",
+									"sousBlocs": [
+										{
+											"bloc": "41",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": []
+										},
+										{
+											"bloc": "60",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": []
+										},
+										{
+											"bloc": "62",
+											"cardinalite": "ZERO_OU_UN",
+											"actif": "true",
+											"sousBlocs": []
+										},
+										{
+											"bloc": "65",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": []
+										},
+										{
+											"bloc": "70",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": [
+												{
+													"bloc": "72",
+													"cardinalite": "TOUS",
+													"actif": "true",
+													"sousBlocs": []
+												}
+											]
+										},
+										{
+											"bloc": "71",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": []
+										}
+									]
+								},
+								{
+									"bloc": "50",
+									"cardinalite": "TOUS",
+									"actif": "true",
+									"sousBlocs": [
+										{
+											"bloc": "51",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": [
+												{
+													"bloc": "53",
+													"cardinalite": "TOUS",
+													"actif": "true",
+													"sousBlocs": []
+												}
+											]
+										},
+										{
+											"bloc": "52",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": []
+										},
+										{
+											"bloc": "54",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": []
+										},
+										{
+											"bloc": "78",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": [
+												{
+													"bloc": "79",
+													"cardinalite": "TOUS",
+													"actif": "true",
+													"sousBlocs": []
+												},
+												{
+													"bloc": "81",
+													"cardinalite": "TOUS",
+													"actif": "true",
+													"sousBlocs": []
+												}
+											]
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"bloc": "85",
+			"cardinalite": "TOUS",
+			"actif": "true",
+			"sousBlocs": []
+		}
+	]
+}
+		
