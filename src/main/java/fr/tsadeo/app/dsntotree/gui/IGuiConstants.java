@@ -51,7 +51,7 @@ public interface IGuiConstants {
     public final static Color TREE_BACKGROUND_COLOR = Color.BLACK;
     public final static Color TREE_ERROR_COLOR = Color.RED;
     public final static Color TREE_CREATED_COLOR = Color.PINK;
-    public final static Color TREE_MODIFIED_COLOR = Color.blue;
+    public final static Color TREE_MODIFIED_COLOR = Color.cyan;
     public final static Color TREE_NORMAL_COLOR = Color.white;
 
     public final static String SHOW_OPEN_DIALOG_ACTION = "show-opendialog";

@@ -99,6 +99,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     public MyPanelBloc(ItemBlocListener itemBlocListener) {
         this.itemBlocListener = itemBlocListener;
         this.setLayout(new BorderLayout());
+        this.setBackground(TREE_BACKGROUND_COLOR);
 
         this.createTopPanel(this, BorderLayout.PAGE_START);
         this.createMiddlePanel(this, BorderLayout.CENTER);
@@ -128,8 +129,11 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
 
         JPanel middlePanel = new JPanel();
         middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.Y_AXIS));
+        middlePanel.setBackground(TREE_BACKGROUND_COLOR);
+        middlePanel.add(Box.createRigidArea(DIM_VER_RIGID_AREA_15));
 
         this.createListRubriquePanel(middlePanel, BorderLayout.CENTER);
+        middlePanel.add(Box.createRigidArea(DIM_VER_RIGID_AREA_15));
         this.createChildrenPanel(middlePanel, BorderLayout.PAGE_END);
         middlePanel.add(Box.createVerticalGlue());
 
@@ -272,6 +276,8 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
 
         this.panelBloc = new JPanel();
         this.panelBloc.setMinimumSize(container.getSize());
+        this.panelBloc.setBackground(TREE_BACKGROUND_COLOR);
+        this.panelBloc.setForeground(TREE_NORMAL_COLOR);
 
         this.panelBloc.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5),
                 BorderFactory.createLineBorder(Color.BLUE)));
@@ -283,6 +289,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         this.panelListRubriques = new JPanel();
         this.panelListRubriques.setLayout(new BoxLayout(this.panelListRubriques, BoxLayout.Y_AXIS));
         this.panelListRubriques.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        
         container.add(this.panelListRubriques);
     }
 
@@ -480,8 +487,13 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         this.currentItemRubrique = itemRubriqueToSelect;
         this.currentTreeRowBloc = treeRowBloc;
 
-        this.panelBloc.add(new JLabel(pathParent));
-        this.panelBloc.add(new JLabel("Bloc " + itemBloc.toString()));
+        JLabel labelTitle = new JLabel(pathParent);
+        labelTitle.setForeground(TREE_NORMAL_COLOR);
+        this.panelBloc.add(labelTitle);
+        
+        JLabel labelBloc = new JLabel("Bloc " + itemBloc.toString());
+        labelBloc.setForeground(TREE_NORMAL_COLOR);
+        this.panelBloc.add(labelBloc);
 
         // liste des rubriques
         if (itemBloc.hasRubriques()) {
