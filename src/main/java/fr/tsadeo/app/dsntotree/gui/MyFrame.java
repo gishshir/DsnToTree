@@ -39,6 +39,7 @@ import fr.tsadeo.app.dsntotree.gui.action.SaveDsnAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowErrorAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowJdbcFrameAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowOpenDialogAction;
+import fr.tsadeo.app.dsntotree.gui.component.StateButton;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ErrorMessage;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
@@ -61,13 +62,13 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 	private MyPanelBloc myPanelBloc;
 	private JdbcFrame jdbcFrame;
 
-	private JButton btOpen, btSave, btShowErrors, showJdbc;
+	private StateButton btOpen, btSave, btShowErrors, showJdbc;
 	private JTextField tfSearch;
 	private int searchNoResult = Integer.MAX_VALUE;
 	private Color tfSearchBg;
-	private final JFileChooser fc = new JFileChooser();
+	
 	private final FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("Fichiers texte", "txt");
-	private File currentDirectory;
+	
 
 	public void addComponentsToPane(Container pane) {
 		pane.setLayout(new BorderLayout());
@@ -133,28 +134,28 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 
 	private void createButtonOpen(Container container, String layout) {
 
-		btOpen = new JButton();
+		btOpen = new StateButton();
 		GuiUtils.createButton(btOpen, new ShowOpenDialogAction(this), SHOW_OPEN_DIALOG_ACTION, KeyEvent.VK_O,
 				PATH_OPEN_ICO, "Ouvrir une DSN ...", "Ouvrir un fichier DSN", true, container, layout);
 	}
 
 	private void createButtonSave(Container container, String layout) {
 
-		btSave = new JButton();
+		btSave = new StateButton();
 		GuiUtils.createButton(btSave, new SaveDsnAction(this), SAVE_DSN_ACTION, KeyEvent.VK_S, PATH_SAVE_ICO,
 				"sauvegarder", "Sauvegarder le fichier", false, container, layout);
 	}
 
 	private void createButtonShowJdbc(Container container, String layout) {
 
-		showJdbc = new JButton();
+		showJdbc = new StateButton();
 		GuiUtils.createButton(showJdbc, new ShowJdbcFrameAction(this), SHOW_JDBC_ACTION, KeyEvent.VK_B, PATH_BDD_ICO,
 				"Accéder BDD", "Récupérer un message depuis la base", true, container, layout);
 	}
 
 	private void createButtonShowErrors(Container container, String layout) {
 
-		btShowErrors = new JButton();
+		btShowErrors = new StateButton();
 		GuiUtils.createButton(btShowErrors, new ShowErrorAction(this), SHOW_ERROR_DIALOG_ACTION, KeyEvent.VK_R,
 				PATH_ERROR_ICO, "erreurs", "Voir la liste des erreurs", false, container, layout);
 	}
@@ -195,7 +196,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 	}
 
 	public MyFrame() {
-		super("Visualisation DSN", JFrame.EXIT_ON_CLOSE);
+		super("Visualisation et édition d'un message DSN sous forme arborescente", JFrame.EXIT_ON_CLOSE);
 
 		// Set up the content pane.
 		addComponentsToPane(this.getContentPane());
@@ -233,7 +234,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 			this.dsn = ServiceFactory.getReadDsnFromFileService().buildTreeFromFile(file);
 			this.actionShowDsnTree(dsn);
 		} catch (Exception e) {
-			textArea.setText("ERROR: " + e.getMessage());
+			processTextArea.setText("ERROR: " + e.getMessage());
 			this.myTree.createNodes(null);
 		}
 	}
@@ -262,6 +263,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 
 	private void actionShowDsnTree(Dsn dsn) {
 
+		this.requestFocus();
 		this.actionCancelSearch();
 		this.myPanelBloc.clear();
 		this.myTree.clearTree();
@@ -270,7 +272,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 		try {
 
 			this.dsn = dsn;
-			this.btSave.setEnabled(true);
+			this.btSave.setEnabled(dsn.getDsnState().isModified());
 			this.actionCancelSearch();
 			this.btShowErrors.setEnabled(this.dsn.getDsnState().isError());
 
@@ -288,12 +290,12 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 			String phase = dsn.getPhase() == null ? "NA" : dsn.getPhase();
 			String nature = dsn.getNature() == null ? "NA" : dsn.getNature();
 			String type = dsn.getType() == null ? "NA" : dsn.getType();
-			textArea.append("Phase: ".concat(phase).concat(" - Nature: ").concat(nature).concat(" - Type: ")
+			processTextArea.append("Phase: ".concat(phase).concat(" - Nature: ").concat(nature).concat(" - Type: ")
 					.concat(type).concat(SAUT_LIGNE));
 
 			this.setFocusOnSearch();
 		} catch (Exception e) {
-			textArea.setText("ERROR: " + e.getMessage());
+			processTextArea.setText("ERROR: " + e.getMessage());
 			this.myTree.createNodes(null);
 		}
 	}
@@ -347,7 +349,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 	public void actionSaveDsn( boolean reload) {
 
 		if (this.dsn == null || this.dsn.getFile() == null) {
-			this.textArea.append("Sauvegarde du fichier impossible");
+			this.processTextArea.append("Sauvegarde du fichier impossible");
 			return;
 		}
 		try {
@@ -359,7 +361,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 				if (fileToSave != null) {
 					this.dsn.setFile(fileToSave);
 				}else {
-					this.textArea.append("Sauvegarde du fichier annulée");
+					this.processTextArea.append("Sauvegarde du fichier annulée");
 					return;
 				}
 			}
@@ -367,7 +369,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 			File file = ServiceFactory.getWriteDsnService().write(this.dsn);
 			if (file != null) {
 				JOptionPane.showMessageDialog(this, "DSN sauvegardée!", "Information", JOptionPane.INFORMATION_MESSAGE);
-				this.textArea.append("Sauvegarde du fichier ".concat(file.getAbsolutePath().concat(SAUT_LIGNE)));
+				this.processTextArea.append("Sauvegarde du fichier ".concat(file.getAbsolutePath().concat(SAUT_LIGNE)));
 				this.btSave.setEnabled(false);
 				if (reload) {
 					// on recharge le fichier sauvegardé
@@ -375,7 +377,9 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 				}
 			}
 		} catch (Exception ex) {
-			this.textArea.setText(ex.getMessage());
+			this.processTextArea.setText("Echec de la sauvegarde:");
+			this.processTextArea.append(RC);
+			this.processTextArea.append(ex.getMessage() == null?ex.getClass().getName():ex.getMessage());
 		}
 	}
 
@@ -425,18 +429,18 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 		}
 		int returnVal = fc.showOpenDialog(this);
 
-		textArea.setText(null);
+		processTextArea.setText(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
 			this.currentDirectory = file.getParentFile();
 
-			textArea.append("DSN: ".concat(file.getName()).concat(POINT).concat(SAUT_LIGNE).concat(SAUT_LIGNE));
+			processTextArea.append("DSN: ".concat(file.getName()).concat(POINT).concat(SAUT_LIGNE).concat(SAUT_LIGNE));
 			this.actionReadFileAndShowTree(file);
 		} else {
 
-			textArea.setText("Open command cancelled by user.".concat(SAUT_LIGNE));
+			processTextArea.setText("Open command cancelled by user.".concat(SAUT_LIGNE));
 		}
-		textArea.setCaretPosition(textArea.getDocument().getLength());
+		processTextArea.setCaretPosition(processTextArea.getDocument().getLength());
 	}
 
 	// -------------------------------------- implementing DocumentListener

@@ -6,7 +6,7 @@ import javax.swing.AbstractAction;
 
 import fr.tsadeo.app.dsntotree.gui.IBddActionListener;
 
-public class LireBddMsgAction extends AbstractAction {
+public class LoadBddMsgAction extends AbstractAction {
 
   /**
   * 
@@ -15,12 +15,12 @@ public class LireBddMsgAction extends AbstractAction {
 
  private final IBddActionListener listener;
 
- public LireBddMsgAction(IBddActionListener listener) {
+ public LoadBddMsgAction(IBddActionListener listener) {
      this.listener = listener;
  }
  
 	public void actionPerformed(ActionEvent e) {
-        this.listener.actionLoadMessageByChrono();
+        this.listener.actionLoadBddMessageByChrono();
     }
 
 }

@@ -37,6 +37,7 @@ public interface IGuiConstants {
     public static final String PATH_CONNEXION_OK_ICO = PATH_IMAGES + "ok.gif";
     public static final String PATH_CONNEXION_NOK_ICO = PATH_IMAGES + "nok.gif";
     public static final String PATH_CONNEXION_UNKNONW_ICO = PATH_IMAGES + "greymark.gif";
+    public static final String PATH_SQL_REQUEST_ICO = PATH_IMAGES + "sqlrequest.png";
 
     public static final Font FONT = new Font("SansSerif", Font.PLAIN, 14);
 
@@ -60,6 +61,7 @@ public interface IGuiConstants {
 
     public final static String LIRE_BDD_MSG_ACTION = "lire-bdd-msg";
     public final static String EDIT_BDD_MSG_ACTION = "edit-bdd-msg";
+    public final static String LOAD_SQL_MSG_ACTION = "load-sql-msg";
     public final static String TESTER_BDD_ACTION = "test-bdd";
 
     public final static String VALIDER_SAISIE_ACTION = "saisie-valider";

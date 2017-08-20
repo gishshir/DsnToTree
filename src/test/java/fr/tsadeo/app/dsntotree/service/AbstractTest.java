@@ -15,7 +15,8 @@ public abstract class AbstractTest {
 	protected static final String DSN_MENSUELLE_PHASE2 = "DSN_KIEFFER_P02V01_092015_DSNPC_NOUVADH.txt";
 	protected static final String DSN_SIGNAL_ARRET_TRAVAIL_PHASE3 = "DSN_P03V01_ArretTravail.txt";
 	protected static final String DSN_SIGNAL_REPRISE_SUITE_ARRET_TRAVAIL_PHASE3 = "DSN_P03V01_RepriseTravail.txt";
-
+	
+	protected static final String SQL_DSN_CHRONO_EXTRACTION = "chrono118660.txt";
 	
 	
 	protected File getFile(String resource) throws Exception {

@@ -22,7 +22,7 @@ public class GroupBlocDatasDto implements IConstants {
             this.mapBlocLabelToListBlocDatas.put(bloc.getBloc(), listBlocs);
         }
         List<BlocDatasDto> listBlocs = this.mapBlocLabelToListBlocDatas.get(bloc.getBloc());
-        listBlocs.add(bloc.getSequence(), bloc);
+        listBlocs.add(bloc);
     }
 
     public boolean isEmpty() {

@@ -92,6 +92,21 @@ public class Dsn implements IConstants {
             this.blocs.clear();
         }
     }
+    
+    public void clearListRubriques() {
+    	if(this.rubriques != null) {
+    		this.rubriques.clear();
+    	}
+    }
+    public void addAllRubriques(List<ItemRubrique> listRubriques) {
+    	if (listRubriques == null) {
+    		return;
+    	}
+    	if (this.rubriques == null) {
+    		this.rubriques = new ArrayList<ItemRubrique>();
+    	}
+    	this.rubriques.addAll(listRubriques);
+    }
 
     public void addBloc(ItemBloc itemBloc) {
         this.addBloc(-1, itemBloc);

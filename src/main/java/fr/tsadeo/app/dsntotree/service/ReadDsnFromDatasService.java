@@ -55,6 +55,9 @@ public class ReadDsnFromDatasService extends AbstractReadDsn{
 
                 dsn.getDsnState().setModified(true);
             }
+            else {
+            	throw new RuntimeException("Phase ou nature de la DSN inconnue!");
+            }
         }
 
         return dsn;

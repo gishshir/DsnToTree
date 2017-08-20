@@ -4,6 +4,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.InputEvent;
+import java.io.File;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -11,6 +12,7 @@ import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
@@ -26,7 +28,9 @@ public abstract class AbstractFrame extends JFrame implements IGuiConstants, ICo
 
     private static final long serialVersionUID = 1L;
 
-    protected JTextArea textArea;
+    protected JTextArea processTextArea;
+    protected final JFileChooser fc = new JFileChooser();
+    protected File currentDirectory;
 
     // ----------------------------------- implementing DocumentListener
     @Override
@@ -55,10 +59,10 @@ public abstract class AbstractFrame extends JFrame implements IGuiConstants, ICo
 
     protected void createTextArea(Container container, String layout) {
 
-        textArea = new JTextArea(5, 100);
-        textArea.setEditable(false);
-        textArea.setMargin(new Insets(10, 10, 10, 10));
-        container.add(textArea, layout);
+        processTextArea = new JTextArea(5, 100);
+        processTextArea.setEditable(false);
+        processTextArea.setMargin(new Insets(10, 10, 10, 10));
+        container.add(processTextArea, layout);
     }
 
    

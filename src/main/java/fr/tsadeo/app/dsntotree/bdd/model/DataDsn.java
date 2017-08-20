@@ -72,8 +72,8 @@ public class DataDsn extends EntiteBase {
     @Override
     public String toString() {
 
-        return StringUtils.concat("id: ", this.getId(), " - bloc:", this.getBloc(), " - seq: ",
-                this.getNumSequenceBloc(), " - ssup: ", this.getNumSequenceBlocSup(), " - rub: ",
+        return StringUtils.concat("bloc:", this.getBloc(), " - seq: ",
+                this.getNumSequenceBloc(), " - seq sup: ", this.getNumSequenceBlocSup(), " - rub: ",
                 this.getCodeRubrique(), " = ", this.getValue());
     }
 }

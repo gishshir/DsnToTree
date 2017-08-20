@@ -224,10 +224,10 @@ public class DsnService implements IConstants, IJsonConstants {
      */
     public void updateDsnWithTree(Dsn dsn) {
 
-        dsn.getRubriques().clear();
+        dsn.clearListRubriques();
         if (dsn.getBlocs() != null) {
             for (ItemBloc itemBloc : dsn.getBlocs()) {
-                dsn.getRubriques().addAll(itemBloc.getListRubriques());
+                dsn.addAllRubriques(itemBloc.getListRubriques());
             }
         }
     }

@@ -6,7 +6,14 @@ public class ServiceFactory {
     private static ReadDsnFromDatasService readDsnFromDatasService;
     private static WriteDsn writeDsnService;
     private static DsnService dsnService;
+    private static ReadDatasFromSqlRequestService readDatasFromSqlRequestService;
     
+    public static ReadDatasFromSqlRequestService getReadDatasFromSqlRequestService() {
+    	if (readDatasFromSqlRequestService == null) {
+    		readDatasFromSqlRequestService = new ReadDatasFromSqlRequestService();
+    	}
+    	return readDatasFromSqlRequestService;
+    }
     public static ReadDsnFromDatasService getReadDsnFromDatasService() {
     	if(readDsnFromDatasService == null) {
     		readDsnFromDatasService = new ReadDsnFromDatasService();
