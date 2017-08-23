@@ -10,11 +10,10 @@ import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ErrorMessage;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
-import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 
-public class ReadDsnFromDatasService extends AbstractReadDsn{
+public class ReadDsnFromDatasService extends AbstractReadDsn {
 
-	  /**
+    /**
      * Prerequis la liste des datas est triée par bloc, seq_bloc, seq_sup,
      * codeRubrique
      * 
@@ -54,14 +53,14 @@ public class ReadDsnFromDatasService extends AbstractReadDsn{
                 ServiceFactory.getDsnService().updateDsnAllListBlocs(dsn);
 
                 dsn.getDsnState().setModified(true);
-            }
-            else {
-            	throw new RuntimeException("Phase ou nature de la DSN inconnue!");
+            } else {
+                throw new RuntimeException("Phase ou nature de la DSN inconnue!");
             }
         }
 
         return dsn;
     }
+
     private void buildDsnTreeFromDatas(Dsn dsn, GroupBlocDatasDto groupBlocs) {
 
         // organisation des blocs en arborescence
@@ -82,7 +81,7 @@ public class ReadDsnFromDatasService extends AbstractReadDsn{
         }
 
     }
-    
+
     private ItemBloc buildItemTreeFromDatas(Dsn dsn, GroupBlocDatasDto groupBlocs) {
 
         ItemBloc root = new ItemBloc(0, RUBRIQUE_PREFIX, "DSN");
@@ -119,12 +118,43 @@ public class ReadDsnFromDatasService extends AbstractReadDsn{
                 for (BlocTree blocTree : treeRoot.getChildrens()) {
                     this.buildItemBlocsFromDatas(root, blocTree, groupBlocs);
                 }
-
             }
+
+            // Gerer les blocs orphelins
+            this.gererBlocOrphelins(dsn, groupBlocs);
+
+            // si bloc d'erreur on l'affiche en premier
+            if (dsn.getItemBlocError() != null) {
+                root.addFirstChild(dsn.getItemBlocError());
+            }
+
         }
 
         return root;
 
+    }
+
+    // On cherche les BlocDataDtos orphelins
+    // (label bloc inconnu dans le json)
+    private void gererBlocOrphelins(Dsn dsn, GroupBlocDatasDto groupBlocs) {
+
+        List<BlocDatasDto> listNotUsedBlocs = groupBlocs.getListNotUsedBlocs();
+        if (!listNotUsedBlocs.isEmpty()) {
+            ItemBloc itemBlocError = super.getOrBuildItemBlocErreur(dsn);
+            for (BlocDatasDto blocDatasDto : listNotUsedBlocs) {
+
+                ItemBloc itemBloc = ServiceFactory.getDsnService().createNewBloc(blocDatasDto.getBloc());
+                ErrorMessage errorMessage = new ErrorMessage(-1, blocDatasDto.getIntervalleLines().concat(" - Bloc ")
+                        .concat(blocDatasDto.getBloc()).concat(" inconnu dans l'arborescence!"));
+                itemBloc.setErrorMessage(errorMessage);
+                dsn.getDsnState().addErrorMessage(errorMessage);
+                itemBlocError.addChild(itemBloc);
+
+                for (DataDsn dataDsn : blocDatasDto.getListDatas()) {
+                    itemBloc.addRubrique(ServiceFactory.getDsnService().createNewRubrique(itemBloc, dataDsn));
+                }
+            }
+        }
     }
 
     // Fonction recursive
@@ -133,12 +163,12 @@ public class ReadDsnFromDatasService extends AbstractReadDsn{
 
         ItemBloc blocChild = ServiceFactory.getDsnService().createNewChild(blocParent, blocTree.getBlocLabel());
         blocChild.setIndex(blocDatasDto.getSequence());
+        blocDatasDto.setUsed(true);
 
         // on construit la liste des ItemRubriques
         for (DataDsn dataDsn : blocDatasDto.getListDatas()) {
-            ItemRubrique itemRubrique = ServiceFactory.getDsnService().createNewRubrique(blocChild, dataDsn);
-            itemRubrique.setValue(dataDsn.getValue());
-            blocChild.addRubrique(itemRubrique);
+
+            blocChild.addRubrique(ServiceFactory.getDsnService().createNewRubrique(blocChild, dataDsn));
         }
         blocParent.addChild(blocChild);
 
@@ -176,13 +206,13 @@ public class ReadDsnFromDatasService extends AbstractReadDsn{
 
             // pour chaque blocDatas on construit un ItemBloc avec ses rubriques
             for (BlocDatasDto blocDatasDto : listBlocDatas) {
-                this.buildItemBlocFromDatas(blocParent, blocTree, blocDatasDto, groupBlocs);
+                if (!blocDatasDto.isUsed()) {
+                    this.buildItemBlocFromDatas(blocParent, blocTree, blocDatasDto, groupBlocs);
+                }
             }
 
         }
 
     }
-
-
 
 }

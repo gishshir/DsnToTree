@@ -34,7 +34,7 @@ public class JdbcMessageDsnDao extends AbstractJdbcDao<MessageDsn> implements IM
 
     // ------------------------------------ implementing AbstractJdbcDao
     @Override
-    protected MessageDsn mapToEntity(ResultSet rs) throws SQLException {
+    protected MessageDsn mapToEntity(int numline, ResultSet rs) throws SQLException {
 
         MessageDsn messageDsn = new MessageDsn();
 

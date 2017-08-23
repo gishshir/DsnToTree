@@ -6,9 +6,11 @@ public interface IBddActionListener {
 
     public void setFocusOnSearch();
 
-	public void actionTesterConnexion();
+    public void actionTesterConnexion();
 
-	public void actionEditMessageInTree();
+    public void actionEditMessageInTree();
 
-	public void actionLoadSqlRequestByChrono();
+    public void actionLoadSqlFileByChrono();
+
+    public void actionLoadSqlRequestByChrono();
 }

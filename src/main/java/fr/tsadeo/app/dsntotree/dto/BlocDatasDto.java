@@ -19,6 +19,8 @@ public class BlocDatasDto implements IConstants {
     private final int sequenceSup;
     private final String bloc;
 
+    private boolean used = false;
+
     // champ calculé d'une clé unique pour un bloc de data
     private final String key;
 
@@ -37,9 +39,35 @@ public class BlocDatasDto implements IConstants {
         this.key = this.getKeyBloc();
     }
 
+    // ---------------------------- public methods
+    public String getIntervalleLines() {
+        StringBuilder sb = new StringBuilder();
+        if (!this.listDatas.isEmpty()) {
+            if (this.listDatas.size() == 1) {
+                sb.append("ligne ").append(this.listDatas.get(0).getNumLine());
+            } else {
+                sb.append("lignes: [");
+                sb.append(this.listDatas.get(0).getNumLine());
+                sb.append(" , ");
+                sb.append(this.listDatas.get(this.listDatas.size() - 1).getNumLine());
+                sb.append("]");
+            }
+        }
+
+        return sb.toString();
+    }
     // -------------------------------- accessors
+
     public void addData(DataDsn data) {
         this.listDatas.add(data);
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
     }
 
     public int getSequence() {

@@ -34,9 +34,10 @@ public class JdbcDataDsnDao extends AbstractJdbcDao<DataDsn> implements IDataDsn
 
     // ------------------------------------ implementing AbstractJdbcDao
     @Override
-    protected DataDsn mapToEntity(ResultSet rs) throws SQLException {
+    protected DataDsn mapToEntity(int numline, ResultSet rs) throws SQLException {
 
         DataDsn data = new DataDsn();
+        data.setNumLine(numline);
         data.setId(rs.getLong(DSDOIDFSYS));
         data.setBloc(rs.getString(DSDOBLCRAT));
         data.setNumSequenceBloc(rs.getInt(DSDOSEQBLC));

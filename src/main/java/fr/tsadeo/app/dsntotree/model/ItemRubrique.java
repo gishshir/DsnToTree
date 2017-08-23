@@ -6,10 +6,9 @@ public class ItemRubrique extends AbstractItemTree implements Comparable<ItemRub
 
     private ItemBloc blocContainer;
 
-    
     // ligne d'origine
     private final String line;
-    
+
     // ex S21.G00.30.001
     private String key;
     // 2750564102107
@@ -19,13 +18,12 @@ public class ItemRubrique extends AbstractItemTree implements Comparable<ItemRub
     private String prefix;
     // ex 30
     private String blocLabel;
-    //ex 001
+    // ex 001
     private String rubriqueLabel;
-    
 
     // ---------------------------------- constructor
     public ItemRubrique() {
-    	this(-1, null);
+        this(-1, null);
     }
 
     public ItemRubrique(int numLine, String line) {
@@ -33,16 +31,16 @@ public class ItemRubrique extends AbstractItemTree implements Comparable<ItemRub
         this.line = line;
     }
 
-    //---------------------------------- implementing IItemTree
-	@Override
-	public boolean isBloc() {
-		return false;
-	}
+    // ---------------------------------- implementing IItemTree
+    @Override
+    public boolean isBloc() {
+        return false;
+    }
 
-	@Override
-	public boolean isRubrique() {
-		return true;
-	}
+    @Override
+    public boolean isRubrique() {
+        return true;
+    }
 
     // --------------------------------------- accessor
     public ItemBloc getBlocContainer() {
@@ -52,22 +50,20 @@ public class ItemRubrique extends AbstractItemTree implements Comparable<ItemRub
     public void setBlocContainer(ItemBloc blocContainer) {
         this.blocContainer = blocContainer;
     }
-    
-    
 
-	public String getPrefix() {
-		return prefix;
-	}
+    public String getPrefix() {
+        return prefix;
+    }
 
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
 
-	public String getLine() {
-		return line;
-	}
+    public String getLine() {
+        return line;
+    }
 
-	public String getValue() {
+    public String getValue() {
         return value;
     }
 
@@ -75,10 +71,8 @@ public class ItemRubrique extends AbstractItemTree implements Comparable<ItemRub
         this.value = value;
     }
 
-
-    
     public String getBlocAndRubriqueLabel() {
-    	return this.blocLabel.concat(IConstants.POINT).concat(this.rubriqueLabel);
+        return this.blocLabel.concat(IConstants.POINT).concat(this.rubriqueLabel);
     }
 
     public String getBlocLabel() {
@@ -105,42 +99,42 @@ public class ItemRubrique extends AbstractItemTree implements Comparable<ItemRub
         this.key = key;
     }
 
-		
-	public int getRubriqueLabelAsInt() {
-		
-		int numRubrique = Integer.MIN_VALUE;
+    public int getRubriqueLabelAsInt() {
 
-		try {
-			numRubrique = Integer.parseInt(this.rubriqueLabel);
-		} catch (NumberFormatException e) {
-             // Nothing
-		}
-		
-		return numRubrique;
-	}
+        int numRubrique = Integer.MIN_VALUE;
 
-	//---------------------------------------- overriding Object
-@Override
-	public String toString() {
+        try {
+            numRubrique = Integer.parseInt(this.rubriqueLabel);
+        } catch (NumberFormatException e) {
+            // Nothing
+        }
 
-        return (this.isError())?"ligne: ".concat(Integer.toString(this.getNumLine())).concat(" - ").concat(this.line):
-        		this.getBlocAndRubriqueLabel() + " : " + this.value;
+        return numRubrique;
     }
 
-	// --------------------------------------------- implements Comparable
-	@Override
-	public int compareTo(ItemRubrique other) {
-	    final int BEFORE = -1;
-	    final int EQUAL = 0;
-	    final int AFTER = 1;
-	    
-	    if (other == null) {
-	    	return BEFORE;
-	    }
-	    if (this == other) {
-	    	return EQUAL;
-	    }
-	    
-		return (this.getRubriqueLabelAsInt() < other.getRubriqueLabelAsInt())?BEFORE:AFTER;
-	}
+    // ---------------------------------------- overriding Object
+    @Override
+    public String toString() {
+
+        return (this.isError()) ? "ligne: ".concat(Integer.toString(this.getNumLine())).concat(" - ").concat(this.line)
+                : this.getBlocAndRubriqueLabel() + " : " + this.value;
+    }
+
+    // --------------------------------------------- implements Comparable
+    @Override
+    public int compareTo(ItemRubrique other) {
+        final int BEFORE = -1;
+        final int EQUAL = 0;
+        final int AFTER = 1;
+
+        if (other == null) {
+            return BEFORE;
+        }
+        if (this == other) {
+            return EQUAL;
+        }
+
+        return (this.getRubriqueLabelAsInt() < other.getRubriqueLabelAsInt()) ? BEFORE : AFTER;
+    }
+
 }

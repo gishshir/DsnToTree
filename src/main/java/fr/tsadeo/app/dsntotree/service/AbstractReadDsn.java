@@ -10,15 +10,29 @@ import org.codehaus.jettison.json.JSONObject;
 
 import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.CardinaliteEnum;
+import fr.tsadeo.app.dsntotree.model.Dsn;
+import fr.tsadeo.app.dsntotree.model.ErrorMessage;
+import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.util.IConstants;
 import fr.tsadeo.app.dsntotree.util.IJsonConstants;
 import fr.tsadeo.app.dsntotree.util.JsonUtils;
 
 public class AbstractReadDsn implements IConstants, IJsonConstants {
-	
-	protected final JsonUtils jsonUtils = new JsonUtils();
-	protected final DsnService dsnService = ServiceFactory.getDsnService();
-	
+
+    protected final JsonUtils jsonUtils = new JsonUtils();
+    protected final DsnService dsnService = ServiceFactory.getDsnService();
+
+    protected ItemBloc getOrBuildItemBlocErreur(Dsn dsn) {
+
+        ItemBloc itemBlocError = dsn.getItemBlocError();
+        if (itemBlocError == null) {
+            itemBlocError = new ItemBloc(0, null, "ERROR");
+            itemBlocError.setErrorMessage(new ErrorMessage("Bloc d'erreurs"));
+            dsn.setItemBlocError(itemBlocError);
+
+        }
+        return itemBlocError;
+    }
 
     /*
      * Description de la structure arborescente de la DSN (phase/nature)
@@ -48,6 +62,7 @@ public class AbstractReadDsn implements IConstants, IJsonConstants {
         }
         return treeBlocs;
     }
+
     /*
      * Methode recursive Construction d'un bloc fils à partir de jsonObject et
      * rattachement à son parent
@@ -109,6 +124,7 @@ public class AbstractReadDsn implements IConstants, IJsonConstants {
             }
         }
     }
+
     private CardinaliteEnum getCardinalite(String cardinalite) {
 
         CardinaliteEnum result;
@@ -121,7 +137,5 @@ public class AbstractReadDsn implements IConstants, IJsonConstants {
 
         return result;
     }
-
-
 
 }

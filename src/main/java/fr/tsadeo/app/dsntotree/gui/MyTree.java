@@ -2,7 +2,6 @@ package fr.tsadeo.app.dsntotree.gui;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -34,6 +33,7 @@ public class MyTree extends JTree implements TreeSelectionListener, IGuiConstant
     private static final long serialVersionUID = 1L;
 
     private int selectedIndex = Integer.MIN_VALUE;
+    private IItemTree selectedItemTreee = null;
 
     private final ItemBlocListener itemBlocListener;
 
@@ -68,6 +68,7 @@ public class MyTree extends JTree implements TreeSelectionListener, IGuiConstant
             String pathParent = this.getPath(event.getPath().getParentPath());
             ItemBloc itemBloc = ((BlocNode) node).getItemBloc();
             this.itemBlocListener.onItemBlocSelected(itemBloc, row, pathParent);
+            this.selectedItemTreee = itemBloc;
         } else if (node.isLeaf()) {
 
             ItemRubrique itemRubrique = ((RubriqueNode) node).getItemRubrique();
@@ -75,6 +76,7 @@ public class MyTree extends JTree implements TreeSelectionListener, IGuiConstant
 
             String pathParent = this.getPath(event.getPath().getParentPath().getParentPath());
             this.itemBlocListener.onItemRubriqueSelected(itemRubrique, row, pathParent);
+            this.selectedItemTreee = itemRubrique;
         }
 
     }
@@ -111,16 +113,18 @@ public class MyTree extends JTree implements TreeSelectionListener, IGuiConstant
         return null;
     }
 
-//    private RubriqueNode getRubriqueNodeFromPath(TreePath path) {
-//
-//        DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-//        if (!node.isRoot() && node.isLeaf()) {
-//            return (RubriqueNode) node;
-//        }
-//        return null;
-//    }
+    // private RubriqueNode getRubriqueNodeFromPath(TreePath path) {
+    //
+    // DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+    // path.getLastPathComponent();
+    // if (!node.isRoot() && node.isLeaf()) {
+    // return (RubriqueNode) node;
+    // }
+    // return null;
+    // }
 
-    // FIXME traiter le cas de rafraichissement quand la dsn est non stucturee et
+    // FIXME traiter le cas de rafraichissement quand la dsn est non stucturee
+    // et
     // qu'on a ajouté une rubrique
     void refreshBloc(int treeRowOfBloc, ItemBloc itemBloc) {
 
@@ -134,7 +138,6 @@ public class MyTree extends JTree implements TreeSelectionListener, IGuiConstant
         }
 
     }
-
 
     boolean search(String search, boolean next) {
 
@@ -162,11 +165,11 @@ public class MyTree extends JTree implements TreeSelectionListener, IGuiConstant
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
                 if (node.getUserObject() != null && node.getUserObject() instanceof IItemTree) {
                     IItemTree item = (IItemTree) node.getUserObject();
-					if (item.getNumLine() > 0) {
-						label.setToolTipText("ligne: " + item.getNumLine());
-					}
-					label.setOpaque(true);
-					label.setBackground(TREE_BACKGROUND_COLOR);
+                    if (item.getNumLine() > 0) {
+                        label.setToolTipText("ligne: " + item.getNumLine());
+                    }
+                    label.setOpaque(true);
+                    label.setBackground(item == selectedItemTreee ? Color.gray : TREE_BACKGROUND_COLOR);
                     if (item.isError()) {
                         label.setForeground(TREE_ERROR_COLOR);
                     } else if (item.isModified()) {
@@ -174,7 +177,7 @@ public class MyTree extends JTree implements TreeSelectionListener, IGuiConstant
                     } else if (item.isCreated()) {
                         label.setForeground(TREE_CREATED_COLOR);
                     } else {
-                    	label.setForeground(TREE_NORMAL_COLOR);
+                        label.setForeground(TREE_NORMAL_COLOR);
                     }
                 }
 
@@ -278,20 +281,20 @@ public class MyTree extends JTree implements TreeSelectionListener, IGuiConstant
             model.reload(node);
         }
     }
-    
-	private void addTreeNodeChildrens(BlocNode node, ItemBloc itemBloc, boolean reloadModel) {
 
-		 DefaultTreeModel model = ((DefaultTreeModel) this.getModel());
-		//
-		if (itemBloc.hasChildren()) {
-			for (ItemBloc itemChild : itemBloc.getChildrens()) {
-				this.createTreeNode(node, itemChild, true);
-			}
-		}
-		if (reloadModel) {
-			model.reload(node);
-		}
-	}
+    private void addTreeNodeChildrens(BlocNode node, ItemBloc itemBloc, boolean reloadModel) {
+
+        DefaultTreeModel model = ((DefaultTreeModel) this.getModel());
+        //
+        if (itemBloc.hasChildren()) {
+            for (ItemBloc itemChild : itemBloc.getChildrens()) {
+                this.createTreeNode(node, itemChild, true);
+            }
+        }
+        if (reloadModel) {
+            model.reload(node);
+        }
+    }
 
     private void expandRoot(boolean expand) {
         this.expandAll(new TreePath(this.top), expand);

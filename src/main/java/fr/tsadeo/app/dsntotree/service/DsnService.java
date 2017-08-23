@@ -191,6 +191,8 @@ public class DsnService implements IConstants, IJsonConstants {
                 .getBlocAndRubriqueLabelFromCodeLabelAndRubrique(dataDsn.getCodeRubrique());
         String labelRubrique = blocAndLabel == null ? dataDsn.getCodeRubrique() : blocAndLabel.rubriqueLabel;
         ItemRubrique itemRubrique = this.createNewRubrique(itemBloc, labelRubrique);
+        itemRubrique.setValue(dataDsn.getValue());
+        itemRubrique.setNumLine(dataDsn.getNumLine());
         itemRubrique.setCreated(true);
         return itemRubrique;
     }

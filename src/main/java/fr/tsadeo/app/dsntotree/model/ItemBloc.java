@@ -12,7 +12,7 @@ public class ItemBloc extends AbstractItemTree implements Comparable<ItemBloc> {
     private final String prefix;
     private final String blocLabel;
     private ItemBloc parent;
-    
+
     private boolean childrenModified = false;
     // si plusieurs blocs enfant de meme label, index
     private int index = 0;
@@ -29,7 +29,7 @@ public class ItemBloc extends AbstractItemTree implements Comparable<ItemBloc> {
 
     public ItemBloc(int numLine, String prefix, String blocLabel) {
         this.setNumLine(numLine);
-    	this.prefix = prefix;
+        this.prefix = prefix;
         this.blocLabel = blocLabel;
     }
 
@@ -45,31 +45,30 @@ public class ItemBloc extends AbstractItemTree implements Comparable<ItemBloc> {
     }
 
     // --------------------------------- public methods
-   
+
     // -------------------------------- accessor
-    
+
     public boolean isRoot() {
         return root;
     }
 
     public boolean isChildrenModified() {
-		return childrenModified;
-	}
+        return childrenModified;
+    }
 
-	public void setChildrenModified(boolean childrenModified) {
-		this.childrenModified = childrenModified;
-	}
+    public void setChildrenModified(boolean childrenModified) {
+        this.childrenModified = childrenModified;
+    }
 
-	
-	public int getOrder() {
-		return order;
-	}
+    public int getOrder() {
+        return order;
+    }
 
-	public void setOrder(int order) {
-		this.order = order;
-	}
+    public void setOrder(int order) {
+        this.order = order;
+    }
 
-	public void setRoot(boolean root) {
+    public void setRoot(boolean root) {
         this.root = root;
     }
 
@@ -84,21 +83,20 @@ public class ItemBloc extends AbstractItemTree implements Comparable<ItemBloc> {
     public String getPrefix() {
         return prefix;
     }
-    
+
     /*
-     * Fonction recursive
-     * Determine si itemBloc est un ancetre
+     * Fonction recursive Determine si itemBloc est un ancetre
      */
     public boolean isAncestorBloc(ItemBloc itemBloc) {
-    	
-    	if (this.parent == null) {
-    		return false;
-    	}
-    	if (parent == itemBloc) {
-    		return true;
-    	} else {
-    		return this.parent.isAncestorBloc(itemBloc);
-    	}
+
+        if (this.parent == null) {
+            return false;
+        }
+        if (parent == itemBloc) {
+            return true;
+        } else {
+            return this.parent.isAncestorBloc(itemBloc);
+        }
     }
 
     public ItemRubrique getFirstRubrique() {
@@ -114,6 +112,7 @@ public class ItemBloc extends AbstractItemTree implements Comparable<ItemBloc> {
         }
         return this.listRubriques.get(this.listRubriques.size() - 1);
     }
+
     public ItemBloc getParent() {
         return parent;
     }
@@ -127,44 +126,61 @@ public class ItemBloc extends AbstractItemTree implements Comparable<ItemBloc> {
     }
 
     public List<ItemRubrique> getListRubriques() {
-    	if (this.listRubriques == null) {
-    		this.listRubriques = new ArrayList<ItemRubrique>();
-    	}
+        if (this.listRubriques == null) {
+            this.listRubriques = new ArrayList<ItemRubrique>();
+        }
         return listRubriques;
     }
+
     public boolean hasRubriques() {
-    	return this.listRubriques != null && !this.listRubriques.isEmpty();
+        return this.listRubriques != null && !this.listRubriques.isEmpty();
     }
 
     public void clearChildrens() {
-    	if(this.hasChildren()) {
-    		this.getChildrens().clear();
-    		this.mapBlocLabelToListChildren = null;
-    	}
+        if (this.hasChildren()) {
+            this.getChildrens().clear();
+            this.mapBlocLabelToListChildren = null;
+        }
     }
-    public List<String> getListLabelChildrens() {
-    	return this.mapBlocLabelToListChildren == null?null:
-    			new ArrayList<String>(this.mapBlocLabelToListChildren.keySet());
-    }
-    public List<ItemBloc> getChildrens(String blocLabel) {
-    		return mapBlocLabelToListChildren == null?null: this.mapBlocLabelToListChildren.get(blocLabel);
-    }
-    public List<ItemBloc> getChildrens() {
-    	if (this.childrens == null) {
-    		this.childrens = new ArrayList<ItemBloc>();
-    	}
-        return childrens;
-    }
-    public boolean hasChildren() {
-    	return this.childrens != null && !this.childrens.isEmpty();
-    }
-    
 
-    public void addChild(ItemBloc child) {
+    public List<String> getListLabelChildrens() {
+        return this.mapBlocLabelToListChildren == null ? null
+                : new ArrayList<String>(this.mapBlocLabelToListChildren.keySet());
+    }
+
+    public List<ItemBloc> getChildrens(String blocLabel) {
+        return mapBlocLabelToListChildren == null ? null : this.mapBlocLabelToListChildren.get(blocLabel);
+    }
+
+    public List<ItemBloc> getChildrens() {
         if (this.childrens == null) {
             this.childrens = new ArrayList<ItemBloc>();
         }
-        this.childrens.add(child);
+        return childrens;
+    }
+
+    public boolean hasChildren() {
+        return this.childrens != null && !this.childrens.isEmpty();
+    }
+
+    public void addFirstChild(ItemBloc child) {
+        this.addChild(child, 0);
+    }
+
+    public void addChild(ItemBloc child) {
+        this.addChild(child, -1);
+
+    }
+
+    private void addChild(ItemBloc child, int index) {
+        if (this.childrens == null) {
+            this.childrens = new ArrayList<ItemBloc>();
+        }
+        if (index >= 0) {
+            this.childrens.add(index, child);
+        } else {
+            this.childrens.add(child);
+        }
         child.parent = this;
 
         if (this.mapBlocLabelToListChildren == null) {
@@ -203,39 +219,41 @@ public class ItemBloc extends AbstractItemTree implements Comparable<ItemBloc> {
     private String showIndex() {
         return this.index > 0 ? " [" + this.index + "]" : "";
     }
+
     private String showNumLine() {
-    	return (this.getNumLine() > 0)?"ligne: ".concat(Integer.toString(this.getNumLine())).concat(" - "):"";
+        return (this.getNumLine() > 0) ? "ligne: ".concat(Integer.toString(this.getNumLine())).concat(" - ") : "";
     }
-    
-    private String showError(){
-    	return (this.isError())?this.showNumLine().concat(this.blocLabel):"";
+
+    private String showError() {
+        return (this.isError()) ? this.showNumLine().concat(this.blocLabel) : "";
     }
 
     private String showLabel() {
-    	return (this.isError())?"":this.blocLabel.concat(this.showIndex());
+        return (this.isError()) ? "" : this.blocLabel.concat(this.showIndex());
     }
-    //----------------------------- overriding Object
+
+    // ----------------------------- overriding Object
     @Override
     public String toString() {
-    	
-    	return this.showError().concat(this.showLabel());
+
+        return this.showError().concat(this.showLabel());
     }
 
-    //------------------------------ Implementing Comparable
-	@Override
-	public int compareTo(ItemBloc o) {
+    // ------------------------------ Implementing Comparable
+    @Override
+    public int compareTo(ItemBloc o) {
 
         if (o == null) {
-        	return -1;
+            return -1;
         }
         if (this == o) {
-        	return 0;
+            return 0;
         }
         if (this.getBlocLabel().equals(o.getBlocLabel())) {
-        	return Integer.compare(this.index, o.index);
+            return Integer.compare(this.index, o.index);
         } else {
-        	return Integer.compare(this.order, o.order);
+            return Integer.compare(this.order, o.order);
         }
-	}
+    }
 
 }

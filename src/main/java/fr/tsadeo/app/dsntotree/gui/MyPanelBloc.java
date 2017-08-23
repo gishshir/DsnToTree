@@ -289,7 +289,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         this.panelListRubriques = new JPanel();
         this.panelListRubriques.setLayout(new BoxLayout(this.panelListRubriques, BoxLayout.Y_AXIS));
         this.panelListRubriques.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        
+
         container.add(this.panelListRubriques);
     }
 
@@ -482,7 +482,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         this.clear();
 
         this.enableButtons(false);
-        this.btAddRubrique.setEnabled(true);
+        this.btAddRubrique.setEnabled(!itemBloc.isError());
         this.currentItemBloc = itemBloc;
         this.currentItemRubrique = itemRubriqueToSelect;
         this.currentTreeRowBloc = treeRowBloc;
@@ -490,7 +490,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         JLabel labelTitle = new JLabel(pathParent);
         labelTitle.setForeground(TREE_NORMAL_COLOR);
         this.panelBloc.add(labelTitle);
-        
+
         JLabel labelBloc = new JLabel("Bloc " + itemBloc.toString());
         labelBloc.setForeground(TREE_NORMAL_COLOR);
         this.panelBloc.add(labelBloc);
@@ -516,9 +516,9 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
             this.addVerticalGlueToPanelChildList();
         }
 
-        // Etat des boutons Add et Del
+        // Etat des boutons Add et Del des blocs enfants
         if (this.updateListChildrenActions()) {
-            this.panelChildrens.setVisible(true);
+            this.panelChildrens.setVisible(!itemBloc.isError());
         }
     }
 
@@ -699,6 +699,10 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         PanelRubrique panelRubrique = new PanelRubrique(itemRubrique, this.getDocumentListener());
         this.panelListRubriques.add(panelRubrique);
         panelRubrique.selectRubrique(toBeSelected, toBeFocused);
+
+        if (this.currentItemBloc.isError()) {
+            panelRubrique.setReadOnly();
+        }
 
         this.panelListRubriques.add(Box.createRigidArea(new Dimension(0, 5)));
 
@@ -1087,6 +1091,12 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
                 this.tfRubriqueValue.setForeground(this.originForeground);
                 this.tfRubriqueValue.setCaretColor(this.originForeground);
             }
+        }
+
+        private void setReadOnly() {
+            this.tfRubriqueValue.setEnabled(false);
+            this.btDelRubrique.setEnabled(false);
+
         }
 
         private String getValue() {

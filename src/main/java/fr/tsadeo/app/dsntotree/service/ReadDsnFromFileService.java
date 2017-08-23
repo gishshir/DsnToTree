@@ -19,8 +19,6 @@ import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 
 public class ReadDsnFromFileService extends AbstractReadDsn {
 
-    
-
     public static void main(String[] args) {
 
         if (args == null || args.length == 0) {
@@ -53,7 +51,6 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
 
     }
 
-  
     /**
      * Creation d'un objet Dsn à partir d'un fichier
      * 
@@ -75,7 +72,6 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
         return dsn;
     }
 
-  
     private void buildDsnTree(Dsn dsn) {
 
         // organisation des blocs en arborescence
@@ -97,9 +93,6 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
 
     }
 
-  
-   
-  
     /*
      * Construction de l'arborescence des blocs (ItemBloc) en s'appuyant sur la
      * structure (BlocTree)
@@ -136,11 +129,6 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
         Map<String, ItemBloc> mapBlocLabel2LastBlocItem = new HashMap<String, ItemBloc>();
 
         mapBlocLabel2LastBlocItem.put("", root);
-
-        // si bloc d'erreur on l'affiche en premier
-        if (dsn.getItemBlocError() != null) {
-            root.addChild(dsn.getItemBlocError());
-        }
 
         for (ItemBloc bloc : dsn.getBlocs()) {
             String blocLabel = bloc.getBlocLabel();
@@ -180,6 +168,11 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
                 dsn.getDsnState().addErrorMessage(errorMessage);
                 this.getOrBuildItemBlocErreur(dsn).addChild(bloc);
             }
+        }
+
+        // si bloc d'erreur on l'affiche en premier
+        if (dsn.getItemBlocError() != null) {
+            root.addFirstChild(dsn.getItemBlocError());
         }
 
         // on numerote les blocs enfant
@@ -292,17 +285,6 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
         return dsn;
     }
 
-    private ItemBloc getOrBuildItemBlocErreur(Dsn dsn) {
-
-        ItemBloc itemBlocError = dsn.getItemBlocError();
-        if (itemBlocError == null) {
-            itemBlocError = new ItemBloc(0, null, "ERROR");
-            itemBlocError.setErrorMessage(new ErrorMessage("Bloc d'erreurs"));
-            dsn.setItemBlocError(itemBlocError);
-        }
-        return itemBlocError;
-    }
-
     private void extractDsnPhase(Dsn dsn) {
 
         ItemRubrique rubPhase = this.dsnService.findOneRubrique(dsn.getRubriques(), BLOC_00, RUB_006);
@@ -326,5 +308,4 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
         }
     }
 
- 
-   }
+}

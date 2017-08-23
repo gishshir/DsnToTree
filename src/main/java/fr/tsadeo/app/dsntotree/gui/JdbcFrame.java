@@ -6,8 +6,9 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.InputEvent;
-import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -29,11 +30,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
+import javax.swing.MyJOptionPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingWorker;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AbstractDocument;
+
+import org.apache.commons.io.IOUtils;
 
 import com.sun.glass.events.KeyEvent;
 
@@ -49,6 +53,7 @@ import fr.tsadeo.app.dsntotree.dto.LinkedPropertiesDto;
 import fr.tsadeo.app.dsntotree.gui.action.EditBddMsgAction;
 import fr.tsadeo.app.dsntotree.gui.action.FocusSearchChronoAction;
 import fr.tsadeo.app.dsntotree.gui.action.LoadBddMsgAction;
+import fr.tsadeo.app.dsntotree.gui.action.LoadSqlFileAction;
 import fr.tsadeo.app.dsntotree.gui.action.LoadSqlRequestAction;
 import fr.tsadeo.app.dsntotree.gui.action.PatternFilter;
 import fr.tsadeo.app.dsntotree.gui.bdd.ConnexionState;
@@ -56,6 +61,7 @@ import fr.tsadeo.app.dsntotree.gui.component.LabelAndTextField;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
 import fr.tsadeo.app.dsntotree.gui.component.StateTextField;
 import fr.tsadeo.app.dsntotree.model.Dsn;
+import fr.tsadeo.app.dsntotree.model.ErrorMessage;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
 
 public class JdbcFrame extends AbstractFrame implements IBddActionListener, DocumentListener {
@@ -78,7 +84,7 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
     private final Map<String, PanelMessageInfo> mapKeyToMessageInfo = new HashMap<String, PanelMessageInfo>();
 
     private MyPanelConnexion panelConnexion;
-    private StateButton btChargerMsg, btEditerMsg, btSqlRequest;
+    private StateButton btChargerMsg, btEditerMsg, btSqlFile, btSqlRequest;
     private StateTextField tfSearchChrono;
     private JTextArea tAListRubriques;
 
@@ -106,24 +112,24 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
         }
     }
 
-	@Override
-	public void actionLoadSqlRequestByChrono() {
-		try {
-			this.processTextArea.setText("Recherche du message en base de donnée...");
+    @Override
+    public void actionLoadSqlFileByChrono() {
+    	this.processTextArea.setText(null);
+        try {
+            this.processTextArea.setText("Chargement du message DSN depuis un fichier...");
 
-	        this.tAListRubriques.setText(null);
-	        
-	        this.waitEndAction();
+            this.tAListRubriques.setText(null);
+            this.waitEndAction();
 
-			boolean success = this.showOpenFileDialogAndExtractDatas();
-			
-			this.searchActionEnded(success);
-		} catch (Exception e) {
-			this.processTextArea.append("Erreur lors du chargement des datas!: ");
-			this.processTextArea.append(e.getMessage());
-			this.searchActionEnded(false);
-		}
-	}
+            boolean success = this.showOpenFileDialogAndExtractDatas();
+
+            this.searchActionEnded(success);
+        } catch (Exception e) {
+            this.processTextArea.append("Erreur lors du chargement des datas!: ");
+            this.processTextArea.append(e.getMessage());
+            this.searchActionEnded(false);
+        }
+    }
 
     @Override
     public void actionTesterConnexion() {
@@ -161,21 +167,21 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
 
         if (this.message != null && this.listDatas != null) {
 
-        	try {
-            Dsn dsn = ServiceFactory.getReadDsnFromDatasService().buildTreeFromDatas(this.message.getName(), listDatas);
-				if (dsn != null) {
-					this.mainActionListener.actionShowDsnTreeWithConfirmation(dsn);
-				} else {
-	        		this.processTextArea.append("Impossible de construire la DSN!");
-	        		this.btEditerMsg.setEnabled(false);
-				}
-        	}
-        	catch (Exception e) {
-        		this.btEditerMsg.setEnabled(false);
-        		this.processTextArea.append("Erreur dans la construction de la DSN!");
-        		this.processTextArea.append(RC);
-        		this.processTextArea.append(e.getMessage());
-        	}               
+            try {
+                Dsn dsn = ServiceFactory.getReadDsnFromDatasService().buildTreeFromDatas(this.message.getName(),
+                        listDatas);
+                if (dsn != null) {
+                    this.mainActionListener.actionShowDsnTreeWithConfirmation(dsn);
+                } else {
+                    this.processTextArea.append("Impossible de construire la DSN!");
+                    this.btEditerMsg.setEnabled(false);
+                }
+            } catch (Exception e) {
+                this.btEditerMsg.setEnabled(false);
+                this.processTextArea.append("Erreur dans la construction de la DSN!");
+                this.processTextArea.append(RC);
+                this.processTextArea.append(e.getMessage());
+            }
         }
     }
 
@@ -190,6 +196,78 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
             }
         }
         return properties;
+    }
+
+    @Override
+    public void actionLoadSqlRequestByChrono() {
+
+    	this.processTextArea.setText(null);
+    	this.processTextArea.setText("Chargement des datas à partir des résultats d'une requête SQL...");
+        String results = this.askSqlRequestResult();
+        if (results != null) {
+        	
+        	File file = this.writeTemporaryFile(results);
+        	if (file != null && file.exists()) {
+        		try {
+        			 this.tAListRubriques.setText(null);
+        	         this.waitEndAction();
+
+					boolean success = this.extractDatasFromFile(file);
+					this.searchActionEnded(success);
+					this.processTextArea.setText((success?"SUCCES":"ECHEC").concat(" du chargement des datas à partir des résultats d'une requête SQL."));
+				} catch (Exception ex) {
+					this.processTextArea.append("Echec dans la lecture du fichier temporaire");
+					this.processTextArea.append(RC);
+					this.processTextArea.append(ex.getMessage());
+					this.searchActionEnded(false);
+				}
+        	}
+        } else {
+        	this.processTextArea.append(RC);
+        	this.processTextArea.append("... action annulée par l'utilisateur.");
+        }
+
+    }
+
+	private File writeTemporaryFile(String results) {
+
+		if (results != null) {
+			// sauvegarder un fichier temporaire
+			File file = null;
+			FileOutputStream out = null;
+			try {
+				file = File.createTempFile("dsn", ".tmp");
+				out = new FileOutputStream(file);
+				IOUtils.write(results, out, UTF8);
+			} catch (Exception ex) {
+
+				this.processTextArea.append("Erreur dans la sauvegarde du fichier temporaire");
+				this.processTextArea.append(RC);
+				this.processTextArea.append(ex.getMessage());
+
+			} finally {
+				IOUtils.closeQuietly(out);
+			}
+			return file;
+		} else {
+			this.processTextArea.append("Aucune data DSN valide!!");
+			return null;
+		}
+
+	}
+
+    private String askSqlRequestResult() {
+
+        final PanelSqlRequest panelSqlRequest = new PanelSqlRequest(SQL_CHRONO);
+        panelSqlRequest.setFocusOnResults();
+
+        int option = MyJOptionPane.showOptionDialog(null, panelSqlRequest,
+                "Copier/coller le résultat de la requête SQL", MyJOptionPane.OK_CANCEL_OPTION,
+                MyJOptionPane.QUESTION_MESSAGE, null, null, null);
+        if (option == MyJOptionPane.OK_OPTION) {
+            return panelSqlRequest.getResults();
+        }
+        return null;
     }
 
     @Override
@@ -233,7 +311,7 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
             private void poursuivreAction() {
 
                 if (message != null) {
-                	loadDatasForMessage(chrono);
+                    loadDatasForMessage(chrono);
                 } else {
                     searchActionEnded(false);
                 }
@@ -243,33 +321,37 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
         worker.execute();
 
     }
-    
+
     private boolean showOpenFileDialogAndExtractDatas() throws Exception {
 
-		if (this.currentDirectory != null) {
-			fc.setCurrentDirectory(this.currentDirectory);
-		}
-		int returnVal = fc.showOpenDialog(this);
+        if (this.currentDirectory != null) {
+            fc.setCurrentDirectory(this.currentDirectory);
+        }
+        int returnVal = fc.showOpenDialog(this);
 
-		processTextArea.setText(null);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			this.currentDirectory = file.getParentFile();
-			
-			this.message = new MessageDsn();
-			this.message.setName(file.getName());
+        processTextArea.setText(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            this.currentDirectory = file.getParentFile();
+            return this.extractDatasFromFile(file);
 
-			processTextArea.append("DSN: ".concat(file.getName()).concat(POINT).concat(SAUT_LIGNE).concat(SAUT_LIGNE));
-			this.listDatas = ServiceFactory.getReadDatasFromSqlRequestService().buildListDatasFromSqlRequest(file);
-			populateMessageDatas();
-			return listDatas != null && !listDatas.isEmpty();
-		} else {
+        } else {
 
-			processTextArea.setText("Open command cancelled by user.".concat(SAUT_LIGNE));
-			return false;
-		}
-	}
+            processTextArea.setText("Open command cancelled by user.".concat(SAUT_LIGNE));
+            return false;
+        }
+    }
+    private boolean extractDatasFromFile(File file) throws Exception{
 
+        this.message = new MessageDsn();
+        this.message.setName(file.getName());
+
+        this.listDatas = ServiceFactory.getReadDatasFromSqlRequestService().buildListDatasFromSqlRequest(file);
+        this.populateMessageInfos(message);
+        this.populateMessageDatas();
+        return listDatas != null && !listDatas.isEmpty();
+
+    }
 
     private void loadDatasForMessage(final String chrono) {
         this.listDatas = null;
@@ -358,7 +440,8 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
         JPanel panelButton = new JPanel();
         this.createButtonChargerMessage(panelButton, BorderLayout.CENTER);
         this.createButtonEditTreeMessage(panelButton, BorderLayout.CENTER);
-        this.createButtonLoadSqlRequestMessage(panelButton, BorderLayout.CENTER);
+        this.createButtonLoadSqlFile(panelButton, BorderLayout.CENTER);
+        this.createButtonLoadSqlRequest(panelButton, BorderLayout.CENTER);
         container.add(panelButton, layout);
     }
 
@@ -418,14 +501,22 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
                 container, layout);
     }
 
-    private void createButtonLoadSqlRequestMessage(Container container, String layout) {
+    private void createButtonLoadSqlFile(Container container, String layout) {
 
-        this.btSqlRequest = new StateButton();
-        GuiUtils.createButton(btSqlRequest, new LoadSqlRequestAction(this), LOAD_SQL_MSG_ACTION, KeyEvent.VK_S,
-        		PATH_SQL_REQUEST_ICO, "Charger depuis SQL", "Charger un message depuis une requête SQL.", true,
-                container, layout);
+        this.btSqlFile = new StateButton();
+        GuiUtils.createButton(btSqlFile, new LoadSqlFileAction(this), LOAD_SQL_FILE_MSG_ACTION, KeyEvent.VK_S,
+                PATH_SQL_FILE_ICO, "Charger fichier SQL", "Charger un message depuis une fichier de résultat SQL.",
+                true, container, layout);
+        this.btSqlFile.setVisible(false);
     }
 
+    private void createButtonLoadSqlRequest(Container container, String layout) {
+
+        this.btSqlRequest = new StateButton();
+        GuiUtils.createButton(btSqlRequest, new LoadSqlRequestAction(this), LOAD_SQL_REQUEST_MSG_ACTION, KeyEvent.VK_R,
+                PATH_SQL_REQUEST_ICO, "Charger résultats SQL", "Charger un message depuis une requête SQL.", true,
+                container, layout);
+    }
 
     private void createButtonChargerMessage(Container container, String layout) {
 
@@ -450,9 +541,11 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
     private void waitEndAction() {
 
         this.setCursor(WaitingCursor);
-        
+
         this.btChargerMsg.waitEndAction();
         this.btEditerMsg.waitEndAction();
+        this.btSqlFile.waitEndAction();
+        this.btSqlRequest.waitEndAction();
 
         this.tfSearchChrono.waitEndAction();
         panelConnexion.waitEndAction();
@@ -462,6 +555,8 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
 
         this.btChargerMsg.actionEnded();
         this.btEditerMsg.actionEnded();
+        this.btSqlFile.actionEnded();
+        this.btSqlRequest.actionEnded();
 
         this.tfSearchChrono.actionEnded();
         panelConnexion.actionEnded();
@@ -476,21 +571,24 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
 
     }
 
-    private void populateMessageInfos(MessageDsn message) {
+	private void populateMessageInfos(MessageDsn message) {
 
-        this.mapKeyToMessageInfo.get(KEY_INFO_CHRONO)
-                .setValue(message == null ? null : message.getNumeroChronoMessage() + "");
-        this.mapKeyToMessageInfo.get(KEY_INFO_DATE)
-                .setValue(message == null ? null : DATE_FORMAT.format(message.getDateReferenceDeclaration()));
-        this.mapKeyToMessageInfo.get(KEY_INFO_NAME).setValue(message == null ? null : message.getName());
-    }
+		if (message != null) {
+			this.mapKeyToMessageInfo.get(KEY_INFO_CHRONO)
+					.setValue(message.getNumeroChronoMessage() == null ? null : message.getNumeroChronoMessage() + "");
+			this.mapKeyToMessageInfo.get(KEY_INFO_DATE)
+					.setValue(message.getDateReferenceDeclaration() == null ? null : DATE_FORMAT.format(message.getDateReferenceDeclaration()));
+			this.mapKeyToMessageInfo.get(KEY_INFO_NAME).setValue(message.getName() == null ? null : message.getName());
+
+		}
+	}
 
     private void populateMessageDatas() {
 
-    	if (this.listDatas == null || this.listDatas.isEmpty()) {
-    		this.processTextArea.append("la liste des données est vide!");
-    		return;
-    	}
+        if (this.listDatas == null || this.listDatas.isEmpty()) {
+            this.processTextArea.append("la liste des données est vide!");
+            return;
+        }
         for (DataDsn dataDSN : this.listDatas) {
             this.tAListRubriques.append(RC);
             this.tAListRubriques.append(dataDSN.toString());
@@ -504,6 +602,78 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
         private PanelMessageInfo(String text) {
             super(text, 120, 300, false);
         }
+    }
+
+    private static final String SQL_CHRONO = "select\n" +
+
+            " DSDOCHRMSG as chronoMess,\n" + // ...
+            " DSDOIDFSYS as id,\n" + // ...
+            " DSDOBLCRAT as bloc,\n" + // ...
+            " DSDOSEQBLC as seq_bloc,\n" + // ...
+            " DSDOBLCSUP as bloc_sup,\n" + // ...
+            " DSDOSEQSUP as seq_sup,\n" + // ...
+            " DSDOCODRUB as codeRubrique,\n" + // ...
+            " DSDOVALRUB as value\n" + // ...
+
+            " from DSDONNEESCL data\n" + // ...
+
+            " where DSDOCHRMSG = <chrono>\n" + // ...
+            " order by  bloc, seq_bloc, seq_sup, codeRubrique;"; // ...
+
+    private static final class PanelSqlRequest extends JPanel {
+
+        private final JTextArea taSql = new JTextArea(5, 50);
+        private final JTextArea taResult = new JTextArea(10, 100);
+
+        // ------------------------------------- constructor
+        private PanelSqlRequest(String sql) {
+            this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+            this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+            this.assemblageComposants();
+
+            this.taSql.setText(sql);
+            this.taResult.requestFocusInWindow();
+        }
+
+        private String getResults() {
+            return this.taResult.getText();
+        }
+        private void setFocusOnResults() {
+        	this.taResult.requestFocus();
+        }
+
+        private void assemblageComposants() {
+
+            this.add(new JLabel("Requête SQL à exécuter dans SQL Developper (alimenter le numéro chrono):"));
+            this.add(Box.createRigidArea(DIM_VER_RIGID_AREA_5));
+            this.createSqlTextArea(this, BorderLayout.CENTER);
+
+            this.add(new JLabel("Resultat à copier depuis SQL Developper:"));
+            this.add(Box.createRigidArea(DIM_VER_RIGID_AREA_5));
+            this.createResultTextArea(this, BorderLayout.CENTER);
+        }
+
+        private void createSqlTextArea(Container container, String layout) {
+
+            taSql.setEditable(false);
+            taSql.setMargin(new Insets(10, 10, 10, 10));
+            container.add(taSql, layout);
+        }
+
+        private void createResultTextArea(Container container, String layout) {
+
+            taResult.setEditable(true);
+            taResult.setMargin(new Insets(10, 10, 10, 10));
+
+            JScrollPane scrollPane = new JScrollPane();
+            scrollPane.setViewportView(taResult);
+            scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+            container.add(scrollPane, layout);
+        }
+
     }
 
 }

@@ -8,6 +8,8 @@ public class DataDsn extends EntiteBase {
      * 
      */
     private static final long serialVersionUID = 1L;
+    /** numero de ligne du fichier ou de la requete */
+    private int numLine;
 
     /** Bloc de rattachement exemple '73'. */
     private String bloc;
@@ -31,6 +33,14 @@ public class DataDsn extends EntiteBase {
 
     public String getCodeRubrique() {
         return codeRubrique;
+    }
+
+    public int getNumLine() {
+        return numLine;
+    }
+
+    public void setNumLine(int numLine) {
+        this.numLine = numLine;
     }
 
     public String getBloc() {
@@ -72,7 +82,7 @@ public class DataDsn extends EntiteBase {
     @Override
     public String toString() {
 
-        return StringUtils.concat("bloc:", this.getBloc(), " - seq: ",
+        return StringUtils.concat("line:", this.numLine, " - bloc:", this.getBloc(), " - seq: ",
                 this.getNumSequenceBloc(), " - seq sup: ", this.getNumSequenceBlocSup(), " - rub: ",
                 this.getCodeRubrique(), " = ", this.getValue());
     }

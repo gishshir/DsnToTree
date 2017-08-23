@@ -10,12 +10,9 @@ import fr.tsadeo.app.dsntotree.util.IConstants;
 
 public class GroupBlocDatasDto implements IConstants {
 
-    private Map<String, BlocDatasDto> mapKeyToBlocDatas = new HashMap<String, BlocDatasDto>();
-
     private Map<String, List<BlocDatasDto>> mapBlocLabelToListBlocDatas = new HashMap<String, List<BlocDatasDto>>();
 
     public void addBloc(BlocDatasDto bloc) {
-        this.mapKeyToBlocDatas.put(bloc.getKey(), bloc);
 
         if (!this.mapBlocLabelToListBlocDatas.containsKey(bloc.getBloc())) {
             List<BlocDatasDto> listBlocs = new ArrayList<BlocDatasDto>();
@@ -26,7 +23,7 @@ public class GroupBlocDatasDto implements IConstants {
     }
 
     public boolean isEmpty() {
-        return this.mapKeyToBlocDatas.isEmpty();
+        return this.mapBlocLabelToListBlocDatas.isEmpty();
     }
 
     public String extractDsnPhase() {
@@ -37,6 +34,29 @@ public class GroupBlocDatasDto implements IConstants {
     public String extractDsnNature() {
         DataDsn dataDsn = this.extractRubrique(BLOC_05, RUB_001);
         return dataDsn == null ? null : dataDsn.getValue();
+    }
+
+    /**
+     * Retourne si existent les blocs non intégrés dans l'arboresence
+     * 
+     * @return
+     */
+    public List<BlocDatasDto> getListNotUsedBlocs() {
+
+        List<BlocDatasDto> listNotUsedBlocs = new ArrayList<BlocDatasDto>();
+
+        for (String blocLabel : this.mapBlocLabelToListBlocDatas.keySet()) {
+            List<BlocDatasDto> list = this.mapBlocLabelToListBlocDatas.get(blocLabel);
+            if (list != null) {
+                for (BlocDatasDto blocDatasDto : list) {
+                    if (!blocDatasDto.isUsed()) {
+                        listNotUsedBlocs.add(blocDatasDto);
+                    }
+                }
+            }
+        }
+        return listNotUsedBlocs;
+
     }
 
     /**

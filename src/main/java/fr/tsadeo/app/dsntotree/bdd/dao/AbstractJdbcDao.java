@@ -19,7 +19,7 @@ public abstract class AbstractJdbcDao<T extends EntiteBase> {
 
             jdbcContainer = this.prepareQuery(sql);
             if (jdbcContainer.getRs().next()) {
-                return this.mapToEntity(jdbcContainer.getRs());
+                return this.mapToEntity(Integer.MIN_VALUE, jdbcContainer.getRs());
             }
             return null;
 
@@ -41,8 +41,9 @@ public abstract class AbstractJdbcDao<T extends EntiteBase> {
 
             jdbcContainer = this.prepareQuery(sql);
             List<T> list = new ArrayList<T>();
+            int numline = 0;
             while (jdbcContainer.getRs().next()) {
-                list.add(this.mapToEntity(jdbcContainer.getRs()));
+                list.add(this.mapToEntity(numline++, jdbcContainer.getRs()));
             }
             return list;
 
@@ -83,7 +84,7 @@ public abstract class AbstractJdbcDao<T extends EntiteBase> {
         }
     }
 
-    protected abstract T mapToEntity(ResultSet rs) throws SQLException;
+    protected abstract T mapToEntity(int numline, ResultSet rs) throws SQLException;
 
     // ========================================= INNER CLASS
     private static class JdbcContainer {
