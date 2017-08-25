@@ -45,12 +45,18 @@ public class ReadDsnFromDatasService extends AbstractReadDsn {
                 dsn = new Dsn(new File(dsnName));
                 dsn.setPhase(phase);
                 dsn.setNature(nature);
+                dsn.setType(groupBlocs.extractDsnType());
 
                 // contruire l'arbre des ItemBloc avec leur rubriques
                 this.buildDsnTreeFromDatas(dsn, groupBlocs);
 
                 // reconstruire la liste linéaire des blocs
                 ServiceFactory.getDsnService().updateDsnAllListBlocs(dsn);
+
+                // on numerote les blocs enfant
+                for (ItemBloc itemBloc : dsn.getBlocs()) {
+                    ServiceFactory.getDsnService().numeroterIndexChildren(itemBloc);
+                }
 
                 dsn.getDsnState().setModified(true);
             } else {
@@ -162,7 +168,8 @@ public class ReadDsnFromDatasService extends AbstractReadDsn {
             GroupBlocDatasDto groupBlocs) {
 
         ItemBloc blocChild = ServiceFactory.getDsnService().createNewChild(blocParent, blocTree.getBlocLabel());
-        blocChild.setIndex(blocDatasDto.getSequence());
+        blocChild.setIndex(blocDatasDto.getSequence() + 1);
+        blocChild.setOrder(blocDatasDto.getSequence());
         blocDatasDto.setUsed(true);
 
         // on construit la liste des ItemRubriques
@@ -201,7 +208,7 @@ public class ReadDsnFromDatasService extends AbstractReadDsn {
         // on cherche une liste de bloc correspondant au nom du bloc et au
         // numero de seq du bloc parent
         List<BlocDatasDto> listBlocDatas = groupBlocs.getListBlocsForLabelAndSeqSup(blocTree.getBlocLabel(),
-                blocParent.getIndex());
+                blocParent.getOrder());
         if (listBlocDatas != null) {
 
             // pour chaque blocDatas on construit un ItemBloc avec ses rubriques

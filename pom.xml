@@ -4,24 +4,59 @@
 	<groupId>DsnToTree</groupId>
 	<artifactId>DsnToTree</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<repositories>
+<!-- 	<repositories>
 		<repository>
 			<id>datanucleus</id>
 			<name>datanucleus repository</name>
 			<url>http://www.datanucleus.org/downloads/maven2/</url>
 		</repository>
-	</repositories>
+	</repositories> -->
 	<build>
-		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.5.1</version>
-				<configuration>
-					<source />
-					<target />
-				</configuration>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.6</target>
+                    <optimize>true</optimize>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
 			</plugin>
+			  <!--   <plugin>
+                <groupId>org.jvnet.jaxb2.maven2</groupId>
+                <artifactId>maven-jaxb2-plugin</artifactId>
+                <version>0.11.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <schemaDirectory>${basedir}/src/main/resources</schemaDirectory>
+                    <schemaIncludes>
+                        <include>**/*.xsd</include>
+                    </schemaIncludes>
+                    <extension>true</extension>
+                    <args>
+                        <arg>-enableIntrospection</arg>
+                        <arg>-XtoString</arg>
+                        <arg>-Xequals</arg>
+                        <arg>-XhashCode</arg>
+                    </args>
+                    <removeOldOutput>true</removeOldOutput>
+                    <verbose>true</verbose>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.jvnet.jaxb2_commons</groupId>
+                            <artifactId>jaxb2-basics</artifactId>
+                            <version>0.11.0</version>
+                        </plugin>
+                    </plugins>
+                </configuration>
+            </plugin> -->
 		</plugins>
 	</build>
 	<dependencies>
@@ -46,7 +81,24 @@
 			<groupId>oracle</groupId>
 			<artifactId>ojdbc6</artifactId>
 			<version>11.2.0.3</version>
+			<scope>runtime</scope>
 		</dependency>
+        <!-- XML binding stuff -->
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.2.11</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>2.2.11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet.jaxb2_commons</groupId>
+            <artifactId>jaxb2-basics-runtime</artifactId>
+            <version>0.11.0</version>
+        </dependency>
 		<!-- https://mvnrepository.com/artifact/junit/junit -->
 		<dependency>
 			<groupId>junit</groupId>

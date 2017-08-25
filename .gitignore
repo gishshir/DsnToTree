@@ -12,6 +12,7 @@
 # Maven
 log/
 target/
+target/classes/
 
 #divers
 *.pdf

@@ -3,24 +3,15 @@ package fr.tsadeo.app.dsntotree.gui;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Insets;
-import java.awt.event.InputEvent;
 import java.io.File;
 
-import javax.swing.AbstractButton;
-import javax.swing.Action;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
-import com.sun.glass.events.KeyEvent;
 
 import fr.tsadeo.app.dsntotree.util.IConstants;
 
@@ -64,8 +55,6 @@ public abstract class AbstractFrame extends JFrame implements IGuiConstants, ICo
         processTextArea.setMargin(new Insets(10, 10, 10, 10));
         container.add(processTextArea, layout);
     }
-
-   
 
     protected void createSplitPanel(Container container, JComponent leftComponent, JComponent rightComponent,
             String layout, int dividerLocation) {

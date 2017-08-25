@@ -259,7 +259,20 @@ public class DsnService implements IConstants, IJsonConstants {
         }
 
         // Remplacer avec les nouveaux blocs enfants
-        this.addBlocItemToList(dsn, itemBloc, indexBloc);
+        System.out.println("Remplacer avec les nouveaux blocs enfants");
+        this.addBlocItemToList(dsn, itemBloc, new Compteur(indexBloc));
+    }
+
+    private void addBlocItemToList(Dsn dsn, ItemBloc itemBloc, Compteur compteur) {
+
+        System.out.println("bloc " + itemBloc.getBlocLabel() + " - index: " + compteur.getValue());
+        dsn.addBloc(compteur.getValueAndIncrements(), itemBloc);
+        if (itemBloc.hasChildren()) {
+            for (ItemBloc childBloc : itemBloc.getChildrens()) {
+                this.addBlocItemToList(dsn, childBloc, compteur);
+            }
+        }
+
     }
 
     /*
@@ -268,18 +281,7 @@ public class DsnService implements IConstants, IJsonConstants {
      */
     public void updateDsnAllListBlocs(Dsn dsn) {
         dsn.clearListBlocs();
-        this.addBlocItemToList(dsn, dsn.getRoot(), 0);
-    }
-
-    private void addBlocItemToList(Dsn dsn, ItemBloc itemBloc, int index) {
-
-        dsn.addBloc(index++, itemBloc);
-        if (itemBloc.hasChildren()) {
-            for (ItemBloc childBloc : itemBloc.getChildrens()) {
-                this.addBlocItemToList(dsn, childBloc, index++);
-            }
-        }
-
+        this.addBlocItemToList(dsn, dsn.getRoot(), new Compteur(0));
     }
 
     String getRubriqueLine(ItemRubrique itemRubrique) {
@@ -456,6 +458,29 @@ public class DsnService implements IConstants, IJsonConstants {
             this.prefix = prefix;
             this.blocLabel = blocLabel;
             this.rubriqueLabel = rubriqueLabel;
+        }
+    }
+
+    // ========================================= INNER CLASS
+    private static final class Compteur {
+
+        private int value = 0;
+
+        Compteur(int start) {
+            this.value = start;
+        }
+
+        private void increments() {
+            this.value++;
+        }
+
+        private int getValueAndIncrements() {
+            this.value++;
+            return this.value - 1;
+        }
+
+        private int getValue() {
+            return value;
         }
     }
 }

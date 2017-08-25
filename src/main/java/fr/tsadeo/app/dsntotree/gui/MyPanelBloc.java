@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -35,8 +36,6 @@ import javax.swing.MyJOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AbstractDocument;
-
-import com.sun.glass.events.KeyEvent;
 
 import fr.tsadeo.app.dsntotree.dto.BlocChildDto;
 import fr.tsadeo.app.dsntotree.dto.BlocChildrenDto;
@@ -78,7 +77,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     private JButton btValider;
     private JButton btAnnuler;
     private JButton btAddRubrique;
-    JButton btAddBloc;
+    private JButton btAddBloc;
 
     private JComboBox<String> cbOtherChildLabel;
 
@@ -232,7 +231,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
 
         this.btAddBloc.setVerticalTextPosition(AbstractButton.CENTER);
         this.btAddBloc.setHorizontalTextPosition(AbstractButton.RIGHT);
-        this.btAddBloc.setEnabled(true);
+        this.btAddBloc.setEnabled(false);
 
         container.add(this.btAddBloc);
 
@@ -289,6 +288,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         this.panelListRubriques = new JPanel();
         this.panelListRubriques.setLayout(new BoxLayout(this.panelListRubriques, BoxLayout.Y_AXIS));
         this.panelListRubriques.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        this.panelListRubriques.setBackground(TREE_BACKGROUND_COLOR);
 
         container.add(this.panelListRubriques);
     }
@@ -576,7 +576,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
             DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>) this.cbOtherChildLabel.getModel();
             model.addElement(otherChildLabel);
         }
-        this.btAddBloc.setEnabled(blocChildrenDto.hasOtherChild());
+        // this.btAddBloc.setEnabled(blocChildrenDto.hasOtherChild());
         this.cbOtherChildLabel.setEnabled(blocChildrenDto.hasOtherChild());
 
         return blocChildrenDto.canHaveChildren();
@@ -985,6 +985,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
             container.add(Box.createRigidArea(DIM_HOR_RIGID_AREA_10));
             this.addButton(this.btDuplicateBloc, container, getDuplicateChildAction(),
                     "dupliquer le bloc ".concat(child.getBlocLabel()).concat(" ..."), PATH_DUPLICATE_ICO);
+
         }
 
         private void addButton(JButton button, Container container, Action action, String tooltip, String iconPath) {
@@ -1028,6 +1029,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         private PanelRubrique(ItemRubrique itemRubrique, DocumentListener documentListener) {
             this.itemRubrique = itemRubrique;
             this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+            this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
             this.addLabelAndTextfield(this, documentListener);
             this.addButtons(this);

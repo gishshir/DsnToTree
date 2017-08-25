@@ -6,6 +6,7 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Collections;
 
@@ -28,8 +29,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.TreePath;
-
-import com.sun.glass.events.KeyEvent;
 
 import fr.tsadeo.app.dsntotree.gui.action.CancelSearchAction;
 import fr.tsadeo.app.dsntotree.gui.action.FocusSearchAction;
@@ -202,7 +201,6 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 
     }
 
-
     @Override
     public void setFocusOnSearch() {
         if (this.tfSearch != null) {
@@ -237,15 +235,14 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         if (dsn == null || dsn.getFile() == null) {
             return;
         }
+        this.processTextArea.setText(null);
         if (this.isDsnModified()) {
 
             int respons = JOptionPane.showConfirmDialog(this,
                     "La DSN a été modifiée. \nVoulez-vous sauvegarder les modifications?", "DSN modifiée",
-                    JOptionPane.INFORMATION_MESSAGE);
-            if (respons == JOptionPane.OK_OPTION) {
+                    JOptionPane.YES_NO_OPTION);
+            if (respons == JOptionPane.YES_OPTION) {
                 this.actionSaveDsn(false);
-            } else if (respons == JOptionPane.CANCEL_OPTION) {
-                return;
             }
             this.actionShowDsnTree(dsn);
 
@@ -387,11 +384,9 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 
             int respons = JOptionPane.showConfirmDialog(this,
                     "La DSN a été modifiée. \nVoulez-vous sauvegarder les modifications?", "DSN modifiée",
-                    JOptionPane.INFORMATION_MESSAGE);
-            if (respons == JOptionPane.OK_OPTION) {
+                    JOptionPane.YES_NO_OPTION);
+            if (respons == JOptionPane.YES_OPTION) {
                 this.actionSaveDsn(false);
-            } else if (respons == JOptionPane.CANCEL_OPTION) {
-                return;
             }
             this.actionShowOpenFileDialog();
 

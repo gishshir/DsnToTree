@@ -36,6 +36,11 @@ public class GroupBlocDatasDto implements IConstants {
         return dataDsn == null ? null : dataDsn.getValue();
     }
 
+    public String extractDsnType() {
+        DataDsn dataDsn = this.extractRubrique(BLOC_05, RUB_002);
+        return dataDsn == null ? null : dataDsn.getValue();
+    }
+
     /**
      * Retourne si existent les blocs non intégrés dans l'arboresence
      * 

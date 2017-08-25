@@ -2,6 +2,7 @@ package fr.tsadeo.app.dsntotree.gui;
 
 import java.awt.Container;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -12,11 +13,9 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
-import com.sun.glass.events.KeyEvent;
-
 public class GuiUtils {
 
-	  /** Returns an ImageIcon, or null if the path was invalid. */
+    /** Returns an ImageIcon, or null if the path was invalid. */
     public static ImageIcon createImageIcon(String path) {
         java.net.URL imgURL = MyFrame.class.getResource(path);
         if (imgURL != null) {
@@ -26,7 +25,7 @@ public class GuiUtils {
             return null;
         }
     }
-    
+
     public static void createButton(JButton button, Action action, String actionName, int keyStrokeWhenFocusedWindow,
             String iconPath, String name, String tooltip, boolean enabled, Container container, String layout) {
 
