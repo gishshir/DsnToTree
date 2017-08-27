@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" >
+
+
+	<xs:element name="settings" type="Settings" />
+
+	<xs:complexType name="Settings">
+		<xs:sequence>
+			<xs:element name="bdd" type="Bdd" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Bdd">
+		<xs:sequence>
+			<xs:element name="connexions" type="Connexions" />
+			<xs:element name="sqls" type="Sqls" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Connexions">
+		<xs:sequence>
+			<xs:element name="oraclecon" type="OracleConnexion" maxOccurs="unbounded" minOccurs="1" />
+			<xs:element name="postgrecon" type="PostGreConnexion" maxOccurs="unbounded" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="OracleConnexion">
+		<xs:sequence>
+			<xs:element name="host" type="xs:string" />
+			<xs:element name="port" type="xs:int" />
+			<xs:element name="instance" type="xs:string" />
+			<xs:element name="user" type="xs:string" />
+			<xs:element name="password" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PostGreConnexion">
+		<xs:sequence>
+			<xs:element name="host" type="xs:string" />
+			<xs:element name="port" type="xs:int" />
+			<xs:element name="instance" type="xs:string" />
+			<xs:element name="user" type="xs:string" />
+			<xs:element name="password" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Sqls">
+		<xs:sequence>
+			<xs:element name="sql" type="Sql" maxOccurs="unbounded" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Sql">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" />
+			<xs:element name="value" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	
+</xs:schema>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<bdd>
+		<connexions>
+			<oraclecon>
+			    <host>server.ext</host>
+			    <port>1234</port>
+			    <instance>ora1</instance>
+				<user>toto</user>
+				<password>pwtToto</password>
+			</oraclecon>
+		</connexions>
+			<sqls/>
+	</bdd>
+</settings>

@@ -7,6 +7,14 @@ public class ServiceFactory {
     private static WriteDsn writeDsnService;
     private static DsnService dsnService;
     private static ReadDatasFromSqlRequestService readDatasFromSqlRequestService;
+    private static SettingsService settingsService;
+    
+    public static SettingsService getSettingsService() {
+    	if (settingsService == null) {
+    		settingsService = new SettingsService();
+    	}
+    	return settingsService;
+    }
     
     public static ReadDatasFromSqlRequestService getReadDatasFromSqlRequestService() {
     	if (readDatasFromSqlRequestService == null) {
