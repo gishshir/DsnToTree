@@ -8,6 +8,7 @@
 			    <instance>ora1</instance>
 				<user>toto</user>
 				<password>pwtToto</password>
+				<defaut>false</defaut>
 			</oraclecon>
 		</connexions>
 			<sqls/>

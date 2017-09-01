@@ -73,7 +73,8 @@ public class MyPanelConnexion extends JPanel implements IGuiConstants, DocumentL
 
     BddConnexionDto getBddConnexionDto() {
 
-        return new BddConnexionDto(this.oracleConnectComponent.getDriver(), this.oracleConnectComponent.getUrl(),
+        return new BddConnexionDto(this.oracleConnectComponent.getConnexionManager().getDriver(), 
+        		this.oracleConnectComponent.getUrl(),
                 this.ltfUser.getValue(), this.ltfPwd.getValue());
     }
 

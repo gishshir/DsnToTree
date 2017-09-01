@@ -576,7 +576,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
             DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>) this.cbOtherChildLabel.getModel();
             model.addElement(otherChildLabel);
         }
-        // this.btAddBloc.setEnabled(blocChildrenDto.hasOtherChild());
+        this.btAddBloc.setEnabled(blocChildrenDto.hasOtherChild());
         this.cbOtherChildLabel.setEnabled(blocChildrenDto.hasOtherChild());
 
         return blocChildrenDto.canHaveChildren();

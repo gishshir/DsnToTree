@@ -2,19 +2,14 @@ package fr.tsadeo.app.dsntotree.gui.bdd;
 
 import javax.swing.event.DocumentListener;
 
+import fr.tsadeo.app.dsntotree.bdd.dao.IConnectionManager;
 import fr.tsadeo.app.dsntotree.dto.BddConnexionDto;
 
 public interface IConnectComponent {
 
-    public enum Type {
-        Oracle, Mysql
-    }
-
     public boolean isUrlEmpty();
 
-    public Type getType();
-
-    public String getDriver();
+    public IConnectionManager getConnexionManager();
 
     public String getUrl();
 

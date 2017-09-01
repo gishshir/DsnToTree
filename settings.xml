@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<bdd>
+		<connexions>
+			<oraclecon>
+			    <defaut>true</defaut>
+			    <host>dedtanya04.ext.tdc</host>
+			    <port>1521</port>
+			    <instance>INFIDEV</instance>
+				<user>IDEV00_USER</user>
+				<password>IDEV00_USER</password>
+			</oraclecon>
+		</connexions>
+			<sqls/>
+	</bdd>
+</settings>
