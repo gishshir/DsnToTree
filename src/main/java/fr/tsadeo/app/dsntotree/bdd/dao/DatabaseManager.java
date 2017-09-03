@@ -11,10 +11,6 @@ import fr.tsadeo.app.dsntotree.dto.BddConnexionDto;
 
 public class DatabaseManager {
 
-//    private static final String JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";
-//    private static final String DB_URL = "jdbc:oracle:thin:@dedtanya04.ext.tdc:1521/INFIDEV";
-//    private static final String DB_USER = "IDEV00_USER";
-//    private static final String DB_PWD = "IDEV00_USER";
 
     private static DatabaseManager instance;
 

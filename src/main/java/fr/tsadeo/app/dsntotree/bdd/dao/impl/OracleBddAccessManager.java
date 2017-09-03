@@ -30,7 +30,7 @@ public class OracleBddAccessManager implements IBddAccessManager {
     @Override
     public BddConnexionDto getDefaultBddConnexionDto() {
 
-        return this.mapOracleBddAccessToDto(SettingsUtils.get().getDefaultOracleConnexion());
+        return this.mapOracleBddAccessToDto(SettingsUtils.get().getDefaultOracleBddAccess());
     }
     
 	@Override

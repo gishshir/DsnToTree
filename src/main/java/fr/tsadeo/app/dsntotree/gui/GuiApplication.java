@@ -2,11 +2,16 @@ package fr.tsadeo.app.dsntotree.gui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.MySwingUtilities;
 
-public class GuiApplication {
+import fr.tsadeo.app.dsntotree.util.IConstants;
+import fr.tsadeo.app.dsntotree.util.SettingsUtils;
+
+public class GuiApplication implements IConstants {
+	
 
     private static void createAndShowGUI() {
         // Create and set up the window.
@@ -17,6 +22,10 @@ public class GuiApplication {
 
         centerFrame(frame, 0.60f, 0.85f);
         frame.setVisible(true);
+    }
+    
+    private static void readSettings() throws Exception{
+    	SettingsUtils.get().readApplicationSettings(new File(SETTINGS_XML));
     }
 
     public static void centerFrame(JFrame frame, float pWidth, float pHeight) {
@@ -32,6 +41,12 @@ public class GuiApplication {
     }
 
     public static void start() {
+    	
+    	try {
+			readSettings();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
         // Schedule a job for the event-dispatching thread:
         // creating and showing this application's GUI.

@@ -28,6 +28,14 @@ public class SettingsUtils {
     private SettingsUtils() {
     }
     
+    public boolean hasApplicationSettings() {
+    	return this.applicationSettings != null;
+    }
+    
+    public void readApplicationSettings(File settingsFile) throws Exception {
+    	
+    	this.applicationSettings = this.readSettings(settingsFile);
+    }
     public Settings readSettings(File settingsFile) throws Exception {
     	
     	if (settingsFile == null || !settingsFile.isFile() || !settingsFile.canRead()) {
@@ -62,7 +70,7 @@ public class SettingsUtils {
         this.applicationSettings = appSettings;
     }
 
-    public OracleBddAccess getDefaultOracleConnexion() {
+    public OracleBddAccess getDefaultOracleBddAccess() {
 
         List<OracleBddAccess> list = this.getListOracleBddAccess();
         if (list != null) {
@@ -76,7 +84,8 @@ public class SettingsUtils {
     }
 
     public List<OracleBddAccess> getListOracleBddAccess() {
-        if (this.applicationSettings == null) {
+        if (this.applicationSettings == null || this.applicationSettings.getBdd() == null ||
+        		this.applicationSettings.getBdd().getBddAccesses() == null) {
             return null;
         }
 

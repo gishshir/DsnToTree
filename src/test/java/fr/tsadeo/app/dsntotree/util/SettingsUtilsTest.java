@@ -1,6 +1,8 @@
 package fr.tsadeo.app.dsntotree.util;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 
 import org.junit.Test;
 
@@ -12,6 +14,12 @@ public class SettingsUtilsTest extends AbstractTest {
 
 	 
 	 @Test
+	 public void testReadApplicationSettings() throws Exception {
+		 
+		 SettingsUtils.get().readApplicationSettings(getFile(XML_SETTINGS));
+		 assertTrue(SettingsUtils.get().hasApplicationSettings());
+	 }
+	 @Test
 	 public void testReadSettings() throws Exception {
 
 	        Settings settings = SettingsUtils.get().readSettings(getFile(XML_SETTINGS));
@@ -19,7 +27,7 @@ public class SettingsUtilsTest extends AbstractTest {
 	        SettingsUtils.get().setApplicationSettings(settings);
 	        
 	        
-	        OracleBddAccess result = SettingsUtils.get().getDefaultOracleConnexion();
+	        OracleBddAccess result = SettingsUtils.get().getDefaultOracleBddAccess();
 	        assertNotNull(result);
 	        
 	        assertNotNull(result.getHost());

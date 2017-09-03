@@ -43,6 +43,7 @@ import fr.tsadeo.app.dsntotree.model.ErrorMessage;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
+import fr.tsadeo.app.dsntotree.util.SettingsUtils;
 
 public class MyFrame extends AbstractFrame implements DocumentListener, ItemBlocListener, IMainActionListener {
 
@@ -144,10 +145,13 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
     }
 
     private void createButtonShowJdbc(Container container, String layout) {
+    	
+    	boolean active = SettingsUtils.get().hasApplicationSettings();
+    	
 
         showJdbc = new StateButton();
         GuiUtils.createButton(showJdbc, new ShowJdbcFrameAction(this), SHOW_JDBC_ACTION, KeyEvent.VK_B, PATH_BDD_ICO,
-                "Accéder BDD", "Récupérer un message depuis la base", true, container, layout);
+                "Accéder BDD", "Récupérer un message depuis la base", active, container, layout);
     }
 
     private void createButtonShowErrors(Container container, String layout) {

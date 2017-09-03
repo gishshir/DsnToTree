@@ -1,18 +1,29 @@
 package fr.tsadeo.app.dsntotree.bdd.dao;
 
 import static org.junit.Assert.assertTrue;
+
+import org.junit.Before;
+
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
+import fr.tsadeo.app.dsntotree.bdd.dao.IBddAccessManager.Type;
 import fr.tsadeo.app.dsntotree.dto.BddConnexionDto;
+import fr.tsadeo.app.dsntotree.service.AbstractTest;
+import fr.tsadeo.app.dsntotree.util.SettingsUtils;
 
-public class DatabaseManagerTest {
+public class DatabaseManagerTest extends AbstractTest{
+	
+    @Before
+    public void init() throws Exception {
 
-    private static final String JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";
-    private static final String DB_URL = "jdbc:oracle:thin:@dedtanya04.ext.tdc:1521/INFIDEV";
-    private static final String DB_USER = "IDEV00_USER";
-    private static final String DB_PWD = "IDEV00_USER";
+        SettingsUtils.get().readApplicationSettings(getFile(XML_SETTINGS));
+    }
+
+
+
     
 	@Test
 	public void testTesterConnexion() {
@@ -21,7 +32,8 @@ public class DatabaseManagerTest {
 		boolean result = DatabaseManager.get().testerConnexion(connexionDto);
 		assertFalse(result);
 		
-		connexionDto = new BddConnexionDto(JDBC_DRIVER, DB_URL, DB_USER, DB_PWD);
+		connexionDto = BddAccessManagerFactory.get(Type.Oracle).getDefaultBddConnexionDto();
+		assertNotNull(connexionDto);
 		result = DatabaseManager.get().testerConnexion(connexionDto);
 		assertTrue(result);
 	}

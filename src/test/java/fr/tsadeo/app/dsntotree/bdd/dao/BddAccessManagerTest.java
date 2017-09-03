@@ -12,12 +12,13 @@ import fr.tsadeo.app.dsntotree.util.SettingsUtils;
 
 public class BddAccessManagerTest extends AbstractTest {
 
-
     @Before
     public void init() throws Exception {
 
-        SettingsUtils.get().readSettings(getFile(XML_SETTINGS));
+        SettingsUtils.get().readApplicationSettings(getFile(XML_SETTINGS));
     }
+
+
 
     @Test
     public void testGetDefaultConnexion() {
