@@ -12,19 +12,19 @@
 
 	<xs:complexType name="Bdd">
 		<xs:sequence>
-			<xs:element name="connexions" type="Connexions" />
+			<xs:element name="bddAccesses" type="BddAccesses" />
 			<xs:element name="sqls" type="Sqls" />
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:complexType name="Connexions">
+	<xs:complexType name="BddAccesses">
 		<xs:sequence>
-			<xs:element name="oraclecon" type="OracleConnexion" maxOccurs="unbounded" minOccurs="1" />
-			<xs:element name="postgrecon" type="PostGreConnexion" maxOccurs="unbounded" minOccurs="0" />
+			<xs:element name="oracleBdd" type="OracleBddAccess" maxOccurs="unbounded" minOccurs="1" />
+			<xs:element name="postgreBdd" type="PostGreBddAccess" maxOccurs="unbounded" minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:complexType name="OracleConnexion">
+	<xs:complexType name="OracleBddAccess">
 		<xs:sequence>
 			<xs:element name="host" type="xs:string" />
 			<xs:element name="port" type="xs:int" />
@@ -34,7 +34,7 @@
 			<xs:element name="defaut" type="xs:boolean" maxOccurs="1" minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="PostGreConnexion">
+	<xs:complexType name="PostGreBddAccess">
 		<xs:sequence>
 			<xs:element name="host" type="xs:string" />
 			<xs:element name="port" type="xs:int" />

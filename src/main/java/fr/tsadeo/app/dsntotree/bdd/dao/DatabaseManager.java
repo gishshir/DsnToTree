@@ -6,14 +6,15 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
+import fr.tsadeo.app.dsntotree.bdd.dao.IBddAccessManager.Type;
 import fr.tsadeo.app.dsntotree.dto.BddConnexionDto;
 
 public class DatabaseManager {
 
-    private static final String JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";
-    private static final String DB_URL = "jdbc:oracle:thin:@dedtanya04.ext.tdc:1521/INFIDEV";
-    private static final String DB_USER = "IDEV00_USER";
-    private static final String DB_PWD = "IDEV00_USER";
+//    private static final String JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";
+//    private static final String DB_URL = "jdbc:oracle:thin:@dedtanya04.ext.tdc:1521/INFIDEV";
+//    private static final String DB_USER = "IDEV00_USER";
+//    private static final String DB_PWD = "IDEV00_USER";
 
     private static DatabaseManager instance;
 
@@ -49,9 +50,9 @@ public class DatabaseManager {
         return loadOk;
     }
 
-    public BddConnexionDto getDefaultBddConnexion() {
+    public BddConnexionDto getDefaultBddConnexionDto() {
 
-        return new BddConnexionDto(JDBC_DRIVER, DB_URL, DB_USER, DB_PWD);
+        return BddAccessManagerFactory.get(Type.Oracle).getDefaultBddConnexionDto();
 
     }
 
@@ -92,7 +93,7 @@ public class DatabaseManager {
 
     public Connection connect() throws SQLException {
 
-        return this.connect(new BddConnexionDto(JDBC_DRIVER, DB_URL, DB_USER, DB_PWD));
+        return this.connect(BddAccessManagerFactory.get().getCurrentBddConnexionDto());
     }
 
     public void closeConnection(Connection con) {
@@ -104,19 +105,6 @@ public class DatabaseManager {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void main(String[] args) {
-
-        try {
-            DatabaseManager manager = DatabaseManager.get();
-            Connection con = manager.connect();
-            manager.closeConnection(con);
-
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

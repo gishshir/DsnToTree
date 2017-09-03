@@ -9,11 +9,11 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentListener;
 
-import fr.tsadeo.app.dsntotree.bdd.dao.ConnexionManagerFactory;
-import fr.tsadeo.app.dsntotree.bdd.dao.IConnectionManager;
-import fr.tsadeo.app.dsntotree.bdd.dao.IConnectionManager.Type;
-import fr.tsadeo.app.dsntotree.bdd.dao.impl.OracleConnexionManager;
-import fr.tsadeo.app.dsntotree.bdd.dao.impl.OracleConnexionManager.UrlParametersDto;
+import fr.tsadeo.app.dsntotree.bdd.dao.BddAccessManagerFactory;
+import fr.tsadeo.app.dsntotree.bdd.dao.IBddAccessManager;
+import fr.tsadeo.app.dsntotree.bdd.dao.IBddAccessManager.Type;
+import fr.tsadeo.app.dsntotree.bdd.dao.impl.OracleBddAccessManager;
+import fr.tsadeo.app.dsntotree.bdd.dao.impl.OracleBddAccessManager.UrlParametersDto;
 import fr.tsadeo.app.dsntotree.dto.BddConnexionDto;
 import fr.tsadeo.app.dsntotree.gui.IGuiConstants;
 import fr.tsadeo.app.dsntotree.gui.component.IStateComponent;
@@ -57,7 +57,7 @@ public class OracleConnectComponent extends JPanel implements IConnectComponent,
 
     
     @Override
-    public IConnectionManager getConnexionManager() {
+    public IBddAccessManager getConnexionManager() {
     	return this.getOracleConnectionManager();
     }
 
@@ -100,8 +100,8 @@ public class OracleConnectComponent extends JPanel implements IConnectComponent,
     }
 
     // ---------------------------------------- private methods
-    private OracleConnexionManager getOracleConnectionManager() {
-    	return (OracleConnexionManager)ConnexionManagerFactory.get(Type.Oracle);
+    private OracleBddAccessManager getOracleConnectionManager() {
+    	return (OracleBddAccessManager)BddAccessManagerFactory.get(Type.Oracle);
     }
     private void createPanelTextField(Container container) {
 
@@ -109,7 +109,7 @@ public class OracleConnectComponent extends JPanel implements IConnectComponent,
         container.add(this.pfHost);
         container.add(Box.createRigidArea(DIM_VER_RIGID_AREA_5));
 
-        this.pfPort = new LabelAndTextField("Port:", 100, 50, true, IConnectionManager.PATTERN_PORT);
+        this.pfPort = new LabelAndTextField("Port:", 100, 50, true, IBddAccessManager.PATTERN_PORT);
         container.add(this.pfPort);
         container.add(Box.createRigidArea(DIM_VER_RIGID_AREA_5));
 

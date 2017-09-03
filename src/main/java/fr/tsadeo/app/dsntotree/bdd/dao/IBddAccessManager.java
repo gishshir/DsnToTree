@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 import fr.tsadeo.app.dsntotree.dto.BddConnexionDto;
 
-public interface IConnectionManager {
+public interface IBddAccessManager {
 	
 	public static final Pattern PATTERN_PORT = Pattern.compile("[0-9]{1,4}");
 	
@@ -17,6 +17,8 @@ public interface IConnectionManager {
     
     public String getDriver();
 
-    public BddConnexionDto getDefaultConnexion();
+    public BddConnexionDto getDefaultBddConnexionDto();
+    
+    public BddConnexionDto getCurrentBddConnexionDto();
 
 }

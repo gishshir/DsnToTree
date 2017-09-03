@@ -107,7 +107,7 @@ public class MyPanelConnexion extends JPanel implements IGuiConstants, DocumentL
     // ----------------------------------------------- private methods
     private void loadDefaultBddConnexion() {
 
-        BddConnexionDto bddConnexionDto = DatabaseManager.get().getDefaultBddConnexion();
+        BddConnexionDto bddConnexionDto = DatabaseManager.get().getDefaultBddConnexionDto();
         this.oracleConnectComponent.setBddConnexionDto(bddConnexionDto);
 
         this.ltfUser.setValue(bddConnexionDto.getUser());

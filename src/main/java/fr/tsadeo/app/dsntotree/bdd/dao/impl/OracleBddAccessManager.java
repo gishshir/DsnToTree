@@ -4,12 +4,12 @@ package fr.tsadeo.app.dsntotree.bdd.dao.impl;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import fr.tsadeo.app.dsntotree.bdd.dao.IConnectionManager;
+import fr.tsadeo.app.dsntotree.bdd.dao.IBddAccessManager;
 import fr.tsadeo.app.dsntotree.dto.BddConnexionDto;
-import fr.tsadeo.app.dsntotree.model.xml.OracleConnexion;
+import fr.tsadeo.app.dsntotree.model.xml.OracleBddAccess;
 import fr.tsadeo.app.dsntotree.util.SettingsUtils;
 
-public class OracleConnexionManager implements IConnectionManager {
+public class OracleBddAccessManager implements IBddAccessManager {
 
     private static final String ORACLE_JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";
     private static final String ORACLE_DB_URL = "jdbc:oracle:thin:@%1$s:%2$d/%3$s";
@@ -28,22 +28,28 @@ public class OracleConnexionManager implements IConnectionManager {
     }
 
     @Override
-    public BddConnexionDto getDefaultConnexion() {
+    public BddConnexionDto getDefaultBddConnexionDto() {
 
-        return this.mapOracleConnextionToDto(SettingsUtils.get().getDefaultOracleConnexion());
+        return this.mapOracleBddAccessToDto(SettingsUtils.get().getDefaultOracleConnexion());
     }
+    
+	@Override
+	public BddConnexionDto getCurrentBddConnexionDto() {
+		return this.getDefaultBddConnexionDto();
+	}
+
 
     // ------------------------------------------------------------- private
     // methods
-    private BddConnexionDto mapOracleConnextionToDto(OracleConnexion oracleConnexion) {
+    private BddConnexionDto mapOracleBddAccessToDto(OracleBddAccess oracleBddAccess) {
 
-        if (oracleConnexion == null) {
+        if (oracleBddAccess == null) {
             return null;
         }
 
         return new BddConnexionDto(ORACLE_JDBC_DRIVER,
-                getUrl(oracleConnexion.getHost(), oracleConnexion.getPort(), oracleConnexion.getInstance()),
-                oracleConnexion.getUser(), oracleConnexion.getPassword());
+                getUrl(oracleBddAccess.getHost(), oracleBddAccess.getPort(), oracleBddAccess.getInstance()),
+                oracleBddAccess.getUser(), oracleBddAccess.getPassword());
 
     }
 
@@ -94,5 +100,7 @@ public class OracleConnexionManager implements IConnectionManager {
     	
     	
     }
+
+
 
 }
