@@ -27,6 +27,7 @@ public interface IGuiConstants {
     public static final String PATH_HIDE_ICO = PATH_IMAGES + "hide.png";
     public static final String PATH_ADD_RUB_ICO = PATH_IMAGES + "addrub.gif";
     public static final String PATH_ADD_BLOC_ICO = PATH_IMAGES + "addbloc.gif";
+    public static final String PATH_SHOW_BLOC_ICO = PATH_IMAGES + "showbloc.png";
     public static final String PATH_DEL_ICO = PATH_IMAGES + "delrub.gif";
     public static final String PATH_ERROR_ICO = PATH_IMAGES + "errors.png";
     public static final String PATH_FIND_ICO = PATH_IMAGES + "find.gif";
