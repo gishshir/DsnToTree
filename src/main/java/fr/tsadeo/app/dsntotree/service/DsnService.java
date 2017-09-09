@@ -140,7 +140,9 @@ public class DsnService implements IConstants, IJsonConstants {
                     listBlocChildDto.add(blocDto);
                     blocDto.setAdd(nbBlocs < max);
                     blocDto.setDel(nbBlocs > min);
-                    blocDto.setDuplicate(blocDto.isAdd() && !blocDto.getBlocChild().isCreated());
+                    blocDto.setDuplicate(blocDto.isAdd());
+                    // blocDto.setDuplicate(blocDto.isAdd() &&
+                    // !blocDto.getBlocChild().isCreated());
                 }
             }
         }
@@ -169,6 +171,39 @@ public class DsnService implements IConstants, IJsonConstants {
         }
         ItemBloc blocChild = new ItemBloc(-1, blocSibling.getPrefix(), blocSibling.getBlocLabel());
         blocChild.setCreated(true);
+        return blocChild;
+    }
+
+    /*
+     * Creation d'un nouveau bloc enfant à partir d'un bloc frère
+     */
+    public ItemBloc createNewChild(ItemBloc blocSibling, boolean withRubriques, boolean withChildrens) {
+
+        ItemBloc blocChild = this.createNewChild(blocSibling);
+        if (blocChild != null) {
+
+            if (withRubriques) {
+                if (blocSibling.hasRubriques()) {
+
+                    for (ItemRubrique itemRubrique : blocSibling.getListRubriques()) {
+                        ItemRubrique newRubrique = this.createNewRubrique(blocChild, itemRubrique.getRubriqueLabel());
+                        newRubrique.setValue(itemRubrique.getValue());
+                        blocChild.addRubrique(newRubrique);
+                    }
+                }
+            }
+            if (withChildrens) {
+
+                if (blocSibling.hasChildren()) {
+
+                    for (ItemBloc childOfSibling : blocSibling.getChildrens()) {
+                        ItemBloc newChildForChild = this.createNewChild(childOfSibling, withRubriques, withChildrens);
+                        blocChild.addChild(newChildForChild);
+                    }
+                }
+            }
+        }
+
         return blocChild;
     }
 

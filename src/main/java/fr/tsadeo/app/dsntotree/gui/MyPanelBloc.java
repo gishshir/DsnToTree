@@ -642,7 +642,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
 
         String childLabel = this.cbOtherChildLabel.getSelectedItem().toString();
         ItemBloc newChild = ServiceFactory.getDsnService().createNewChild(this.currentItemBloc, childLabel);
-        this.addChildBloc(newChild, -1);
+        this.addChildBloc(newChild, -1, "(new)");
     }
 
     @Override
@@ -654,13 +654,14 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
             int index = this.getIndexOfPanelChild(panelChild);
 
             ItemBloc newChild = ServiceFactory.getDsnService().createNewChild(panelChild.child);
-            this.addChildBloc(newChild, index + 1);
+            this.addChildBloc(newChild, index + 1, "(new)");
         }
     }
 
-    private void addChildBloc(ItemBloc newChild, int index) {
+    // ajout d'un bloc
+    private void addChildBloc(ItemBloc newChild, int index, String comment) {
 
-        this.addPanelChildToList(newChild, index, "(new)");
+        this.addPanelChildToList(newChild, index, comment);
         this.enableButtons(true);
 
         this.updateListChildrenActions();
@@ -671,7 +672,22 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     @Override
     public void actionDuplicateChildWithContirmation(PanelChild panelChild) {
 
-        this.askOptionForDuplicateChild(panelChild.child);
+        OptionDuplicateChild respons = this.askOptionForDuplicateChild(panelChild.child);
+        if (respons != null) {
+
+            System.out.println("do duplicate...");
+            System.out.println("with rubriques: " + respons.withRubriques);
+            System.out.println("with childrens: " + respons.withChildrens);
+
+            if (panelChild.child != null) {
+
+                int index = this.getIndexOfPanelChild(panelChild);
+
+                ItemBloc newChild = ServiceFactory.getDsnService().createNewChild(panelChild.child,
+                        respons.withRubriques, respons.withChildrens);
+                this.addChildBloc(newChild, index + 1, "(dupl.)");
+            }
+        }
     }
 
     @Override
@@ -898,7 +914,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
 
     }
 
-    private void askOptionForDuplicateChild(ItemBloc childBloc) {
+    private OptionDuplicateChild askOptionForDuplicateChild(ItemBloc childBloc) {
 
         JLabel label = new JLabel("Dupliquer le bloc " + childBloc.toString());
         JCheckBox cbWithRubriques = new JCheckBox("Avec rubriques");
@@ -918,11 +934,24 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         int option = MyJOptionPane.showOptionDialog(this, panel, "Duplication bloc enfant",
                 MyJOptionPane.OK_CANCEL_OPTION, MyJOptionPane.QUESTION_MESSAGE, null, null, null);
         if (option == MyJOptionPane.OK_OPTION) {
-            System.out.println("do duplicate...");
+            return new OptionDuplicateChild(childBloc, cbWithRubriques.isSelected(), cbWithChildrens.isSelected());
         }
+        return null;
     }
 
     // ================================================= INNER CLASS
+    private final class OptionDuplicateChild {
+        private final ItemBloc childBloc;
+        private final boolean withRubriques;
+        private final boolean withChildrens;
+
+        private OptionDuplicateChild(ItemBloc childBlocToDuplicate, boolean withRubriques, boolean withChildrens) {
+            this.childBloc = childBlocToDuplicate;
+            this.withRubriques = withRubriques;
+            this.withChildrens = withChildrens;
+        }
+    }
+
     private final class MyLabel extends JLabel {
         private MyLabel(String label) {
             super(label);
@@ -969,8 +998,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
 
         private void enableButtons(boolean addSEnabled, boolean delEnabled, boolean duplicateEnabled) {
             this.btAddBloc.setEnabled(addSEnabled);
-            // FIXME terminer l'implementation avant de reactiver
-            // this.btDuplicateBloc.setEnabled(duplicateEnabled);
+            this.btDuplicateBloc.setEnabled(duplicateEnabled);
             this.btDelBloc.setEnabled(delEnabled);
         }
 
