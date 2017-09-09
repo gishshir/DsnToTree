@@ -21,6 +21,7 @@ public interface IBlocActionListener {
 	public void actionNextRubrique(PanelRubrique panelRubrique);
 	
 	public boolean isSourceBtAddBloc(Object obj);
+	public void actionShowChild(PanelChild panelChild);
 	
 
 }
