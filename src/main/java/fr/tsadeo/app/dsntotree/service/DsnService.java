@@ -138,11 +138,9 @@ public class DsnService implements IConstants, IJsonConstants {
                     BlocChildDto blocDto = listDtoForBlocLabel.get(i);
 
                     listBlocChildDto.add(blocDto);
-                    blocDto.setAdd(nbBlocs < max);
+                    blocDto.setShow(blocDto.getBlocChild().hasRubriques() || blocDto.getBlocChild().hasChildren());
                     blocDto.setDel(nbBlocs > min);
-                    blocDto.setDuplicate(blocDto.isAdd());
-                    // blocDto.setDuplicate(blocDto.isAdd() &&
-                    // !blocDto.getBlocChild().isCreated());
+                    blocDto.setDuplicate(nbBlocs < max);
                 }
             }
         }

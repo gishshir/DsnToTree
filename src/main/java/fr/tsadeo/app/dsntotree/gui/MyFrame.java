@@ -230,7 +230,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
             this.actionShowDsnTree(dsn);
         } catch (Exception e) {
             processTextArea.setText("ERROR: " + e.getMessage());
-            this.myTree.createNodes(null);
+            this.myTree.createNodes(null, true);
         }
     }
 
@@ -271,7 +271,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
             this.btShowErrors.setEnabled(this.dsn.getDsnState().isError());
 
             if (dsn.getRoot().hasChildren()) {
-                this.myTree.createNodes(dsn.getRoot());
+                this.myTree.createNodes(dsn.getRoot(), true);
                 this.myTree.expandPath(new TreePath(this.myTree.getTop()));
 
                 this.blocsPanel.buildListBlocCheckbox(dsn);
@@ -290,7 +290,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
             this.setFocusOnSearch();
         } catch (Exception e) {
             processTextArea.setText("ERROR: " + e.getMessage());
-            this.myTree.createNodes(null);
+            this.myTree.createNodes(null, true);
         }
     }
 
@@ -509,6 +509,20 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         }
 
     }
+    
+    
+    @Override
+    public void onItemBlocToDisplay(ItemBloc itemBloc, String pathParent) {
+    	
+    	String title = pathParent.concat(" - ").concat(itemBloc.toString());
+    	BlocTreeFrame blocTreeFrame = new BlocTreeFrame(title, this);
+    	GuiApplication.centerFrame(blocTreeFrame, 0.25f, 0.65f);
+    	
+    	blocTreeFrame.setItemBloc(itemBloc);
+    	
+    	blocTreeFrame.setVisible(true);
+    }
+
 
     private void validerBlocModification(ItemBloc itemBloc, int treeRowOfBloc, boolean refresh) {
 
