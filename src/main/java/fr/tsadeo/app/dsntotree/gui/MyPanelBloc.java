@@ -1030,7 +1030,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         }
 
         private void enableButtons(boolean showEnabled, boolean delEnabled, boolean duplicateEnabled) {
-//            this.btShowBloc.setEnabled(showEnabled);
+            this.btShowBloc.setEnabled(showEnabled);
             this.btDuplicateBloc.setEnabled(duplicateEnabled);
             this.btDelBloc.setEnabled(delEnabled);
         }
@@ -1047,8 +1047,8 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
                     "dupliquer le bloc ".concat(child.toString()).concat(" ..."), PATH_DUPLICATE_ICO);
             container.add(Box.createRigidArea(DIM_HOR_RIGID_AREA_10));
             
-//            this.addButton(this.btShowBloc, container, getShowChildAction(),
-//                    "Voir le bloc ".concat(child.toString()), PATH_SHOW_BLOC_ICO);
+            this.addButton(this.btShowBloc, container, getShowChildAction(),
+                    "Voir le bloc ".concat(child.toString()), PATH_SHOW_BLOC_ICO);
 
         }
 

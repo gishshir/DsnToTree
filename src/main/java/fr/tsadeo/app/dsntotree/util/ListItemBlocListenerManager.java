@@ -22,7 +22,7 @@ public class ListItemBlocListenerManager implements ItemBlocListener {
 	private ListItemBlocListenerManager() {
 	}
 
-	private final List<ItemBlocListener> listItemBlocListener = Collections.synchronizedList(new ArrayList<>());
+	private final List<ItemBlocListener> listItemBlocListener = Collections.synchronizedList(new ArrayList<ItemBlocListener>());
 
 	// -------------------------------------- public methods
 	public void addItemBlocListener(ItemBlocListener itemBlocListener) {
