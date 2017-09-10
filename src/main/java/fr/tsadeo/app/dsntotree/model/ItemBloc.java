@@ -99,6 +99,26 @@ public class ItemBloc extends AbstractItemTree implements Comparable<ItemBloc> {
         }
     }
 
+    /*
+     * Fonction recursive Determine si itemBloc est un descendant
+     */
+    public boolean isDescendentBloc(ItemBloc itemBloc) {
+    	
+    	if (!this.hasChildren()) {
+    		return false;
+    	}
+    	for (ItemBloc childBloc : childrens) {
+			if (childBloc == itemBloc) {
+				return true;
+			}
+			if( childBloc.isDescendentBloc(itemBloc)) {
+				return true;
+			}
+			
+		}
+    	return false;
+    }
+
     public ItemRubrique getFirstRubrique() {
         if (this.listRubriques == null || this.listRubriques.isEmpty()) {
             return null;

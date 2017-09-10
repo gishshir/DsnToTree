@@ -55,6 +55,7 @@ import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
+import fr.tsadeo.app.dsntotree.util.ListItemBlocListenerManager;
 
 public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionListener {
 
@@ -98,11 +99,12 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     private Action duplicateChildAction;
     private Action delChildAction;
 
-    private final ItemBlocListener itemBlocListener;
+    private final IMainActionListener mainActionListener;
     private DocumentListener documentListener;
 
-    public MyPanelBloc(ItemBlocListener itemBlocListener) {
-        this.itemBlocListener = itemBlocListener;
+    public MyPanelBloc(IMainActionListener mainActionListener) {
+       
+    	this.mainActionListener = mainActionListener;
         this.setLayout(new BorderLayout());
         this.setBackground(TREE_BACKGROUND_COLOR);
 
@@ -654,7 +656,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
 
     void validerSaisie(boolean refresh) {
         populateItemBlocFromSaisie();
-        itemBlocListener.onItemBlocModified(currentItemBloc, currentTreeRowBloc, ModifiedState.valider, refresh);
+        ListItemBlocListenerManager.get().onItemBlocModified(currentItemBloc, currentTreeRowBloc, ModifiedState.valider, refresh);
         enableButtons(false);
     }
 
@@ -673,7 +675,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     public void actionShowChild(PanelChild panelChild) {
 
        if (panelChild.child != null) {
-    	   this.itemBlocListener.onItemBlocToDisplay(panelChild.child, this.blocCompletePath);
+    	   this.mainActionListener.actionShowBlocItem(panelChild.child, this.blocCompletePath);
        }
     }
     @Override
@@ -875,7 +877,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     @Override
     public void actionAnnulerSaisie() {
         cancelModification();
-        itemBlocListener.onItemBlocModified(currentItemBloc, currentTreeRowBloc, ModifiedState.annuler, true);
+        ListItemBlocListenerManager.get().onItemBlocModified(currentItemBloc, currentTreeRowBloc, ModifiedState.annuler, true);
         enableButtons(false);
     }
 

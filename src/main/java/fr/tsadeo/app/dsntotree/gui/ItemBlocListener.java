@@ -15,5 +15,5 @@ public interface ItemBlocListener {
 
     public void onItemBlocModified(ItemBloc itemBloc, int treeRowOfBloc, ModifiedState state, boolean refresh);
     
-    public void onItemBlocToDisplay(ItemBloc itemBloc, String pathParent);
+    
 }
