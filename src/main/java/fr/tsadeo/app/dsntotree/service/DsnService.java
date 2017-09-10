@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
 import fr.tsadeo.app.dsntotree.bdd.model.DataDsn;
@@ -22,6 +23,7 @@ import fr.tsadeo.app.dsntotree.util.IJsonConstants;
 
 public class DsnService implements IConstants, IJsonConstants {
 
+	private static final Logger LOG = Logger.getLogger(DsnService.class.getName());
     private static final String NA = "UNKNOWN";
 
     public List<String> buildListBlocChildEnabled(BlocTree treeRoot, ItemBloc itemBloc) {
@@ -292,13 +294,13 @@ public class DsnService implements IConstants, IJsonConstants {
         }
 
         // Remplacer avec les nouveaux blocs enfants
-        System.out.println("Remplacer avec les nouveaux blocs enfants");
+        LOG.config("Remplacer avec les nouveaux blocs enfants");
         this.addBlocItemToList(dsn, itemBloc, new Compteur(indexBloc));
     }
 
     private void addBlocItemToList(Dsn dsn, ItemBloc itemBloc, Compteur compteur) {
 
-        System.out.println("bloc " + itemBloc.getBlocLabel() + " - index: " + compteur.getValue());
+    	LOG.config("bloc " + itemBloc.getBlocLabel() + " - index: " + compteur.getValue());
         dsn.addBloc(compteur.getValueAndIncrements(), itemBloc);
         if (itemBloc.hasChildren()) {
             for (ItemBloc childBloc : itemBloc.getChildrens()) {

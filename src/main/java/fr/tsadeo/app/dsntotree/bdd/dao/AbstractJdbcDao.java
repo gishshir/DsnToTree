@@ -6,14 +6,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import fr.tsadeo.app.dsntotree.bdd.model.EntiteBase;
 
 public abstract class AbstractJdbcDao<T extends EntiteBase> {
+	
+	protected abstract Logger getLogger();
 
     protected T getEntity(String sql) throws SQLException {
 
-        System.out.println(sql);
+        this.getLogger().config(sql);
         JdbcContainer jdbcContainer = null;
         try {
 
@@ -35,7 +38,7 @@ public abstract class AbstractJdbcDao<T extends EntiteBase> {
 
     protected List<T> getListEntity(String sql) throws SQLException {
 
-        System.out.println(sql);
+    	this.getLogger().config(sql);
         JdbcContainer jdbcContainer = null;
         try {
 

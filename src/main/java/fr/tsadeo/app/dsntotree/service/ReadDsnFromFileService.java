@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 
@@ -19,10 +20,12 @@ import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 
 public class ReadDsnFromFileService extends AbstractReadDsn {
 
+	private static final Logger LOG = Logger.getLogger(ReadDsnFromFileService.class.getName());
+	
     public static void main(String[] args) {
 
         if (args == null || args.length == 0) {
-            System.out.println("manque le nom du fichier dsn à analyser...");
+            LOG.severe("manque le nom du fichier dsn à analyser...");
         }
 
         File file = new File(args[0]);
@@ -63,7 +66,7 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
 
             // constituer la liste linéaire des rubriques et des blocs
             dsn = this.createDsnFromFile(dsnFile);
-            System.out.println(dsn.toString());
+            LOG.config(dsn.toString());
             // construire la structure arborescente
             this.buildDsnTree(dsn);
 
@@ -72,6 +75,11 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
         return dsn;
     }
 
+	@Override
+	protected Logger getLog() {
+		return LOG;
+	}
+
     private void buildDsnTree(Dsn dsn) {
 
         // organisation des blocs en arborescence
@@ -79,15 +87,15 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
 
         StringBuffer sb = new StringBuffer();
         itemRoot.showChildrens("", sb);
-        System.out.println(sb.toString());
+        LOG.config(sb.toString());
 
         dsn.setRoot(itemRoot);
 
         if (dsn.getDsnState().isError()) {
-            System.out.println("\nDSN en erreur");
+            LOG.config("\nDSN en erreur");
             itemRoot.setErrorMessage(new ErrorMessage("DSN en erreur"));
             for (ErrorMessage error : dsn.getDsnState().getListErrorMessage()) {
-                System.out.println(error);
+                LOG.severe(error.toString());
             }
         }
 

@@ -26,10 +26,10 @@ public class DsnServiceTest extends AbstractTest{
 		int nbBlocs = dsn.getBlocs().size();
 		
 		// list de tous les blocs
-		System.out.println("AVANT MODIFICATION");
+		LOG.config("AVANT MODIFICATION");
 		ItemBloc firstBloc30 = null;
 		for (ItemBloc itemBloc : dsn.getBlocs()) {
-			System.out.println(itemBloc.getBlocLabel());
+			LOG.config(itemBloc.getBlocLabel());
 			if (firstBloc30 == null && itemBloc.getBlocLabel().equals("30")) {
 				firstBloc30 = itemBloc;
 			}
@@ -50,10 +50,10 @@ public class DsnServiceTest extends AbstractTest{
 		// on met à jour la liste des blocs de la dsn
 		service.updateDsnListBloc(dsn, firstBloc30);
 		
-		System.out.println("");
-		System.out.println("APRES MODIFICATION");
+		LOG.config("");
+		LOG.config("APRES MODIFICATION");
 		for (ItemBloc itemBloc : dsn.getBlocs()) {
-			System.out.println(itemBloc.getBlocLabel());
+			LOG.config(itemBloc.getBlocLabel());
 		}
 		assertEquals(nbBlocs - 3, dsn.getBlocs().size());
 	}

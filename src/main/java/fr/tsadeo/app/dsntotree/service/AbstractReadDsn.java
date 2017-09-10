@@ -2,6 +2,7 @@ package fr.tsadeo.app.dsntotree.service;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 import org.codehaus.jettison.json.JSONArray;
@@ -17,10 +18,12 @@ import fr.tsadeo.app.dsntotree.util.IConstants;
 import fr.tsadeo.app.dsntotree.util.IJsonConstants;
 import fr.tsadeo.app.dsntotree.util.JsonUtils;
 
-public class AbstractReadDsn implements IConstants, IJsonConstants {
+public abstract class AbstractReadDsn implements IConstants, IJsonConstants {
 
     protected final JsonUtils jsonUtils = new JsonUtils();
     protected final DsnService dsnService = ServiceFactory.getDsnService();
+    
+    protected abstract Logger getLog();
 
     protected ItemBloc getOrBuildItemBlocErreur(Dsn dsn) {
 
@@ -57,7 +60,7 @@ public class AbstractReadDsn implements IConstants, IJsonConstants {
 
             }
         } catch (Exception ex) {
-            System.out.println("Echec lors de la lecture du fichier json");
+            getLog().severe("Echec lors de la lecture du fichier json");
             throw new RuntimeException(ex.getMessage());
         }
         return treeBlocs;

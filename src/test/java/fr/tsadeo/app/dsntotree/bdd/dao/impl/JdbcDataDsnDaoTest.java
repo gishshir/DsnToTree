@@ -3,13 +3,17 @@ package fr.tsadeo.app.dsntotree.bdd.dao.impl;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.junit.Test;
 
 import fr.tsadeo.app.dsntotree.bdd.dao.IDataDsnDao;
 import fr.tsadeo.app.dsntotree.bdd.model.DataDsn;
+import fr.tsadeo.app.dsntotree.gui.MyFrame;
 
 public class JdbcDataDsnDaoTest implements IJdbcDaoTest {
+	
+	private static final Logger LOG = Logger.getLogger(JdbcDataDsnDaoTest.class.getName());
 
     private final static IDataDsnDao dao = new JdbcDataDsnDao();
 
@@ -23,7 +27,7 @@ public class JdbcDataDsnDaoTest implements IJdbcDaoTest {
         assertTrue(!result.isEmpty());
 
         for (DataDsn dataDSN : result) {
-            System.out.println(dataDSN.toString());
+        	LOG.config(dataDSN.toString());
         }
     }
 

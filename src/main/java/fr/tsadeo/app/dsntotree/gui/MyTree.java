@@ -1,6 +1,7 @@
 package fr.tsadeo.app.dsntotree.gui;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -13,6 +14,8 @@ import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 
 public class MyTree extends MySimpleTree implements TreeSelectionListener, IGuiConstants {
 
+	
+	private static final Logger LOG = Logger.getLogger(MyTree.class.getName());
 
     /**
      * 
@@ -59,7 +62,7 @@ public class MyTree extends MySimpleTree implements TreeSelectionListener, IGuiC
 
         TreePath result = this.search(new TreePath(this.getTop()), search.toLowerCase(), next);
         if (result != null) {
-            System.out.println("Search OK (".concat(search).concat(") ").concat(result.toString()));
+        	LOG.config("Search OK (".concat(search).concat(") ").concat(result.toString()));
             return true;
         }
 

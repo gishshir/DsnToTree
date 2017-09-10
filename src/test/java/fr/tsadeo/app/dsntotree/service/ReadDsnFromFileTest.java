@@ -21,7 +21,7 @@ public class ReadDsnFromFileTest extends AbstractTest implements IJdbcDaoTest {
         assertNotNull(dsn);
         dsnService.updateDsnWithTree(dsn);
         for (ItemRubrique itemRubrique : dsn.getRubriques()) {
-            System.out.println(itemRubrique.toString());
+            LOG.config(itemRubrique.toString());
         }
     }
 
