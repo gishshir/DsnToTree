@@ -3,12 +3,20 @@ package fr.tsadeo.app.dsntotree.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetContext;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.ActionMap;
@@ -85,9 +93,41 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         
         return this.myPanelBloc;
     }
+    
+    
+    private void fireFileDroppedWithConfirmation (File file) {
+
+    	if (this.isDsnModified()) {
+
+            int respons = JOptionPane.showConfirmDialog(this,
+                    "La DSN a été modifiée. \nVoulez-vous sauvegarder les modifications?", "DSN modifiée",
+                    JOptionPane.YES_NO_CANCEL_OPTION);
+            if (respons == JOptionPane.YES_OPTION) {
+                this.actionSaveDsn(false);
+            } else if (respons == JOptionPane.CANCEL_OPTION) {
+            	processTextArea.append("Drag and drop annulé par l'utilisateur!");
+            } else {
+            this.fireFileDropped(file);
+            }            
+
+        } else {
+            this.fireFileDropped(file);
+        }
+
+    }
+    private void fireFileDropped (File file) {
+    	
+    	 this.currentDirectory = file.getParentFile();
+         processTextArea.setText("DSN: ".concat(file.getName()).concat(POINT).concat(SAUT_LIGNE).concat(SAUT_LIGNE));
+         this.actionReadFileAndShowTree(file);
+         JOptionPane.showMessageDialog(this, "DSN dropped!", "Information", JOptionPane.INFORMATION_MESSAGE);
+    }
 
     private JComponent createPanelTree() {
+    	
         this.myTree = new MyTree(this);
+        new DropTarget(this.myTree, new FileDropper());
+        
         JScrollPane scrollPane = new JScrollPane(this.myTree);
         return scrollPane;
     }
@@ -549,4 +589,36 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         this.revalidate();
     }
 
+    //======================================== INNER CLASS
+    private class FileDropper extends DropTargetAdapter {
+
+		@Override
+		public void drop(DropTargetDropEvent dtde) {
+			
+			try {
+				DropTargetContext context = dtde.getDropTargetContext();
+				dtde.acceptDrop(DnDConstants.ACTION_COPY);
+				
+				Transferable trans = dtde.getTransferable();	
+				File file;
+					Object obj = trans.getTransferData(DataFlavor.javaFileListFlavor);
+					if (obj instanceof List) {
+						List<?> list = (List<?>) obj;
+						for (Object item : list) {
+							if (item instanceof File) {
+								file = (File) item;
+								LOG.config("Drop: " + file.getAbsolutePath() );
+								context.dropComplete(true);
+								fireFileDroppedWithConfirmation(file);
+							}
+						}
+					}
+					
+			} catch (Exception e) {
+				 processTextArea.setText("ERROR: " + e.getMessage());
+			}
+			
+		}
+    	
+    }
 }
