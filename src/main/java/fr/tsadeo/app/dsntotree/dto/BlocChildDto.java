@@ -6,7 +6,7 @@ public class BlocChildDto {
 	
 	private final ItemBloc blocChild;
 	
-	private boolean add = true;
+	private boolean show = true;
 	private boolean del = true;
 	private boolean duplicate = true;
 	
@@ -16,13 +16,13 @@ public class BlocChildDto {
 	}
 
 
-	public boolean isAdd() {
-		return add;
+	public boolean isShow() {
+		return show;
 	}
 
 
-	public void setAdd(boolean add) {
-		this.add = add;
+	public void setShow(boolean show) {
+		this.show = show;
 	}
 
 

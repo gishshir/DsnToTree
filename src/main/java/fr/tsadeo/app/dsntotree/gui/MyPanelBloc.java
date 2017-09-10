@@ -55,6 +55,7 @@ import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
+import fr.tsadeo.app.dsntotree.util.ListItemBlocListenerManager;
 
 public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionListener {
 
@@ -66,6 +67,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
 
     private static final Dimension DIM_BUTTON_SMALL = new Dimension(16, 20);
 
+    private String blocCompletePath;
     private BlocTree treeRoot;
     
     private JTabbedPane tabbedPane;
@@ -97,11 +99,12 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     private Action duplicateChildAction;
     private Action delChildAction;
 
-    private final ItemBlocListener itemBlocListener;
+    private final IMainActionListener mainActionListener;
     private DocumentListener documentListener;
 
-    public MyPanelBloc(ItemBlocListener itemBlocListener) {
-        this.itemBlocListener = itemBlocListener;
+    public MyPanelBloc(IMainActionListener mainActionListener) {
+       
+    	this.mainActionListener = mainActionListener;
         this.setLayout(new BorderLayout());
         this.setBackground(TREE_BACKGROUND_COLOR);
 
@@ -508,6 +511,8 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         JLabel labelBloc = new JLabel("Bloc " + itemBloc.toString());
         labelBloc.setForeground(TREE_NORMAL_COLOR);
         this.panelBloc.add(labelBloc);
+        
+        this.blocCompletePath = pathParent.concat(" ").concat(itemBloc.toString());
 
         // liste des rubriques
         if (itemBloc.hasRubriques()) {
@@ -581,7 +586,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         if (blocChildrenDto.getListBlocChildDto() != null) {
             for (BlocChildDto blocChildDto : blocChildrenDto.getListBlocChildDto()) {
                 PanelChild panelChild = mapPanelChildrens.get(blocChildDto.getBlocChild());
-                panelChild.enableButtons(blocChildDto.isAdd(), blocChildDto.isDel(), blocChildDto.isDuplicate());
+                panelChild.enableButtons(blocChildDto.isShow(), blocChildDto.isDel(), blocChildDto.isDuplicate());
             }
 
         }
@@ -651,7 +656,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
 
     void validerSaisie(boolean refresh) {
         populateItemBlocFromSaisie();
-        itemBlocListener.onItemBlocModified(currentItemBloc, currentTreeRowBloc, ModifiedState.valider, refresh);
+        ListItemBlocListenerManager.get().onItemBlocModified(currentItemBloc, currentTreeRowBloc, ModifiedState.valider, refresh);
         enableButtons(false);
     }
 
@@ -668,8 +673,10 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     // voir un bloc enfant dans une fenêtre secondaire
     @Override
     public void actionShowChild(PanelChild panelChild) {
-    	
-    	//TODO
+
+       if (panelChild.child != null) {
+    	   this.mainActionListener.actionShowBlocItem(panelChild.child, this.blocCompletePath);
+       }
     }
     @Override
     // ajout d'un bloc enfant de meme label
@@ -870,7 +877,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     @Override
     public void actionAnnulerSaisie() {
         cancelModification();
-        itemBlocListener.onItemBlocModified(currentItemBloc, currentTreeRowBloc, ModifiedState.annuler, true);
+        ListItemBlocListenerManager.get().onItemBlocModified(currentItemBloc, currentTreeRowBloc, ModifiedState.annuler, true);
         enableButtons(false);
     }
 
