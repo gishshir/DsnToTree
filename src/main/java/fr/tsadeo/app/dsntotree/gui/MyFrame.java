@@ -7,10 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 import javax.swing.ActionMap;
 import javax.swing.BoxLayout;
@@ -50,9 +49,8 @@ import fr.tsadeo.app.dsntotree.util.SettingsUtils;
 
 public class MyFrame extends AbstractFrame implements DocumentListener, ItemBlocListener, IMainActionListener {
 
-    /**
-     * 
-     */
+	private static final Logger LOG = Logger.getLogger(MyFrame.class.getName());
+	
     private static final long serialVersionUID = 1L;
 
     private Dsn dsn;
@@ -110,7 +108,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 
                 if (e.getSource() instanceof JCheckBox) {
                     JCheckBox cb = (JCheckBox) e.getSource();
-                    System.out.println(cb.getText() + " - " + cb.isSelected());
+                    LOG.config(cb.getText() + " - " + cb.isSelected());
                     MyFrame.this.myTree.expandBloc(cb.getText().substring(0, 2), cb.isSelected());
                 } else if (e.getActionCommand().equals(ALL) && e.getSource() instanceof JToggleButton) {
                     JToggleButton tb = (JToggleButton) e.getSource();

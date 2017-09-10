@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import javax.swing.AbstractButton;
@@ -59,6 +60,7 @@ import fr.tsadeo.app.dsntotree.util.ListItemBlocListenerManager;
 
 public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionListener {
 
+	private static final Logger LOG = Logger.getLogger(MyPanelBloc.class.getName());
     /**
      * 
      */
@@ -708,9 +710,6 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         OptionDuplicateChild respons = this.askOptionForDuplicateChild(panelChild.child);
         if (respons != null) {
 
-            System.out.println("do duplicate...");
-            System.out.println("with rubriques: " + respons.withRubriques);
-            System.out.println("with childrens: " + respons.withChildrens);
 
             if (panelChild.child != null) {
 

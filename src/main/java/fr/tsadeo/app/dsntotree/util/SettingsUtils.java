@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -13,6 +14,8 @@ import fr.tsadeo.app.dsntotree.model.xml.OracleBddAccess;
 import fr.tsadeo.app.dsntotree.model.xml.Settings;
 
 public class SettingsUtils {
+	
+	private static final Logger log = Logger.getLogger(SettingsUtils.class.getName());
 
     private static SettingsUtils instance;
 
@@ -54,7 +57,7 @@ public class SettingsUtils {
             return o == null ? null :  jbElement.getValue();
             
 		} catch (Exception e) {
-			System.out.println("Erreur lors de la lecture du fichie " + settingsFile.getName());
+			log.severe("Erreur lors de la lecture du fichier " + settingsFile.getName());
 			e.printStackTrace();
 		} finally {
 			if (is != null) {

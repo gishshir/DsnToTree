@@ -5,12 +5,15 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import fr.tsadeo.app.dsntotree.bdd.dao.IBddAccessManager.Type;
+import fr.tsadeo.app.dsntotree.bdd.dao.impl.JdbcDataDsnDao;
 import fr.tsadeo.app.dsntotree.dto.BddConnexionDto;
 
 public class DatabaseManager {
 
+	private static final Logger LOG = Logger.getLogger(DatabaseManager.class.getName());
 
     private static DatabaseManager instance;
 
@@ -35,11 +38,11 @@ public class DatabaseManager {
         boolean loadOk = false;
         try {
             Class.forName(driver);
-            System.out.println("Driver OK...");
+            LOG.info("Driver OK...");
             this.bagOfLoadedDriver.add(driver);
             loadOk = true;
         } catch (ClassNotFoundException e) {
-            System.err.println("Driver Nok...");
+        	LOG.severe("Driver Nok...");
             e.printStackTrace();
         }
 
@@ -83,7 +86,7 @@ public class DatabaseManager {
         }
         Connection con = DriverManager.getConnection(connexionDto.getUrl(), connexionDto.getUser(),
                 connexionDto.getPwd());
-        System.out.println("connection openned...");
+        LOG.config("connection openned...");
         return con;
     }
 
@@ -97,7 +100,7 @@ public class DatabaseManager {
             if (con != null && !con.isClosed()) {
 
                 con.close();
-                System.out.println("...connection closed.");
+                LOG.config("...connection closed.");
             }
 
         } catch (SQLException e) {

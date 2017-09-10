@@ -2,10 +2,12 @@ package fr.tsadeo.app.dsntotree.service;
 
 import java.io.File;
 import java.util.List;
+import java.util.logging.Logger;
 
 import fr.tsadeo.app.dsntotree.bdd.model.DataDsn;
 import fr.tsadeo.app.dsntotree.dto.BlocDatasDto;
 import fr.tsadeo.app.dsntotree.dto.GroupBlocDatasDto;
+import fr.tsadeo.app.dsntotree.gui.MyFrame;
 import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ErrorMessage;
@@ -13,6 +15,7 @@ import fr.tsadeo.app.dsntotree.model.ItemBloc;
 
 public class ReadDsnFromDatasService extends AbstractReadDsn {
 
+	private static final Logger LOG = Logger.getLogger(ReadDsnFromDatasService.class.getName());
     /**
      * Prerequis la liste des datas est triée par bloc, seq_bloc, seq_sup,
      * codeRubrique
@@ -66,6 +69,10 @@ public class ReadDsnFromDatasService extends AbstractReadDsn {
 
         return dsn;
     }
+	@Override
+	protected Logger getLog() {
+		return LOG;
+	}
 
     private void buildDsnTreeFromDatas(Dsn dsn, GroupBlocDatasDto groupBlocs) {
 
@@ -74,15 +81,15 @@ public class ReadDsnFromDatasService extends AbstractReadDsn {
 
         StringBuffer sb = new StringBuffer();
         itemRoot.showChildrens("", sb);
-        System.out.println(sb.toString());
+        LOG.config(sb.toString());
 
         dsn.setRoot(itemRoot);
 
         if (dsn.getDsnState().isError()) {
-            System.out.println("\nDSN en erreur");
+            LOG.config("\nDSN en erreur");
             itemRoot.setErrorMessage(new ErrorMessage("DSN en erreur"));
             for (ErrorMessage error : dsn.getDsnState().getListErrorMessage()) {
-                System.out.println(error);
+                LOG.severe(error.toString());
             }
         }
 
@@ -221,5 +228,6 @@ public class ReadDsnFromDatasService extends AbstractReadDsn {
         }
 
     }
+
 
 }

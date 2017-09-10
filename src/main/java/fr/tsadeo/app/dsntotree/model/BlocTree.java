@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
+
+import fr.tsadeo.app.dsntotree.gui.MyTree;
 
 /**
  * The Class BlocDependencies.
  */
 public class BlocTree {
+	
+	private static final Logger LOG = Logger.getLogger(BlocTree.class.getName());
 
     /** Father block name property. */
     private String blocLabel;
@@ -74,7 +79,7 @@ public class BlocTree {
 
     public void showChildrens(String prefix) {
 
-        System.out.println(prefix + this);
+    	LOG.config(prefix + this);
         if (this.hasChildrens()) {
 
             for (BlocTree child : childrens) {

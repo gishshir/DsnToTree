@@ -3,6 +3,7 @@ package fr.tsadeo.app.dsntotree.bdd.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import fr.tsadeo.app.dsntotree.bdd.dao.AbstractJdbcDao;
 import fr.tsadeo.app.dsntotree.bdd.dao.IMessageDsnDao;
@@ -10,6 +11,8 @@ import fr.tsadeo.app.dsntotree.bdd.model.MessageDsn;
 import fr.tsadeo.app.dsntotree.util.StringUtils;
 
 public class JdbcMessageDsnDao extends AbstractJdbcDao<MessageDsn> implements IMessageDsnDao {
+	
+	private static final Logger LOG = Logger.getLogger(JdbcMessageDsnDao.class.getName());
 
     private static final String DSMSCHRMSG = "DSMSCHRMSG"; // chrono message
     private static final String DSMSDATDCL = "DSMSDATDCL"; // date ref
@@ -33,6 +36,12 @@ public class JdbcMessageDsnDao extends AbstractJdbcDao<MessageDsn> implements IM
     }
 
     // ------------------------------------ implementing AbstractJdbcDao
+	@Override
+	protected Logger getLogger() {
+		return LOG;
+	}
+
+    
     @Override
     protected MessageDsn mapToEntity(int numline, ResultSet rs) throws SQLException {
 

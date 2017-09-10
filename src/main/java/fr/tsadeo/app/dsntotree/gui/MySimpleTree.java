@@ -2,6 +2,7 @@ package fr.tsadeo.app.dsntotree.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -20,6 +21,8 @@ import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 
 public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiConstants {
 
+	private static final Logger LOG = Logger.getLogger(MySimpleTree.class.getName());
+	
 	private DefaultMutableTreeNode top;
 	protected int selectedIndex = Integer.MIN_VALUE;
 
@@ -65,7 +68,7 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
 	public void valueChanged(TreeSelectionEvent event) {
 
 		int row = this.getRowForPath(event.getPath());
-		System.out.println("path :" + event.getPath() + " - " + row);
+		LOG.config("path :" + event.getPath() + " - " + row);
 
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) event.getPath().getLastPathComponent();
 		if (node.isRoot()) {

@@ -23,7 +23,7 @@ public class ReadDatasFromSqlRequestServiceTest extends AbstractTest{
 		assertFalse(result.isEmpty())
 ;		
 		for (DataDsn dataDsn : result) {
-			System.out.println(dataDsn);
+			LOG.config(dataDsn.toString());
 		}
 	}
 }

@@ -27,11 +27,6 @@ public class JsonUtils implements IJsonConstants, IConstants {
 
         return this.getClass().getClassLoader().getResourceAsStream(completePath);
 
-        // URL url = this.getClass().getClassLoader().getResource(completePath);
-        // File jsonFile = (url == null) ? null : new File(url.getFile());
-        // System.out.println(jsonFile == null ? "aucun fichier json trouvé!" :
-        // jsonFile.getAbsolutePath());
-        // return jsonFile;
 
     }
 

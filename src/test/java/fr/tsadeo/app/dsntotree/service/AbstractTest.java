@@ -3,12 +3,16 @@ package fr.tsadeo.app.dsntotree.service;
 import java.io.File;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.logging.Logger;
 
 import org.junit.Assert;
 
+import fr.tsadeo.app.dsntotree.gui.MyFrame;
 import fr.tsadeo.app.dsntotree.util.IConstants;
 
 public abstract class AbstractTest {
+	
+	protected static final Logger LOG = Logger.getLogger(AbstractTest.class.getName());
 	
 	protected static final String DSN_MENSUELLE_PHASE3 = "SFDSN_KIEFFER_P03V01_022016_DSNPC880.txt";
 	protected static final String DSN_MENSUELLE_PHASE3_ERREUR = "SFDSN_KIEFFER_P03V01_AvecErreurs.txt";

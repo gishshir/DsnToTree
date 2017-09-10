@@ -3,6 +3,7 @@ package fr.tsadeo.app.dsntotree.bdd.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import fr.tsadeo.app.dsntotree.bdd.dao.AbstractJdbcDao;
 import fr.tsadeo.app.dsntotree.bdd.dao.IDataDsnDao;
@@ -11,6 +12,8 @@ import fr.tsadeo.app.dsntotree.util.StringUtils;
 
 public class JdbcDataDsnDao extends AbstractJdbcDao<DataDsn> implements IDataDsnDao {
 
+	private static final Logger LOG = Logger.getLogger(JdbcDataDsnDao.class.getName());
+	
     private static final String DSDOCHRMSG = "DSDOCHRMSG"; // chronomessage
     private static final String DSDOIDFSYS = "DSDOIDFSYS"; // idfsys
     private static final String DSDOSEQBLC = "DSDOSEQBLC"; // seq_bloc
@@ -33,6 +36,11 @@ public class JdbcDataDsnDao extends AbstractJdbcDao<DataDsn> implements IDataDsn
     }
 
     // ------------------------------------ implementing AbstractJdbcDao
+	@Override
+	protected Logger getLogger() {
+		return LOG;
+	}
+
     @Override
     protected DataDsn mapToEntity(int numline, ResultSet rs) throws SQLException {
 
@@ -47,5 +55,6 @@ public class JdbcDataDsnDao extends AbstractJdbcDao<DataDsn> implements IDataDsn
 
         return data;
     }
+
 
 }

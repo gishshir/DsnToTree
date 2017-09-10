@@ -5,15 +5,18 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 
+import fr.tsadeo.app.dsntotree.gui.MyFrame;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 import fr.tsadeo.app.dsntotree.util.IConstants;
 
 public class WriteDsn implements IConstants {
 
+	private static final Logger LOG = Logger.getLogger(WriteDsn.class.getName());
     private final DsnService dsnService = new DsnService();
 
     // Ecrit le fichier Dsn au meme endroit
@@ -41,7 +44,7 @@ public class WriteDsn implements IConstants {
         int index = 1;
         for (ItemRubrique itemRubrique : listRubriques) {
             String line = this.dsnService.getRubriqueLine(itemRubrique);
-            System.out.println(index++ + " :" +line);
+            LOG.info(index++ + " :" +line);
             lines.add(line);
         }
 

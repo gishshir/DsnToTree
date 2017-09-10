@@ -35,7 +35,7 @@ public class ReadDsnFromDatasTest extends AbstractTest implements IJdbcDaoTest {
       assertNotNull(dsn.getTreeRoot());
 
       assertFalse(dsn.getBlocs().isEmpty());
-      System.out.println(dsn.toString());
+      LOG.config(dsn.toString());
 
   }
 
