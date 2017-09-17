@@ -40,6 +40,7 @@ public interface IGuiConstants {
     public static final String PATH_CONNEXION_UNKNONW_ICO = PATH_IMAGES + "greymark.gif";
     public static final String PATH_SQL_FILE_ICO = PATH_IMAGES + "sqlrequest.png";
     public static final String PATH_SQL_REQUEST_ICO = PATH_IMAGES + "sqlrequest.png";
+    public static final String PATH_SALARIES_ICO = PATH_IMAGES + "salaries.png";
 
     public static final Font FONT = new Font("SansSerif", Font.PLAIN, 14);
 
@@ -61,6 +62,7 @@ public interface IGuiConstants {
     public final static String SAVE_DSN_ACTION = "save-dsn";
     public final static String SHOW_JDBC_ACTION = "show-jdbc";
     public final static String SHOW_SALARIES_ACTION = "show-salaries";
+    public final static String SHOW_SALARIE_ACTION = "show-salarie";
 
     public final static String LIRE_BDD_MSG_ACTION = "lire-bdd-msg";
     public final static String EDIT_BDD_MSG_ACTION = "edit-bdd-msg";

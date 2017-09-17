@@ -6,11 +6,11 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import fr.tsadeo.app.dsntotree.business.SalarieDto;
+import fr.tsadeo.app.dsntotree.gui.salarie.TableSalaries.Column;
 
 public class SalariesTableModel extends AbstractTableModel {
 
-    private String[] columnNames = { "index", "Nir", "Nom", "Prenoms" };
-
+	private final Column[] tabColumns;
     private final List<SalarieDto> listSalaries = new ArrayList<>();
 
     /**
@@ -22,6 +22,10 @@ public class SalariesTableModel extends AbstractTableModel {
         this.clear();
         this.listSalaries.addAll(listSalaries);
     }
+    
+    public  SalariesTableModel(Column[] tabColumns) {
+		this.tabColumns = tabColumns;
+	}
 
     // ------------------ implementing TableModel
     @Override
@@ -31,7 +35,7 @@ public class SalariesTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return columnNames.length;
+        return tabColumns.length;
     }
 
     @Override
@@ -42,7 +46,7 @@ public class SalariesTableModel extends AbstractTableModel {
     // ------------------ overriding AbstractTableModel
     @Override
     public String getColumnName(int col) {
-        return columnNames[col];
+        return tabColumns[col].getTitle();
     }
 
     @Override
@@ -55,7 +59,7 @@ public class SalariesTableModel extends AbstractTableModel {
         this.listSalaries.clear();
     }
 
-    private SalarieDto getSalarie(int rowIndex) {
+     SalarieDto getSalarie(int rowIndex) {
         if (rowIndex < this.getRowCount()) {
             return this.listSalaries.get(rowIndex);
         }
@@ -69,7 +73,7 @@ public class SalariesTableModel extends AbstractTableModel {
         }
         switch (columnIndex) {
         case 0:
-            return salarie.getIndex() + "";
+            return (salarie.getIndex() + 1) + "";
         case 1:
             return salarie.getNir();
         case 2:
