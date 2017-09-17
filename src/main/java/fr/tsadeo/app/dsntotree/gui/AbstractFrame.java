@@ -3,6 +3,7 @@ package fr.tsadeo.app.dsntotree.gui;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javax.swing.JComponent;
@@ -46,6 +47,10 @@ public abstract class AbstractFrame extends JFrame implements IGuiConstants, ICo
     protected AbstractFrame(String title, int closeOperation) {
         super(title);
         this.setDefaultCloseOperation(closeOperation);
+    }
+
+    protected void actionClose() {
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 
     protected void createTextArea(Container container, String layout) {

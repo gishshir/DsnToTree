@@ -18,8 +18,10 @@ public interface IMainActionListener {
     public void actionShowOpenDialogWithConfirmation();
 
     public void actionShowJdbcDialog();
-    
-    public void actionShowDsnTreeWithConfirmation(Dsn dsn);
-    
+
+    public void actionShowDsnTreeWithConfirmation(Dsn dsn, String messageDialog);
+
     public void actionShowBlocItem(ItemBloc itemBloc, String pathParent);
+
+    public void actionShowSalarieDialog();
 }
