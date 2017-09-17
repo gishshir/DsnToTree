@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
 import fr.tsadeo.app.dsntotree.bdd.model.DataDsn;
+import fr.tsadeo.app.dsntotree.business.SalarieDto;
 import fr.tsadeo.app.dsntotree.dto.BlocChildDto;
 import fr.tsadeo.app.dsntotree.dto.BlocChildrenDto;
 import fr.tsadeo.app.dsntotree.model.BlocTree;
@@ -23,8 +24,44 @@ import fr.tsadeo.app.dsntotree.util.IJsonConstants;
 
 public class DsnService implements IConstants, IJsonConstants {
 
-	private static final Logger LOG = Logger.getLogger(DsnService.class.getName());
+    private static final Logger LOG = Logger.getLogger(DsnService.class.getName());
     private static final String NA = "UNKNOWN";
+
+    public List<SalarieDto> buildListSalarieDtos(Dsn dsn) {
+
+        List<SalarieDto> listSalaries = new ArrayList<>();
+
+        List<ItemBloc> listItemBlocs = this.findListItemBlocByBlocLabel(dsn, BLOC_30);
+        if (listItemBlocs != null) {
+
+            int index = 0;
+            for (ItemBloc itemBloc : listItemBlocs) {
+                listSalaries.add(this.createSalarieDto(index++, itemBloc));
+            }
+        }
+
+        return listSalaries;
+    }
+
+    private SalarieDto createSalarieDto(int index, ItemBloc itemBloc) {
+        SalarieDto salarieDto = new SalarieDto(index, itemBloc);
+
+        if (itemBloc.hasRubriques()) {
+            for (ItemRubrique itemRubrique : itemBloc.getListRubriques()) {
+                if (itemRubrique.getRubriqueLabel().equals(RUB_001)) {
+                    salarieDto.setNir(itemRubrique.getValue());
+                } else if (itemRubrique.getRubriqueLabel().equals(RUB_002)) {
+                    salarieDto.setNom(itemRubrique.getValue());
+                } else if (itemRubrique.getRubriqueLabel().equals(RUB_003)) {
+                    salarieDto.setNom(itemRubrique.getValue());
+                } else if (itemRubrique.getRubriqueLabel().equals(RUB_004)) {
+                    salarieDto.setPrenom(itemRubrique.getValue());
+                }
+            }
+        }
+
+        return salarieDto;
+    }
 
     public List<String> buildListBlocChildEnabled(BlocTree treeRoot, ItemBloc itemBloc) {
 
@@ -63,6 +100,50 @@ public class DsnService implements IConstants, IJsonConstants {
                 }
             }
         }
+    }
+
+    /**
+     * Trouver dans la Dsn une liste de blocs de même label
+     * 
+     * @param dsn
+     * @param blocLabel
+     * @return
+     */
+    private List<ItemBloc> findListItemBlocByBlocLabel(Dsn dsn, String blocLabel) {
+        List<ItemBloc> listItemBlocs = new ArrayList<>();
+
+        if (dsn != null && blocLabel != null) {
+            for (ItemBloc itemBloc : dsn.getBlocs()) {
+                if (itemBloc.getBlocLabel().equals(blocLabel)) {
+                    listItemBlocs.add(itemBloc);
+                }
+            }
+        }
+
+        return listItemBlocs;
+    }
+
+    /**
+     * Trouver dans la Dsn un ItemBloc équivalent (equals) à celui fourni en
+     * argument
+     * 
+     * @param dsn
+     * @param itemBloc
+     * @return
+     */
+    public ItemBloc findItemBlocEquivalent(Dsn dsn, ItemBloc itemBlocToFind) {
+
+        if (dsn != null && itemBlocToFind != null) {
+            for (ItemBloc itemBloc : dsn.getBlocs()) {
+                if (itemBloc == itemBlocToFind) {
+                    return itemBloc;
+                }
+                if (itemBloc.hashCode() == itemBlocToFind.hashCode()) {
+                    return itemBloc;
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -300,7 +381,7 @@ public class DsnService implements IConstants, IJsonConstants {
 
     private void addBlocItemToList(Dsn dsn, ItemBloc itemBloc, Compteur compteur) {
 
-    	LOG.config("bloc " + itemBloc.getBlocLabel() + " - index: " + compteur.getValue());
+        LOG.config("bloc " + itemBloc.getBlocLabel() + " - index: " + compteur.getValue());
         dsn.addBloc(compteur.getValueAndIncrements(), itemBloc);
         if (itemBloc.hasChildren()) {
             for (ItemBloc childBloc : itemBloc.getChildrens()) {

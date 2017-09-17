@@ -1,111 +1,173 @@
 package fr.tsadeo.app.dsntotree.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.MySwingUtilities;
 
+import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
+import fr.tsadeo.app.dsntotree.service.ServiceFactory;
+import fr.tsadeo.app.dsntotree.util.ListDsnListenerManager;
 import fr.tsadeo.app.dsntotree.util.ListItemBlocListenerManager;
 
-public class BlocTreeFrame extends AbstractFrame implements ItemBlocListener {
+public class BlocTreeFrame extends AbstractFrame implements ItemBlocListener, IDsnListener {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private IMainActionListener mainActionListener;
-	
-	private MySimpleTree simpleTree;
-	private ItemBloc itemBloc;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    private final IMainActionListener mainActionListener;
 
-	
-	
-	
-	//------------------------------------- implementing ItemBlocListener
-	@Override
-	public void onItemBlocSelected(ItemBloc itemBloc, int treeRowOfBloc, String path) {
-		// TODO Auto-generated method stub
-		
-	}
+    private final String pathItemBloc;
+    private MySimpleTree simpleTree;
+    private ItemBloc itemBloc;
+    private JPanel panelBlocPath;
 
+    // ------------------------------------ implementing IDsnListener
+    @Override
+    public void onDsnReloaded(Dsn dsn) {
 
-	@Override
-	public void onItemRubriqueSelected(ItemRubrique itemRubrique, int treeRowOfBloc, String path) {
-		// TODO Auto-generated method stub
-		
-	}
+        if (this.itemBloc == null) {
+            return;
+        }
+        ItemBloc sameItemBloc = ServiceFactory.getDsnService().findItemBlocEquivalent(dsn, this.itemBloc);
+        this.itemBloc = sameItemBloc;
+        this.simpleTree.clearTree();
+        this.simpleTree.createNodes(itemBloc, false);
+        this.simpleTree.expandBloc(ALL, true);
+    }
 
+    @Override
+    public void onDsnOpened() {
+        this.actionClose();
+    }
 
-	@Override
-	public void onItemBlocModified(ItemBloc modifiedItemBloc, int treeRowOfBloc, ModifiedState state, boolean refresh) {
+    @Override
+    public void onSearch(String search, boolean next) {
+        this.simpleTree.search(search, next);
+    }
 
-		if (this.itemBloc.isDeleted()) {
-			this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-			return;
-		}
-		if (this.itemBloc == modifiedItemBloc ||
-				this.itemBloc.isAncestorBloc(modifiedItemBloc) || this.itemBloc.isDescendentBloc(modifiedItemBloc)) {
+    @Override
+    public void onSearchCanceled() {
+        this.simpleTree.cancelSearch();
+    }
 
-			this.simpleTree.clearTree();
-			this.simpleTree.createNodes(itemBloc, false);
-		}
-	}
+    // ------------------------------------- implementing ItemBlocListener
+    @Override
+    public void onItemBlocSelected(ItemBloc itemBloc, int treeRowOfBloc, String path) {
+        // TODO Auto-generated method stub
 
+    }
 
+    @Override
+    public void onItemRubriqueSelected(ItemRubrique itemRubrique, int treeRowOfBloc, String path) {
+        // TODO Auto-generated method stub
 
-   //---------------------------------------------- constructor	
-	protected BlocTreeFrame(String title, IMainActionListener listener) {
-		super("Arborescence du bloc " + title, JFrame.DISPOSE_ON_CLOSE);
-		this.mainActionListener = listener;
+    }
 
-		// Set up the content pane.
-		addComponentsToPane(this.getContentPane());
+    @Override
+    public void onItemBlocModified(ItemBloc modifiedItemBloc, int treeRowOfBloc, ModifiedState state, boolean refresh) {
 
-		this.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				ListItemBlocListenerManager.get().removeItemBlocListener((ItemBlocListener) BlocTreeFrame.this);
-			}
-		});
+        if (this.itemBloc.isDeleted()) {
+            this.actionClose();
+            return;
+        }
+        if (this.itemBloc == modifiedItemBloc || this.itemBloc.isAncestorBloc(modifiedItemBloc)
+                || this.itemBloc.isDescendentBloc(modifiedItemBloc)) {
 
-	}
+            this.simpleTree.clearTree();
+            this.simpleTree.createNodes(itemBloc, false);
+            this.simpleTree.expandBloc(ALL, true);
+        }
+    }
 
-	void setItemBloc(ItemBloc itemBloc) {
-		this.itemBloc= itemBloc;
-		this.simpleTree.createNodes(itemBloc, false);
-	}
+    // ---------------------------------------------- constructor
+    protected BlocTreeFrame(String title, String pathItemBloc, IMainActionListener listener) {
+        super("DSN: " + title, JFrame.DISPOSE_ON_CLOSE);
+        this.mainActionListener = listener;
+        this.pathItemBloc = pathItemBloc;
 
-	//-------------------------------------------- private methode
-	private void addComponentsToPane(Container pane) {
-	      pane.setLayout(new BorderLayout());
+        ListDsnListenerManager.get().addDsnListener(this);
 
-	      createPanelTop(pane, BorderLayout.PAGE_START);
-	      createPanelMiddle(pane, BorderLayout.CENTER);
-	}
+        // Set up the content pane.
+        addComponentsToPane(this.getContentPane());
 
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                // Schedule a job for the event-dispatching thread:
+                // creating and showing this application's GUI.
+                MySwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        ListItemBlocListenerManager.get().removeItemBlocListener((ItemBlocListener) BlocTreeFrame.this);
+                        ListDsnListenerManager.get().removeDsnListener((IDsnListener) BlocTreeFrame.this);
+                    }
+                });
+            }
+        });
 
-	private void createPanelMiddle(Container pane, String layout) {
+    }
 
-		 this.simpleTree = new MySimpleTree(null, "Bloc");
-	     JScrollPane scrollPane = new JScrollPane(this.simpleTree);
-	     
-	     pane.add(scrollPane, layout);
-	}
+    void setItemBloc(ItemBloc itemBloc) {
+        this.itemBloc = itemBloc;
+        this.simpleTree.createNodes(itemBloc, false);
+        this.simpleTree.expandBloc(ALL, true);
+    }
 
+    // -------------------------------------------- private methode
 
-	private void createPanelTop(Container pane, String pageStart) {
-		// TODO Auto-generated method stub
-		
-	}
+    private void addComponentsToPane(Container pane) {
+        pane.setLayout(new BorderLayout());
 
+        createPanelTop(pane, BorderLayout.PAGE_START);
+        createPanelMiddle(pane, BorderLayout.CENTER);
+    }
 
+    private void createPanelMiddle(Container pane, String layout) {
 
+        this.simpleTree = new MySimpleTree(this.mainActionListener, null, "Bloc");
+        JScrollPane scrollPane = new JScrollPane(this.simpleTree);
 
+        pane.add(scrollPane, layout);
+    }
 
-	
+    private void createPanelTop(Container container, String layout) {
+        this.createBlocPanelTitle(container, layout);
+        this.buildBlocPath();
+    }
+
+    private void createBlocPanelTitle(Container container, String layout) {
+
+        this.panelBlocPath = new JPanel();
+        this.panelBlocPath.setMinimumSize(container.getSize());
+        this.panelBlocPath.setBackground(TREE_BACKGROUND_COLOR);
+        this.panelBlocPath.setForeground(TREE_NORMAL_COLOR);
+
+        this.panelBlocPath.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5),
+                BorderFactory.createLineBorder(Color.BLUE)));
+        container.add(this.panelBlocPath, layout);
+
+    }
+
+    private void buildBlocPath() {
+        JLabel labelTitle = new JLabel("Bloc: ");
+        labelTitle.setForeground(TREE_NORMAL_COLOR);
+
+        this.panelBlocPath.add(labelTitle);
+
+        JLabel labelBloc = new JLabel(this.pathItemBloc);
+        labelBloc.setForeground(TREE_NORMAL_COLOR);
+        this.panelBlocPath.add(labelBloc);
+
+    }
+
 }

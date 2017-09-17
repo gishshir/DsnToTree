@@ -17,111 +17,127 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 
+import fr.tsadeo.app.dsntotree.gui.component.StateCheckBox;
+import fr.tsadeo.app.dsntotree.gui.component.StateToggleButton;
 import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 
-public class FilterPanel extends JPanel implements  IGuiConstants {
+public class FilterPanel extends JPanel implements IGuiConstants {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	private final ActionListener actionListener;
-	private final JPanel panelToggleButton = new JPanel();
-	private final JPanel panelCheckboxes = new JPanel();
-	
-	private final ImageIcon imgIcoShow = GuiUtils.createImageIcon(PATH_SHOW_ICO);
-	private final ImageIcon imgIcoHide = GuiUtils.createImageIcon(PATH_HIDE_ICO);
-	
-	private List<JCheckBox> listCheckboxes = new ArrayList<JCheckBox>();
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public FilterPanel(ActionListener actionListener) {
-		this.actionListener = actionListener;
-		this.setLayout(new BorderLayout());
-		this.setBorder(BorderFactory.createEmptyBorder() );
-		this.buildCheckboxPanel();
-		this.buildTogglePanel();
-		
-		this.setPreferredSize(new Dimension(100, 600));
-	}
-	
-	// --------------------------------------- public methods
+    private final ActionListener actionListener;
+    private final JPanel panelToggleButton = new JPanel();
+    private final JPanel panelCheckboxes = new JPanel();
 
-	// --------------------------------------- private methods
-	private void buildCheckboxPanel() {
-		
-		this.panelCheckboxes.setLayout(new BoxLayout(this.panelCheckboxes, BoxLayout.Y_AXIS));
-		this.add(this.panelCheckboxes, BorderLayout.CENTER);
-	}
-	
-	private void buildTogglePanel() {
-		
-		
-		final JToggleButton  tgbExpandAll = new JToggleButton(imgIcoHide ,true);
-		tgbExpandAll.setMargin(new Insets(2,2,2,2));
-		tgbExpandAll.setSize(70, 50);
-		tgbExpandAll.setActionCommand(ALL);
-		tgbExpandAll.addActionListener(this.actionListener);
-		tgbExpandAll.setEnabled(false);
-		
-		tgbExpandAll.addItemListener(new ItemListener() {
-			
-			@Override
-			public void itemStateChanged(ItemEvent e) {
+    private StateToggleButton tgbExpandAll;
 
-				tgbExpandAll.setIcon(tgbExpandAll.isSelected() ? imgIcoHide : imgIcoShow);
+    private final ImageIcon imgIcoShow = GuiUtils.createImageIcon(PATH_SHOW_ICO);
+    private final ImageIcon imgIcoHide = GuiUtils.createImageIcon(PATH_HIDE_ICO);
 
-				selectAll(tgbExpandAll.isSelected());
-			}
-		});
-		this.panelToggleButton.add(tgbExpandAll, BorderLayout.CENTER);
-		this.add(this.panelToggleButton, BorderLayout.PAGE_START);
-		
-	}
-	
-    private void selectAll(boolean select) {
-    	for (JCheckBox jCheckBox : listCheckboxes) {
-			jCheckBox.setSelected(select);
-		}
+    private List<StateCheckBox> listCheckboxes = new ArrayList<StateCheckBox>();
+
+    public FilterPanel(ActionListener actionListener) {
+        this.actionListener = actionListener;
+        this.setLayout(new BorderLayout());
+        this.setBorder(BorderFactory.createEmptyBorder());
+        this.buildCheckboxPanel();
+        this.buildTogglePanel();
+
+        this.setPreferredSize(new Dimension(100, 600));
     }
 
-	public void buildListBlocCheckbox(Dsn dsn) {
+    // --------------------------------------- package methods
+    void waitEndAction() {
 
-		this.panelToggleButton.getComponent(0).setEnabled(true);
-		this.panelCheckboxes.removeAll();
-		this.listCheckboxes.clear();
+        this.tgbExpandAll.waitEndAction();
+        for (StateCheckBox stateCheckBox : listCheckboxes) {
+            stateCheckBox.waitEndAction();
+        }
+    }
 
-		Set<String> blocNames = new HashSet<String>();
-		if (dsn.getBlocs() != null) {
+    void currentActionEnded() {
 
-			for (ItemBloc itemBloc : dsn.getBlocs()) {
-				if (!blocNames.contains(itemBloc.getBlocLabel())) {
-					blocNames.add(itemBloc.getBlocLabel());
-				}
-			}
-			List<String> listBlocNames = new ArrayList<String>(blocNames);
-			Collections.sort(listBlocNames);
+        this.tgbExpandAll.actionEnded();
+        for (StateCheckBox stateCheckBox : listCheckboxes) {
+            stateCheckBox.actionEnded();
+        }
+    }
 
-			for (String blocLabel : listBlocNames) {
+    // --------------------------------------- private methods
+    private void buildCheckboxPanel() {
 
-				BlocTree blocTree = dsn.getTreeRoot() == null?null:dsn.getTreeRoot().findChild(blocLabel, true);
-				if (blocTree != null) {
-					JCheckBox cb = new JCheckBox(blocTree.toString());
-					cb.setSelected(true);
-					cb.addActionListener(this.actionListener);
-					this.listCheckboxes.add(cb);
-					this.panelCheckboxes.add(cb);
-					cb.setAlignmentX(CENTER_ALIGNMENT);
-				}
-			}
+        this.panelCheckboxes.setLayout(new BoxLayout(this.panelCheckboxes, BoxLayout.Y_AXIS));
+        this.add(this.panelCheckboxes, BorderLayout.CENTER);
+    }
 
-		}
+    private void buildTogglePanel() {
 
-	}
-	
+        tgbExpandAll = new StateToggleButton(imgIcoHide, true);
+        tgbExpandAll.setMargin(new Insets(2, 2, 2, 2));
+        tgbExpandAll.setSize(70, 50);
+        tgbExpandAll.setActionCommand(ALL);
+        tgbExpandAll.addActionListener(this.actionListener);
+        tgbExpandAll.setEnabled(false);
+
+        tgbExpandAll.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+
+                tgbExpandAll.setIcon(tgbExpandAll.isSelected() ? imgIcoHide : imgIcoShow);
+
+                selectAll(tgbExpandAll.isSelected());
+            }
+        });
+        this.panelToggleButton.add(tgbExpandAll, BorderLayout.CENTER);
+        this.add(this.panelToggleButton, BorderLayout.PAGE_START);
+
+    }
+
+    private void selectAll(boolean select) {
+        for (JCheckBox jCheckBox : listCheckboxes) {
+            jCheckBox.setSelected(select);
+        }
+    }
+
+    public void buildListBlocCheckbox(Dsn dsn) {
+
+        this.panelToggleButton.getComponent(0).setEnabled(true);
+        this.panelCheckboxes.removeAll();
+        this.listCheckboxes.clear();
+
+        Set<String> blocNames = new HashSet<String>();
+        if (dsn.getBlocs() != null) {
+
+            for (ItemBloc itemBloc : dsn.getBlocs()) {
+                if (!blocNames.contains(itemBloc.getBlocLabel())) {
+                    blocNames.add(itemBloc.getBlocLabel());
+                }
+            }
+            List<String> listBlocNames = new ArrayList<String>(blocNames);
+            Collections.sort(listBlocNames);
+
+            for (String blocLabel : listBlocNames) {
+
+                BlocTree blocTree = dsn.getTreeRoot() == null ? null : dsn.getTreeRoot().findChild(blocLabel, true);
+                if (blocTree != null) {
+                    StateCheckBox cb = new StateCheckBox(blocTree.toString());
+                    cb.setSelected(true);
+                    cb.addActionListener(this.actionListener);
+                    this.listCheckboxes.add(cb);
+                    this.panelCheckboxes.add(cb);
+                    cb.setAlignmentX(CENTER_ALIGNMENT);
+                }
+            }
+
+        }
+
+    }
 
 }

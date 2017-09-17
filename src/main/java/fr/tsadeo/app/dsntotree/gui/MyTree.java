@@ -3,32 +3,25 @@ package fr.tsadeo.app.dsntotree.gui;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 
-public class MyTree extends MySimpleTree implements TreeSelectionListener, IGuiConstants {
+public class MyTree extends MySimpleTree implements IGuiConstants {
 
-	
-	private static final Logger LOG = Logger.getLogger(MyTree.class.getName());
+    private static final Logger LOG = Logger.getLogger(MyTree.class.getName());
 
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
 
-
-
-
-
     // ------------------------------- constructor
-    MyTree(ItemBlocListener itemBlocListener) {
-    	super (itemBlocListener, "DSN");
+    MyTree(IMainActionListener mainActionListener, ItemBlocListener itemBlocListener) {
+        super(mainActionListener, itemBlocListener, "DSN");
     }
 
     private void removeAllFromNode(DefaultMutableTreeNode node) {
@@ -38,9 +31,6 @@ public class MyTree extends MySimpleTree implements TreeSelectionListener, IGuiC
         }
         node.removeAllChildren();
     }
-
-
-
 
     // FIXME traiter le cas de rafraichissement quand la dsn est non stucturee
     // et
@@ -56,25 +46,6 @@ public class MyTree extends MySimpleTree implements TreeSelectionListener, IGuiC
             this.addTreeNodeChildrens(node, itemBloc, true);
         }
 
-    }
-
-    boolean search(String search, boolean next) {
-
-        TreePath result = this.search(new TreePath(this.getTop()), search.toLowerCase(), next);
-        if (result != null) {
-        	LOG.config("Search OK (".concat(search).concat(") ").concat(result.toString()));
-            return true;
-        }
-
-        return false;
-    }
-
-
-    void cancelSearch() {
-        this.selectedIndex = Integer.MIN_VALUE;
-        // this.selectedItemBloc = null;
-        // this.selectedItemRubrique = null;
-        this.clearSelection();
     }
 
     // visualisation de la liste des rubriques sous forme lineaire
@@ -95,8 +66,6 @@ public class MyTree extends MySimpleTree implements TreeSelectionListener, IGuiC
         this.expandRoot(true);
         this.repaint();
     }
-
-
 
     private void addTreeNodeRubriques(BlocNode node, ItemBloc itemBloc, boolean reloadModel) {
 
@@ -128,47 +97,5 @@ public class MyTree extends MySimpleTree implements TreeSelectionListener, IGuiC
             model.reload(node);
         }
     }
-
-
-    /*
-     * Recherche une rubrique contenant le texte recherché
-     */
-    private TreePath search(TreePath parent, String search, boolean next) {
-
-        TreePath result = null;
-        TreeNode node = (TreeNode) parent.getLastPathComponent();
-        // si on a atteint la fin du fichier et en next alors
-        // on réinitialise le selectedIndex
-        if (next && this.getRowForPath(parent) == this.getRowCount() - 1) {
-            this.selectedIndex = Integer.MIN_VALUE;
-        }
-        if (node.isLeaf()) {
-            ItemRubrique itemRubrique = ((RubriqueNode) node).getItemRubrique();
-            if (itemRubrique.toString().toLowerCase().indexOf(search) > -1) {
-
-                if (!next || (next && this.getRowForPath(parent) > this.selectedIndex)) {
-
-                    this.setSelectionPath(parent);
-                    this.scrollPathToVisible(parent);
-                    selectedIndex = this.getRowForPath(parent);
-                    return parent;
-                }
-            }
-        }
-
-        if (node.getChildCount() >= 0) {
-
-            for (int i = 0; i < node.getChildCount(); i++) {
-                TreeNode child = node.getChildAt(i);
-                TreePath path = parent.pathByAddingChild(child);
-                result = search(path, search, next);
-                if (result != null) {
-                    return result;
-                }
-            }
-        }
-        return null;
-    }
-
 
 }

@@ -60,6 +60,7 @@ public interface IGuiConstants {
     public final static String SHOW_ERROR_DIALOG_ACTION = "show-errordialog";
     public final static String SAVE_DSN_ACTION = "save-dsn";
     public final static String SHOW_JDBC_ACTION = "show-jdbc";
+    public final static String SHOW_SALARIES_ACTION = "show-salaries";
 
     public final static String LIRE_BDD_MSG_ACTION = "lire-bdd-msg";
     public final static String EDIT_BDD_MSG_ACTION = "edit-bdd-msg";

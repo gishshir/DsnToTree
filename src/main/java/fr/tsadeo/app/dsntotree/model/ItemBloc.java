@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class ItemBloc extends AbstractItemTree implements Comparable<ItemBloc> {
 
     private boolean root = false;
@@ -103,20 +105,20 @@ public class ItemBloc extends AbstractItemTree implements Comparable<ItemBloc> {
      * Fonction recursive Determine si itemBloc est un descendant
      */
     public boolean isDescendentBloc(ItemBloc itemBloc) {
-    	
-    	if (!this.hasChildren()) {
-    		return false;
-    	}
-    	for (ItemBloc childBloc : childrens) {
-			if (childBloc == itemBloc) {
-				return true;
-			}
-			if( childBloc.isDescendentBloc(itemBloc)) {
-				return true;
-			}
-			
-		}
-    	return false;
+
+        if (!this.hasChildren()) {
+            return false;
+        }
+        for (ItemBloc childBloc : childrens) {
+            if (childBloc == itemBloc) {
+                return true;
+            }
+            if (childBloc.isDescendentBloc(itemBloc)) {
+                return true;
+            }
+
+        }
+        return false;
     }
 
     public ItemRubrique getFirstRubrique() {
@@ -257,6 +259,63 @@ public class ItemBloc extends AbstractItemTree implements Comparable<ItemBloc> {
     public String toString() {
 
         return this.showError().concat(this.showLabel());
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 71;
+        int result = 1;
+        result = prime * result + ((blocLabel == null) ? 0 : blocLabel.hashCode());
+        if (this.hasRubriques()) {
+            for (ItemRubrique itemRubrique : listRubriques) {
+                result = prime * result + itemRubrique.hashCode();
+            }
+        }
+        if (this.hasChildren()) {
+            for (ItemBloc childBloc : childrens) {
+                result = prime * result + childBloc.hashCode();
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        ItemBloc other = (ItemBloc) obj;
+        if (!StringUtils.equals(this.blocLabel, other.blocLabel)) {
+            return false;
+        }
+        // liste rubriques
+        if (this.hasRubriques() && !other.hasRubriques()) {
+            return false;
+        }
+        if (!this.hasRubriques() && other.hasRubriques()) {
+            return false;
+        }
+        if (this.hasRubriques() && other.hasRubriques()) {
+            if (this.getListRubriques().equals(other.getListRubriques())) {
+                return false;
+            }
+        }
+
+        // liste children
+        if (this.hasChildren() && !other.hasChildren()) {
+            return false;
+        }
+        if (!this.hasChildren() && other.hasChildren()) {
+            return false;
+        }
+        if (this.hasChildren() && other.hasChildren()) {
+            if (!this.getChildrens().equals(other.getChildrens())) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     // ------------------------------ Implementing Comparable

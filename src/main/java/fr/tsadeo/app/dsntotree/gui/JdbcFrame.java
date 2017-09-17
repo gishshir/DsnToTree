@@ -164,15 +164,36 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
         if (this.message != null && this.listDatas != null) {
 
             try {
-                Dsn dsn = ServiceFactory.getReadDsnFromDatasService().buildTreeFromDatas(this.message.getName(),
-                        listDatas);
-                if (dsn != null) {
-                    this.mainActionListener.actionShowDsnTreeWithConfirmation(dsn);
-                    this.setVisible(false);
-                } else {
-                    this.processTextArea.append("Impossible de construire la DSN!");
-                    this.btEditerMsg.setEnabled(false);
-                }
+
+                SwingWorker<Dsn, Void> worker = new SwingWorker<Dsn, Void>() {
+
+                    Dsn dsn;
+
+                    @Override
+                    protected Dsn doInBackground() throws Exception {
+                        waitEndAction();
+                        dsn = ServiceFactory.getReadDsnFromDatasService().buildTreeFromDatas(message.getName(),
+                                listDatas);
+                        return dsn;
+                    }
+
+                    @Override
+                    protected void done() {
+
+                        currentActionEnded();
+                        if (dsn != null) {
+                            mainActionListener.actionShowDsnTreeWithConfirmation(dsn, "Chargement depuis BDD terminé!");
+                            JdbcFrame.this.setVisible(false);
+                        } else {
+                            processTextArea.append("Impossible de construire la DSN!");
+                            btEditerMsg.setEnabled(false);
+                        }
+
+                    }
+
+                };
+                worker.execute();
+
             } catch (Exception e) {
                 this.btEditerMsg.setEnabled(false);
                 this.processTextArea.append("Erreur dans la construction de la DSN!");
@@ -594,7 +615,7 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
         private static final long serialVersionUID = 1L;
 
         private PanelMessageInfo(String text) {
-            super(text, 120, 300, false);
+            super(text, 120, 400, false);
         }
     }
 

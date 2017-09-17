@@ -1,5 +1,7 @@
 package fr.tsadeo.app.dsntotree.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import fr.tsadeo.app.dsntotree.util.IConstants;
 
 public class ItemRubrique extends AbstractItemTree implements Comparable<ItemRubrique> {
@@ -118,6 +120,36 @@ public class ItemRubrique extends AbstractItemTree implements Comparable<ItemRub
 
         return (this.isError()) ? "ligne: ".concat(Integer.toString(this.getNumLine())).concat(" - ").concat(this.line)
                 : this.getBlocAndRubriqueLabel() + " : " + this.value;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 71;
+        int result = 1;
+        result = prime * result + ((blocLabel == null) ? 0 : blocLabel.hashCode());
+        result = prime * result + ((rubriqueLabel == null) ? 0 : rubriqueLabel.hashCode());
+        result = prime * result + ((value == null) ? 0 : value.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        ItemRubrique other = (ItemRubrique) obj;
+        if (!StringUtils.equals(this.blocLabel, other.blocLabel)) {
+            return false;
+        }
+
+        if (!StringUtils.equals(this.rubriqueLabel, other.rubriqueLabel)) {
+            return false;
+        }
+        if (!StringUtils.equals(this.value, other.value)) {
+            return false;
+        }
+        return true;
     }
 
     // --------------------------------------------- implements Comparable

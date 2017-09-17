@@ -3,8 +3,8 @@ package fr.tsadeo.app.dsntotree.util;
 import java.util.regex.Pattern;
 
 public interface IConstants {
-	
-	public static final String SETTINGS_XML = "settings.xml";
+
+    public static final String SETTINGS_XML = "settings.xml";
 
     public static final String US = "_";
     public static final String VIRGULE = ",";
@@ -18,10 +18,14 @@ public interface IConstants {
     public static final String UTF8 = "UTF-8";
     public static final String BLOC_00 = "00";
     public static final String BLOC_05 = "05";
+    public static final String BLOC_11 = "11";
+    public static final String BLOC_30 = "30";
     public static final String BLOC_90 = "90";
 
     public static final String RUB_001 = "001";
     public static final String RUB_002 = "002";
+    public static final String RUB_003 = "003";
+    public static final String RUB_004 = "004";
     public static final String RUB_006 = "006";
 
     public static final String NATURE_MENSUELLE = "01";
