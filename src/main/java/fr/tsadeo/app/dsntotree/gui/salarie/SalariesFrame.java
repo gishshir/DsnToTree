@@ -25,6 +25,7 @@ import fr.tsadeo.app.dsntotree.business.SalarieDto;
 import fr.tsadeo.app.dsntotree.gui.AbstractFrame;
 import fr.tsadeo.app.dsntotree.gui.GuiUtils;
 import fr.tsadeo.app.dsntotree.gui.IMainActionListener;
+import fr.tsadeo.app.dsntotree.gui.action.EditSalarieAction;
 import fr.tsadeo.app.dsntotree.gui.action.FocusSearchSalarieAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowSalarieAction;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
@@ -51,12 +52,16 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener, Do
 
         if (salarie != null) {
             this.btShowRubriques.setEnabled(true);
+            this.btEditSalarie.setEnabled(true);
             this.btShowRubriques.setToolTipText("voir les rubriques du salarie " + salarie.getNom());
             this.btShowRubriques.setSalarie(salarie);
+            this.btEditSalarie.setSalarie(salarie);
         } else {
             this.btShowRubriques.setEnabled(false);
+            this.btEditSalarie.setEnabled(false);
             this.btShowRubriques.setToolTipText("");
             this.btShowRubriques.setSalarie(null);
+            this.btEditSalarie.setSalarie(null);
         }
     }
 
@@ -149,7 +154,10 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener, Do
         panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.X_AXIS));
 
         panelButton.add(Box.createHorizontalGlue());
-        this.createButtonShowSalaries(container, BorderLayout.CENTER);
+        this.createButtonShowSalaries(panelButton, BorderLayout.CENTER);
+        panelButton.add(Box.createRigidArea(DIM_HOR_RIGID_AREA_10));
+        this.createButtonEditSalaries(panelButton, BorderLayout.CENTER);
+        panelButton.add(Box.createHorizontalGlue());
 
         container.add(panelButton, layout);
     }
@@ -159,6 +167,13 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener, Do
         this.btShowRubriques = new SalarieStateButton();
         GuiUtils.createButton(this.btShowRubriques, new ShowSalarieAction(this.mainActionListener), SHOW_SALARIE_ACTION,
                 KeyEvent.VK_R, PATH_SHOW_BLOC_ICO, null, "Voir les rubriques du salarié", false, container, layout);
+    }
+
+    private void createButtonEditSalaries(Container container, String layout) {
+
+        this.btEditSalarie = new SalarieStateButton();
+        GuiUtils.createButton(this.btEditSalarie, new EditSalarieAction(this.mainActionListener), EDIT_SALARIE_ACTION,
+                KeyEvent.VK_E, PATH_EDIT_SALARIE_ICO, null, "Editer les rubriques du salarié", false, container, layout);
     }
 
     private void createPanelSearch(Container container, String layout) {
@@ -190,8 +205,19 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener, Do
         private static final long serialVersionUID = 1L;
 
         private SalarieDto salarie;
+        // TODO implementer
+        private String pathParent = "";
 
-        public SalarieDto getSalarie() {
+        
+        public String getPathParent() {
+			return pathParent;
+		}
+
+		public void setPathParent(String pathParent) {
+			this.pathParent = pathParent;
+		}
+
+		public SalarieDto getSalarie() {
             return salarie;
         }
 

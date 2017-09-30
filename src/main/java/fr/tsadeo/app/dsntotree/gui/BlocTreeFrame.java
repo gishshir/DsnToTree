@@ -64,19 +64,19 @@ public class BlocTreeFrame extends AbstractFrame implements ItemBlocListener, ID
 
     // ------------------------------------- implementing ItemBlocListener
     @Override
-    public void onItemBlocSelected(ItemBloc itemBloc, int treeRowOfBloc, String path) {
+    public void onItemBlocSelected(ItemBloc itemBloc, String path) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onItemRubriqueSelected(ItemRubrique itemRubrique, int treeRowOfBloc, String path) {
+    public void onItemRubriqueSelected(ItemRubrique itemRubrique, String path) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onItemBlocModified(ItemBloc modifiedItemBloc, int treeRowOfBloc, ModifiedState state, boolean refresh) {
+    public void onItemBlocModified(ItemBloc modifiedItemBloc, ModifiedState state, boolean refresh) {
 
         if (this.itemBloc.isDeleted()) {
             this.actionClose();

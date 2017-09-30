@@ -39,6 +39,7 @@ import javax.swing.SwingWorker;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.tree.TreePath;
 
 import fr.tsadeo.app.dsntotree.business.SalarieDto;
 import fr.tsadeo.app.dsntotree.gui.action.CancelSearchAction;
@@ -279,6 +280,12 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         if (this.tfSearch != null) {
             this.tfSearch.requestFocusInWindow();
         }
+    }
+    
+    @Override
+    public void actionEditBlocItem(ItemBloc itemBloc, String pathParent) {
+    	 this.actionShowBlocToEditWithConfirmation(itemBloc, pathParent, itemBloc.getFirstRubrique(),
+                 false);
     }
 
     @Override
@@ -603,25 +610,25 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 
     // ---------------------------------- implements ItemBlocListener
     @Override
-    public void onItemBlocSelected(ItemBloc itemBloc, int treeRowOfBloc, String pathParent) {
+    public void onItemBlocSelected(ItemBloc itemBloc, String pathParent) {
 
-        this.actionShowBlocToEditWithConfirmation(itemBloc, treeRowOfBloc, pathParent, itemBloc.getFirstRubrique(),
+        this.actionShowBlocToEditWithConfirmation(itemBloc, pathParent, itemBloc.getFirstRubrique(),
                 false);
     }
 
     @Override
-    public void onItemRubriqueSelected(ItemRubrique itemRubrique, int treeRowOfBloc, String pathParent) {
+    public void onItemRubriqueSelected(ItemRubrique itemRubrique, String pathParent) {
 
         if (!itemRubrique.isError()) {
             boolean focus = !this.tfSearch.hasFocus();
             ItemBloc itemBloc = itemRubrique.getBlocContainer();
             if (itemBloc != null) {
-                this.actionShowBlocToEditWithConfirmation(itemBloc, treeRowOfBloc, pathParent, itemRubrique, focus);
+                this.actionShowBlocToEditWithConfirmation(itemBloc, pathParent, itemRubrique, focus);
             }
         }
     }
 
-    private void actionShowBlocToEditWithConfirmation(ItemBloc itemBloc, int treeRowOfBloc, String pathParent,
+    private void actionShowBlocToEditWithConfirmation(ItemBloc itemBloc, String pathParent,
             ItemRubrique itemRubriqueToFocus, boolean focus) {
 
         ItemBloc editedItemBloc = this.myPanelBloc.getCurrentItemBloc();
@@ -639,39 +646,39 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
                 this.myPanelBloc.validerSaisie(false);
             }
         }
-        this.actionShowBlocToEdit(itemBloc, treeRowOfBloc, pathParent, itemRubriqueToFocus, focus);
+        this.actionShowBlocToEdit(itemBloc, pathParent, itemRubriqueToFocus, focus);
     }
 
-    private void actionShowBlocToEdit(ItemBloc itemBloc, int treeRowOfBloc, String pathParent,
+    private void actionShowBlocToEdit(ItemBloc itemBloc, String pathParent,
             ItemRubrique itemRubriqueToFocus, boolean focus) {
 
-        this.myPanelBloc.setItemBloc(itemBloc, treeRowOfBloc, pathParent, itemRubriqueToFocus, focus);
+        this.myPanelBloc.setItemBloc(itemBloc, pathParent, itemRubriqueToFocus, focus);
         this.repaint();
         this.revalidate();
     }
 
     @Override
-    public void onItemBlocModified(ItemBloc itemBloc, int treeRowOfBloc, ModifiedState state, boolean refresh) {
+    public void onItemBlocModified(ItemBloc itemBloc, ModifiedState state, boolean refresh) {
 
         switch (state) {
         case annuler:
 
             break;
         case valider:
-            this.validerBlocModification(itemBloc, treeRowOfBloc, true);
+            this.validerBlocModification(itemBloc, true);
             break;
         }
 
     }
 
-    private void validerBlocModification(ItemBloc itemBloc, int treeRowOfBloc, boolean refresh) {
+    private void validerBlocModification(ItemBloc itemBloc, boolean refresh) {
 
         ServiceFactory.getDsnService().updateDsnListBloc(this.dsn, itemBloc);
-        this.myTree.refreshBloc(treeRowOfBloc, itemBloc);
+        TreePath treePath = this.myTree.refreshBloc(itemBloc);
         this.btSave.setEnabled(true);
         if (refresh) {
-            this.myTree.expandRow(treeRowOfBloc);
-            this.myTree.setSelectionRow(treeRowOfBloc);
+            this.myTree.expandPath(treePath);
+            this.myTree.setSelectionPath(treePath);
         }
         this.repaint();
         this.revalidate();
