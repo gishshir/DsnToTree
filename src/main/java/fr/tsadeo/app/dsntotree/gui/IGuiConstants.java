@@ -34,12 +34,15 @@ public interface IGuiConstants {
     public static final String PATH_DUPLICATE_ICO = PATH_IMAGES + "duplicate.gif";
     public static final String PATH_BDD_ICO = PATH_IMAGES + "bdd.png";
     public static final String PATH_EDIT_ICO = PATH_IMAGES + "edit.png";
+    
     public static final String PATH_TEST_CONNEXION_ICO = PATH_IMAGES + "connexion.png";
     public static final String PATH_CONNEXION_OK_ICO = PATH_IMAGES + "ok.gif";
     public static final String PATH_CONNEXION_NOK_ICO = PATH_IMAGES + "nok.gif";
     public static final String PATH_CONNEXION_UNKNONW_ICO = PATH_IMAGES + "greymark.gif";
     public static final String PATH_SQL_FILE_ICO = PATH_IMAGES + "sqlrequest.png";
     public static final String PATH_SQL_REQUEST_ICO = PATH_IMAGES + "sqlrequest.png";
+    public static final String PATH_SALARIES_ICO = PATH_IMAGES + "salaries.png";
+    public static final String PATH_EDIT_SALARIE_ICO = PATH_IMAGES + "smalledit.png";
 
     public static final Font FONT = new Font("SansSerif", Font.PLAIN, 14);
 
@@ -61,6 +64,8 @@ public interface IGuiConstants {
     public final static String SAVE_DSN_ACTION = "save-dsn";
     public final static String SHOW_JDBC_ACTION = "show-jdbc";
     public final static String SHOW_SALARIES_ACTION = "show-salaries";
+    public final static String SHOW_SALARIE_ACTION = "show-salarie";
+    public final static String EDIT_SALARIE_ACTION = "edit-salarie";
 
     public final static String LIRE_BDD_MSG_ACTION = "lire-bdd-msg";
     public final static String EDIT_BDD_MSG_ACTION = "edit-bdd-msg";

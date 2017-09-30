@@ -41,7 +41,7 @@ public class GuiUtils {
 
         button.setAction(action);
         button.setIcon(GuiUtils.createImageIcon(iconPath));
-        button.setText(name);
+        button.setText(name== null?"":name);
         button.setToolTipText(tooltip);
         button.setMnemonic(keyStrokeWhenFocusedWindow);
 

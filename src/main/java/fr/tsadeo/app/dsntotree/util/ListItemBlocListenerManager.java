@@ -36,25 +36,25 @@ public class ListItemBlocListenerManager implements ItemBlocListener {
 
     // --------------------------------------- implementing ItemblocListener
     @Override
-    public void onItemBlocSelected(ItemBloc itemBloc, int treeRowOfBloc, String path) {
+    public void onItemBlocSelected(ItemBloc itemBloc, String path) {
         for (ItemBlocListener itemBlocListener : listItemBlocListener) {
-            itemBlocListener.onItemBlocSelected(itemBloc, treeRowOfBloc, path);
+            itemBlocListener.onItemBlocSelected(itemBloc, path);
         }
     }
 
     @Override
-    public void onItemRubriqueSelected(ItemRubrique itemRubrique, int treeRowOfBloc, String path) {
+    public void onItemRubriqueSelected(ItemRubrique itemRubrique, String path) {
 
         for (ItemBlocListener itemBlocListener : listItemBlocListener) {
-            itemBlocListener.onItemRubriqueSelected(itemRubrique, treeRowOfBloc, path);
+            itemBlocListener.onItemRubriqueSelected(itemRubrique, path);
         }
 
     }
 
     @Override
-    public void onItemBlocModified(ItemBloc itemBloc, int treeRowOfBloc, ModifiedState state, boolean refresh) {
+    public void onItemBlocModified(ItemBloc itemBloc, ModifiedState state, boolean refresh) {
         for (ItemBlocListener itemBlocListener : listItemBlocListener) {
-            itemBlocListener.onItemBlocModified(itemBloc, treeRowOfBloc, state, refresh);
+            itemBlocListener.onItemBlocModified(itemBloc, state, refresh);
         }
     }
 

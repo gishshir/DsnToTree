@@ -93,7 +93,6 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
 
     private ItemBloc currentItemBloc;
     private ItemRubrique currentItemRubrique;
-    private int currentTreeRowBloc;
 
     private Action nextRubriqueAction;
     private Action delRubriqueAction;
@@ -165,7 +164,6 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     void clear() {
 
         this.currentItemBloc = null;
-        this.currentTreeRowBloc = -1;
 
         this.panelTitle.removeAll();
         this.panelChildrens.setVisible(false);
@@ -181,7 +179,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
 
     void validerSaisie(boolean refresh) {
         populateItemBlocFromSaisie();
-        ListItemBlocListenerManager.get().onItemBlocModified(currentItemBloc, currentTreeRowBloc, ModifiedState.valider,
+        ListItemBlocListenerManager.get().onItemBlocModified(currentItemBloc, ModifiedState.valider,
                 refresh);
         enableButtons(false);
     }
@@ -518,11 +516,10 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
             return;
         }
         ItemBloc itemBloc = this.currentItemBloc;
-        int treeRowBloc = this.currentTreeRowBloc;
         ItemRubrique itemRubrique = this.currentItemRubrique;
         this.clear();
 
-        this.setItemBloc(itemBloc, treeRowBloc, "", itemRubrique, true);
+        this.setItemBloc(itemBloc, "", itemRubrique, true);
 
         this.revalidate();
         this.repaint();
@@ -561,7 +558,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
 
     }
 
-    void setItemBloc(ItemBloc itemBloc, int treeRowBloc, String pathParent, ItemRubrique itemRubriqueToSelect,
+    void setItemBloc(ItemBloc itemBloc, String pathParent, ItemRubrique itemRubriqueToSelect,
             boolean focus) {
 
         this.clear();
@@ -570,7 +567,6 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         this.btAddRubrique.setEnabled(!itemBloc.isError());
         this.currentItemBloc = itemBloc;
         this.currentItemRubrique = itemRubriqueToSelect;
-        this.currentTreeRowBloc = treeRowBloc;
 
         this.buildTitle(itemBloc, pathParent);
 
@@ -931,7 +927,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     @Override
     public void actionAnnulerSaisie() {
         cancelModification();
-        ListItemBlocListenerManager.get().onItemBlocModified(currentItemBloc, currentTreeRowBloc, ModifiedState.annuler,
+        ListItemBlocListenerManager.get().onItemBlocModified(currentItemBloc, ModifiedState.annuler,
                 true);
         enableButtons(false);
     }

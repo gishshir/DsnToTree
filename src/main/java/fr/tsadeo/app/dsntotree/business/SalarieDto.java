@@ -19,9 +19,20 @@ public class SalarieDto implements Serializable {
     private String nom;
     private String prenom;
 
+    private boolean visible = true;
+
     // ------------------------------------- accessors
+
     public String getNir() {
         return nir;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 
     public void setNir(String nir) {
@@ -50,6 +61,11 @@ public class SalarieDto implements Serializable {
 
     public int getIndex() {
         return index;
+    }
+
+    // ------------------------------------ public methods
+    public String getValueForSearch() {
+        return StringUtils.concat(this.nir, "-", this.nom, "-", this.prenom).toUpperCase();
     }
 
     // ------------------------------------ constructor

@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
@@ -163,6 +165,55 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
         return null;
     }
 
+    protected BlocNode findBlocNodeFromItemBloc(ItemBloc itemBloc) {
+        if (itemBloc == null || this.top == null) {
+            return null;
+        }
+
+        if (this.top instanceof BlocNode) {
+            return this.findBlocNodeFromItemBloc(itemBloc, (BlocNode) this.top);
+        }
+
+        BlocNode result = null;
+        for (int i = 0; i < top.getChildCount(); i++) {
+            TreeNode node = top.getChildAt(i);
+            if (node instanceof BlocNode) {
+                result = this.findBlocNodeFromItemBloc(itemBloc, (BlocNode) node);
+                if (result != null) {
+                    return result;
+                }
+            }
+        }
+        return null;
+    }
+
+    /*
+     * Fonction recursive de recherche du TreePath à partir d'un ItemBloc
+     */
+    private BlocNode findBlocNodeFromItemBloc(ItemBloc itemBloc, BlocNode blocNode) {
+        if (itemBloc == null || blocNode == null) {
+            return null;
+        }
+
+        if (blocNode.getItemBloc() == itemBloc) {
+            return blocNode;
+        }
+
+        List<BlocNode> listBlocChildren = blocNode.getBlocChildren();
+        if (listBlocChildren != null) {
+
+            for (BlocNode blocChild : listBlocChildren) {
+
+                BlocNode result = this.findBlocNodeFromItemBloc(itemBloc, blocChild);
+                if (result != null) {
+                    return result;
+                }
+            }
+        }
+
+        return null;
+    }
+
     private void actionSelectNode(TreePath path) {
 
         int row = this.getRowForPath(path);
@@ -175,7 +226,7 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
                 String pathParent = this.getPath(path.getParentPath());
                 ItemBloc itemBloc = (ItemBloc) itemTree;
                 if (this.itemBlocListener != null) {
-                    this.itemBlocListener.onItemBlocSelected(itemBloc, row, pathParent);
+                    this.itemBlocListener.onItemBlocSelected(itemBloc, pathParent);
                 }
                 this.selectedItemTreee = itemBloc;
             } else {
@@ -184,7 +235,7 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
 
                 String pathParent = this.getPath(path.getParentPath().getParentPath());
                 if (this.itemBlocListener != null) {
-                    this.itemBlocListener.onItemRubriqueSelected(itemRubrique, row, pathParent);
+                    this.itemBlocListener.onItemRubriqueSelected(itemRubrique, pathParent);
                 }
                 this.selectedItemTreee = itemRubrique;
             }
@@ -309,6 +360,7 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
             this.expandBlocLabel(new TreePath(this.top), blocLabel, expand);
         }
     }
+    
 
     void cancelSearch() {
         this.selectedIndex = Integer.MIN_VALUE;
@@ -429,6 +481,27 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
 
         protected ItemBloc getItemBloc() {
             return (ItemBloc) super.getUserObject();
+        }
+
+        protected boolean hasChildren() {
+            return this.getChildCount() > 0;
+        }
+
+        protected List<BlocNode> getBlocChildren() {
+
+            if (this.hasChildren()) {
+
+                List<BlocNode> list = new ArrayList<>();
+                for (int i = 0; i < this.getChildCount(); i++) {
+                    TreeNode treeChild = this.getChildAt(i);
+                    if (treeChild != null && treeChild instanceof BlocNode) {
+                            list.add((BlocNode) treeChild);
+                    }
+
+                }
+                return list;
+            }
+            return null;
         }
 
         protected BlocNode(ItemBloc itemBloc) {

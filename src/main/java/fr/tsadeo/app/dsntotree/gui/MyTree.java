@@ -32,20 +32,33 @@ public class MyTree extends MySimpleTree implements IGuiConstants {
         node.removeAllChildren();
     }
 
-    // FIXME traiter le cas de rafraichissement quand la dsn est non stucturee
-    // et
-    // qu'on a ajouté une rubrique
-    void refreshBloc(int treeRowOfBloc, ItemBloc itemBloc) {
+//    // FIXME traiter le cas de rafraichissement quand la dsn est non stucturee
+//    // et
+//    // qu'on a ajouté une rubrique
+//    void refreshBloc(int treeRowOfBloc, ItemBloc itemBloc) {
+//
+//        TreePath path = this.getPathForRow(treeRowOfBloc);
+//        BlocNode node = this.getBlocNodeFromPath(path);
+//
+//        this.refreshBloc(itemBloc, node);
+//
+//    }
 
-        TreePath path = this.getPathForRow(treeRowOfBloc);
-        BlocNode node = this.getBlocNodeFromPath(path);
+    TreePath refreshBloc(ItemBloc itemBloc) {
+
+        return this.refreshBloc(itemBloc, this.findBlocNodeFromItemBloc(itemBloc));
+    }
+
+    TreePath refreshBloc(ItemBloc itemBloc, BlocNode node) {
 
         if (node != null) {
             this.removeAllFromNode(node);
             this.addTreeNodeRubriques(node, itemBloc, false);
             this.addTreeNodeChildrens(node, itemBloc, true);
+            
+            return new TreePath(node.getPath());
         }
-
+        return null;
     }
 
     // visualisation de la liste des rubriques sous forme lineaire

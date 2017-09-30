@@ -39,6 +39,7 @@ import javax.swing.SwingWorker;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.tree.TreePath;
 
 import fr.tsadeo.app.dsntotree.business.SalarieDto;
 import fr.tsadeo.app.dsntotree.gui.action.CancelSearchAction;
@@ -48,7 +49,6 @@ import fr.tsadeo.app.dsntotree.gui.action.SaveDsnAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowErrorAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowJdbcFrameAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowOpenDialogAction;
-import fr.tsadeo.app.dsntotree.gui.action.ShowSalariesFrameAction;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
 import fr.tsadeo.app.dsntotree.gui.component.StateTextField;
 import fr.tsadeo.app.dsntotree.gui.salarie.SalariesFrame;
@@ -71,13 +71,14 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 
     private MyTree myTree;
 
-    private FilterPanel filterPanel;
+//    private FilterPanel filterPanel;
+    private BusinessPanel businessPanel;
 
     private MyPanelBloc myPanelBloc;
     private JdbcFrame jdbcFrame;
     private SalariesFrame salariesFrame;
 
-    private StateButton btOpen, btSave, btShowErrors, btShowJdbc, btShowSalaries;
+    private StateButton btOpen, btSave, btShowErrors, btShowJdbc;
     private StateTextField tfSearch;
     private int searchNoResult = Integer.MAX_VALUE;
     private Color tfSearchBg;
@@ -88,7 +89,8 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         pane.setLayout(new BorderLayout());
 
         createPanelTop(pane, BorderLayout.PAGE_START);
-        createFilterPanel(pane, BorderLayout.LINE_START);
+//        createFilterPanel(pane, BorderLayout.LINE_START);
+        createBusinessPanel(pane, BorderLayout.LINE_START);
         createSplitPanel(pane, this.createPanelTree(), this.createPanelBloc(), BorderLayout.CENTER, 500);
         createTextArea(pane, BorderLayout.PAGE_END);
     }
@@ -140,12 +142,22 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
     }
 
     private void createFilterPanel(Container container, String layout) {
-        this.filterPanel = new FilterPanel(this.buildFilterActionListener());
-        JScrollPane scrollPane = new JScrollPane(this.filterPanel);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        container.add(scrollPane, layout);
+//        this.filterPanel = new FilterPanel(this.buildFilterActionListener());
+    	
+//        JScrollPane scrollPane = new JScrollPane(this.filterPanel);
+//        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+//        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+//        container.add(scrollPane, layout);
     }
+    
+    private void createBusinessPanel(Container container, String layout) {
+      this.businessPanel = new BusinessPanel(this);
+  	
+      JScrollPane scrollPane = new JScrollPane(this.businessPanel);
+      scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+      scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+      container.add(scrollPane, layout);
+  }
 
     private ActionListener buildFilterActionListener() {
         ActionListener al = new ActionListener() {
@@ -184,7 +196,6 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         this.createButtonSave(panelButton, BorderLayout.CENTER);
         this.createButtonShowErrors(panelButton, BorderLayout.CENTER);
         this.createButtonShowJdbc(panelButton, BorderLayout.CENTER);
-        this.createButtonShowSalaries(panelButton, BorderLayout.CENTER);
 
         container.add(panelButton, layout);
     }
@@ -212,13 +223,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
                 "Accéder BDD", "Récupérer un message depuis la base", active, container, layout);
     }
 
-    private void createButtonShowSalaries(Container container, String layout) {
-
-        this.btShowSalaries = new StateButton();
-        GuiUtils.createButton(this.btShowSalaries, new ShowSalariesFrameAction(this), SHOW_SALARIES_ACTION,
-                KeyEvent.VK_A, PATH_OPEN_ICO, "Salariés", "Voir la liste des salariés", true, container, layout);
-    }
-
+   
     private void createButtonShowErrors(Container container, String layout) {
 
         btShowErrors = new StateButton();
@@ -276,11 +281,17 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
             this.tfSearch.requestFocusInWindow();
         }
     }
+    
+    @Override
+    public void actionEditBlocItem(ItemBloc itemBloc, String pathParent) {
+    	 this.actionShowBlocToEditWithConfirmation(itemBloc, pathParent, itemBloc.getFirstRubrique(),
+                 false);
+    }
 
     @Override
     public void actionShowBlocItem(ItemBloc itemBloc, String pathParent) {
 
-        String pathItemBloc = pathParent.concat(" - ").concat(itemBloc.toString());
+        String pathItemBloc = ((pathParent != null)?pathParent.concat(" - "):"").concat(itemBloc.toString());
         BlocTreeFrame blocTreeFrame = new BlocTreeFrame(this.dsn.getFile().getName(), pathItemBloc, this);
         ListItemBlocListenerManager.get().addItemBlocListener(blocTreeFrame);
         GuiApplication.centerFrame(blocTreeFrame, 0.25f, 0.65f);
@@ -372,12 +383,13 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
                         myTree.createNodes(dsn.getRoot(), true);
                         myTree.expandBloc(BLOC_11, true);
 
-                        filterPanel.buildListBlocCheckbox(dsn);
+//                        filterPanel.buildListBlocCheckbox(dsn);
 
                     } else {
                         myTree.showListRubriques(dsn.getRoot(), dsn.getRubriques());
                     }
                     myPanelBloc.setTreeRoot(dsn.getTreeRoot());
+                    businessPanel.activeButtons(true);
 
                     String phase = dsn.getPhase() == null ? "NA" : dsn.getPhase();
                     String nature = dsn.getNature() == null ? "NA" : dsn.getNature();
@@ -598,25 +610,25 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 
     // ---------------------------------- implements ItemBlocListener
     @Override
-    public void onItemBlocSelected(ItemBloc itemBloc, int treeRowOfBloc, String pathParent) {
+    public void onItemBlocSelected(ItemBloc itemBloc, String pathParent) {
 
-        this.actionShowBlocToEditWithConfirmation(itemBloc, treeRowOfBloc, pathParent, itemBloc.getFirstRubrique(),
+        this.actionShowBlocToEditWithConfirmation(itemBloc, pathParent, itemBloc.getFirstRubrique(),
                 false);
     }
 
     @Override
-    public void onItemRubriqueSelected(ItemRubrique itemRubrique, int treeRowOfBloc, String pathParent) {
+    public void onItemRubriqueSelected(ItemRubrique itemRubrique, String pathParent) {
 
         if (!itemRubrique.isError()) {
             boolean focus = !this.tfSearch.hasFocus();
             ItemBloc itemBloc = itemRubrique.getBlocContainer();
             if (itemBloc != null) {
-                this.actionShowBlocToEditWithConfirmation(itemBloc, treeRowOfBloc, pathParent, itemRubrique, focus);
+                this.actionShowBlocToEditWithConfirmation(itemBloc, pathParent, itemRubrique, focus);
             }
         }
     }
 
-    private void actionShowBlocToEditWithConfirmation(ItemBloc itemBloc, int treeRowOfBloc, String pathParent,
+    private void actionShowBlocToEditWithConfirmation(ItemBloc itemBloc, String pathParent,
             ItemRubrique itemRubriqueToFocus, boolean focus) {
 
         ItemBloc editedItemBloc = this.myPanelBloc.getCurrentItemBloc();
@@ -634,39 +646,39 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
                 this.myPanelBloc.validerSaisie(false);
             }
         }
-        this.actionShowBlocToEdit(itemBloc, treeRowOfBloc, pathParent, itemRubriqueToFocus, focus);
+        this.actionShowBlocToEdit(itemBloc, pathParent, itemRubriqueToFocus, focus);
     }
 
-    private void actionShowBlocToEdit(ItemBloc itemBloc, int treeRowOfBloc, String pathParent,
+    private void actionShowBlocToEdit(ItemBloc itemBloc, String pathParent,
             ItemRubrique itemRubriqueToFocus, boolean focus) {
 
-        this.myPanelBloc.setItemBloc(itemBloc, treeRowOfBloc, pathParent, itemRubriqueToFocus, focus);
+        this.myPanelBloc.setItemBloc(itemBloc, pathParent, itemRubriqueToFocus, focus);
         this.repaint();
         this.revalidate();
     }
 
     @Override
-    public void onItemBlocModified(ItemBloc itemBloc, int treeRowOfBloc, ModifiedState state, boolean refresh) {
+    public void onItemBlocModified(ItemBloc itemBloc, ModifiedState state, boolean refresh) {
 
         switch (state) {
         case annuler:
 
             break;
         case valider:
-            this.validerBlocModification(itemBloc, treeRowOfBloc, true);
+            this.validerBlocModification(itemBloc, true);
             break;
         }
 
     }
 
-    private void validerBlocModification(ItemBloc itemBloc, int treeRowOfBloc, boolean refresh) {
+    private void validerBlocModification(ItemBloc itemBloc, boolean refresh) {
 
         ServiceFactory.getDsnService().updateDsnListBloc(this.dsn, itemBloc);
-        this.myTree.refreshBloc(treeRowOfBloc, itemBloc);
+        TreePath treePath = this.myTree.refreshBloc(itemBloc);
         this.btSave.setEnabled(true);
         if (refresh) {
-            this.myTree.expandRow(treeRowOfBloc);
-            this.myTree.setSelectionRow(treeRowOfBloc);
+            this.myTree.expandPath(treePath);
+            this.myTree.setSelectionPath(treePath);
         }
         this.repaint();
         this.revalidate();
@@ -683,7 +695,8 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         this.tfSearch.waitEndAction();
 
         this.myPanelBloc.waitEndAction();
-        this.filterPanel.waitEndAction();
+//        this.filterPanel.waitEndAction();
+        this.businessPanel.waitEndAction();
 
     }
 
@@ -696,7 +709,8 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         this.tfSearch.actionEnded();
 
         this.myPanelBloc.currentActionEnded();
-        this.filterPanel.currentActionEnded();
+//        this.filterPanel.currentActionEnded();
+        this.businessPanel.currentActionEnded();
 
         this.setCursor(Cursor.getDefaultCursor());
     }
