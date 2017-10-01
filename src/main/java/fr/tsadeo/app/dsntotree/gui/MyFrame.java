@@ -555,11 +555,13 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 
             int respons = JOptionPane.showConfirmDialog(this,
                     "La DSN a été modifiée. \nVoulez-vous sauvegarder les modifications?", "DSN modifiée",
-                    JOptionPane.YES_NO_OPTION);
+                    JOptionPane.YES_NO_CANCEL_OPTION);
             if (respons == JOptionPane.YES_OPTION) {
                 this.actionSaveDsn(false);
+                this.actionShowOpenFileDialog();
+            } else if (respons == JOptionPane.NO_OPTION) {
+               this.actionShowOpenFileDialog();
             }
-            this.actionShowOpenFileDialog();
 
         } else {
             this.actionShowOpenFileDialog();

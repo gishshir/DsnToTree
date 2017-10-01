@@ -17,6 +17,9 @@ public class OracleBddAccessManager implements IBddAccessManager {
   private static final Pattern PATTERN_DB_URL = Pattern
   .compile("^jdbc:oracle:thin:@([\\w.]*):([\\d]{1,4})\\/([\\w]{1,10})");
 
+  
+    private BddConnexionDto bddConnexionDto;
+    
     @Override
     public Type getType() {
         return Type.Oracle;
@@ -35,7 +38,11 @@ public class OracleBddAccessManager implements IBddAccessManager {
     
 	@Override
 	public BddConnexionDto getCurrentBddConnexionDto() {
-		return this.getDefaultBddConnexionDto();
+		return this.bddConnexionDto != null ? this.bddConnexionDto:this.getDefaultBddConnexionDto();
+	}
+	@Override
+	public void setCurrentBddConnexionDto(BddConnexionDto bddConnexionDto) {
+		this.bddConnexionDto = bddConnexionDto;
 	}
 
 

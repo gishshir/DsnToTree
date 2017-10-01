@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import fr.tsadeo.app.dsntotree.bdd.dao.IBddAccessManager.Type;
-import fr.tsadeo.app.dsntotree.bdd.dao.impl.JdbcDataDsnDao;
 import fr.tsadeo.app.dsntotree.dto.BddConnexionDto;
 
 public class DatabaseManager {
