@@ -39,6 +39,7 @@ import javax.swing.text.AbstractDocument;
 
 import org.apache.commons.io.IOUtils;
 
+import fr.tsadeo.app.dsntotree.bdd.dao.BddAccessManagerFactory;
 import fr.tsadeo.app.dsntotree.bdd.dao.DatabaseManager;
 import fr.tsadeo.app.dsntotree.bdd.dao.IDataDsnDao;
 import fr.tsadeo.app.dsntotree.bdd.dao.IMessageDsnDao;
@@ -147,6 +148,8 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
 
             @Override
             protected void done() {
+            	
+            	BddAccessManagerFactory.get().setCurrentBddConnexionDto(test?connexionDto:null);
                 panelConnexion.setBddConnexionStatus(test ? ConnexionState.Ok : ConnexionState.Nok);
                 processTextArea.append(RC);
                 processTextArea.append(test ? "OK" : "Echec");
@@ -637,7 +640,11 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
 
     private static final class PanelSqlRequest extends JPanel {
 
-        private final JTextArea taSql = new JTextArea(5, 50);
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private final JTextArea taSql = new JTextArea(5, 50);
         private final JTextArea taResult = new JTextArea(10, 100);
 
         // ------------------------------------- constructor

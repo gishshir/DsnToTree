@@ -12,6 +12,7 @@ public interface IConstants {
     public static final String POINT = ".";
     public static final String SAUT_LIGNE = "\n";
     public static final String LIGNE = "Ligne: ";
+    public static final String TIRET_WITH_SPACE = " - ";
 
     public static final String RUBRIQUE_PREFIX = "S21.G00";
 

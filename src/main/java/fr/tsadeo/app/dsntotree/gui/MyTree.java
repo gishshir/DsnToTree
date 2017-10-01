@@ -32,18 +32,19 @@ public class MyTree extends MySimpleTree implements IGuiConstants {
         node.removeAllChildren();
     }
 
-//    // FIXME traiter le cas de rafraichissement quand la dsn est non stucturee
-//    // et
-//    // qu'on a ajouté une rubrique
-//    void refreshBloc(int treeRowOfBloc, ItemBloc itemBloc) {
-//
-//        TreePath path = this.getPathForRow(treeRowOfBloc);
-//        BlocNode node = this.getBlocNodeFromPath(path);
-//
-//        this.refreshBloc(itemBloc, node);
-//
-//    }
 
+    String getPathAsString(ItemBloc itemBloc){
+    	TreePath path = this.getPath(itemBloc);
+    	return path == null? "":super.getPathAsString(path);
+    }
+    TreePath getPath(ItemBloc itemBloc) {
+    	BlocNode node = this.findBlocNodeFromItemBloc(itemBloc);
+    	if (node != null) {
+    		TreePath path = new TreePath(node.getPath());
+    		return path;
+    	}
+    	return null;
+    }
     TreePath refreshBloc(ItemBloc itemBloc) {
 
         return this.refreshBloc(itemBloc, this.findBlocNodeFromItemBloc(itemBloc));

@@ -27,7 +27,7 @@ public class EditSalarieAction extends AbstractAction {
 				
 				SalarieStateButton btSalarie = (SalarieStateButton) src;
 				if (btSalarie.getSalarie() != null) {
-				listener.actionEditBlocItem(btSalarie.getSalarie().getItemBloc(), btSalarie.getPathParent());
+				listener.actionEditBlocItem(btSalarie.getSalarie().getItemBloc(), true);
 				}
 			}
 		}

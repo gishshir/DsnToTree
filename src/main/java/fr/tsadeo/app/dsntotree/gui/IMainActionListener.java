@@ -21,9 +21,9 @@ public interface IMainActionListener {
 
     public void actionShowDsnTreeWithConfirmation(Dsn dsn, String messageDialog);
 
-    public void actionShowBlocItem(ItemBloc itemBloc, String pathParent);
+    public void actionShowBlocItem(ItemBloc itemBloc);
     
-    public void actionEditBlocItem(ItemBloc itemBloc, String pathParent);
+    public void actionEditBlocItem(ItemBloc itemBloc,  boolean selectInTree);
 
     public void actionShowSalarieDialog();
 }

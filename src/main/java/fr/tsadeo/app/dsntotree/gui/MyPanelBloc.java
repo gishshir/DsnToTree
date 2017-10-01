@@ -71,7 +71,6 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
 
     private static final Dimension DIM_BUTTON_SMALL = new Dimension(16, 20);
 
-    private String blocCompletePath;
     private BlocTree treeRoot;
 
     private JTabbedPane tabbedPane;
@@ -174,6 +173,8 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
 
         this.nextRubriqueAction = null;
         this.delRubriqueAction = null;
+        
+        this.tabbedPane.setSelectedIndex(0);
 
     }
 
@@ -546,19 +547,15 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         return this.currentItemBloc;
     }
 
-    private void buildTitle(ItemBloc itemBloc, String pathParent) {
+    private void buildTitle(String path) {
 
-        JLabel labelTitle = new JLabel(pathParent);
+        JLabel labelTitle = new JLabel(path);
         labelTitle.setForeground(TREE_NORMAL_COLOR);
         this.panelTitle.add(labelTitle);
 
-        JLabel labelBloc = new JLabel("Bloc " + itemBloc.toString());
-        labelBloc.setForeground(TREE_NORMAL_COLOR);
-        this.panelTitle.add(labelBloc);
-
     }
 
-    void setItemBloc(ItemBloc itemBloc, String pathParent, ItemRubrique itemRubriqueToSelect,
+    void setItemBloc(ItemBloc itemBloc, String path, ItemRubrique itemRubriqueToSelect,
             boolean focus) {
 
         this.clear();
@@ -568,9 +565,8 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         this.currentItemBloc = itemBloc;
         this.currentItemRubrique = itemRubriqueToSelect;
 
-        this.buildTitle(itemBloc, pathParent);
+        this.buildTitle(path);
 
-        this.blocCompletePath = pathParent.concat(" ").concat(itemBloc.toString());
 
         // liste des rubriques
         if (itemBloc.hasRubriques()) {
@@ -728,7 +724,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     public void actionShowChild(PanelChild panelChild) {
 
         if (panelChild.child != null) {
-            this.mainActionListener.actionShowBlocItem(panelChild.child, this.blocCompletePath);
+            this.mainActionListener.actionShowBlocItem(panelChild.child);
         }
     }
 
