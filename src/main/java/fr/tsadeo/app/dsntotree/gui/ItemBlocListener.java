@@ -9,9 +9,9 @@ public interface ItemBlocListener {
         valider, annuler
     }
 
-    public void onItemBlocSelected(ItemBloc itemBloc, String path);
+    public void onItemBlocSelected(ItemBloc itemBloc);
 
-    public void onItemRubriqueSelected(ItemRubrique itemRubrique, String path);
+    public void onItemRubriqueSelected(ItemRubrique itemRubrique);
 
     public void onItemBlocModified(ItemBloc itemBloc, ModifiedState state, boolean refresh);
     

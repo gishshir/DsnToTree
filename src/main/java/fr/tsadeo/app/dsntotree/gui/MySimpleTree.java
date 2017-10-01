@@ -27,8 +27,9 @@ import javax.swing.tree.TreePath;
 import fr.tsadeo.app.dsntotree.model.IItemTree;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
+import fr.tsadeo.app.dsntotree.util.IConstants;
 
-public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiConstants, ActionListener {
+public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiConstants, IConstants, ActionListener {
 
     private static final Logger LOG = Logger.getLogger(MySimpleTree.class.getName());
 
@@ -86,14 +87,19 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
 
     }
 
-    private String getPath(TreePath path) {
+    protected String getPathAsString(TreePath path) {
 
         StringBuffer sb = new StringBuffer();
 
         if (path != null) {
             for (int i = 1; i < path.getPathCount(); i++) {
                 Object obj = path.getPath()[i];
-                sb.append(obj.toString()).append(" - ");
+                if (i == path.getPathCount() -1){
+                	sb.append("Bloc: ").append(obj.toString());
+                }
+                else {
+                  sb.append(obj.toString()).append(TIRET_WITH_SPACE);
+                }
             }
         }
 
@@ -134,7 +140,7 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
         LOG.config("path :" + path);
         ItemBloc itemBloc = this.getItemBlocFromPath(path);
         if (itemBloc != null) {
-            this.mainActionListener.actionShowBlocItem(itemBloc, this.getPath(path.getParentPath().getParentPath()));
+            this.mainActionListener.actionShowBlocItem(itemBloc);
         }
     }
 
@@ -223,19 +229,19 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
         if (itemTree != null) {
 
             if (itemTree.isBloc()) {
-                String pathParent = this.getPath(path.getParentPath());
+//                String pathParent = this.getPathAsString(path.getParentPath());
                 ItemBloc itemBloc = (ItemBloc) itemTree;
                 if (this.itemBlocListener != null) {
-                    this.itemBlocListener.onItemBlocSelected(itemBloc, pathParent);
+                    this.itemBlocListener.onItemBlocSelected(itemBloc);
                 }
                 this.selectedItemTreee = itemBloc;
             } else {
                 ItemRubrique itemRubrique = (ItemRubrique) itemTree;
                 row = this.getRowForPath(path.getParentPath());
 
-                String pathParent = this.getPath(path.getParentPath().getParentPath());
+//                String pathParent = this.getPathAsString(path.getParentPath().getParentPath());
                 if (this.itemBlocListener != null) {
-                    this.itemBlocListener.onItemRubriqueSelected(itemRubrique, pathParent);
+                    this.itemBlocListener.onItemRubriqueSelected(itemRubrique);
                 }
                 this.selectedItemTreee = itemRubrique;
             }
@@ -246,7 +252,7 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
     /*
      * Recherche une rubrique contenant le texte recherché
      */
-    private TreePath search(TreePath parent, String search, boolean next) {
+    private TreePath searchValue(TreePath parent, String search, boolean next) {
 
         TreePath result = null;
         TreeNode node = (TreeNode) parent.getLastPathComponent();
@@ -274,7 +280,7 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
             for (int i = 0; i < node.getChildCount(); i++) {
                 TreeNode child = node.getChildAt(i);
                 TreePath path = parent.pathByAddingChild(child);
-                result = search(path, search, next);
+                result = searchValue(path, search, next);
                 if (result != null) {
                     return result;
                 }
@@ -369,7 +375,7 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
 
     boolean search(String search, boolean next) {
 
-        TreePath result = this.search(new TreePath(this.getTop()), search.toLowerCase(), next);
+        TreePath result = this.searchValue(new TreePath(this.getTop()), search.toLowerCase(), next);
         if (result != null) {
             LOG.config("Search OK (".concat(search).concat(") ").concat(result.toString()));
             return true;

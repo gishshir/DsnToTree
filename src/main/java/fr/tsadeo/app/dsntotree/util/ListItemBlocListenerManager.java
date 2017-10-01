@@ -36,17 +36,17 @@ public class ListItemBlocListenerManager implements ItemBlocListener {
 
     // --------------------------------------- implementing ItemblocListener
     @Override
-    public void onItemBlocSelected(ItemBloc itemBloc, String path) {
+    public void onItemBlocSelected(ItemBloc itemBloc) {
         for (ItemBlocListener itemBlocListener : listItemBlocListener) {
-            itemBlocListener.onItemBlocSelected(itemBloc, path);
+            itemBlocListener.onItemBlocSelected(itemBloc);
         }
     }
 
     @Override
-    public void onItemRubriqueSelected(ItemRubrique itemRubrique, String path) {
+    public void onItemRubriqueSelected(ItemRubrique itemRubrique) {
 
         for (ItemBlocListener itemBlocListener : listItemBlocListener) {
-            itemBlocListener.onItemRubriqueSelected(itemRubrique, path);
+            itemBlocListener.onItemRubriqueSelected(itemRubrique);
         }
 
     }

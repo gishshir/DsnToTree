@@ -205,17 +205,6 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener, Do
         private static final long serialVersionUID = 1L;
 
         private SalarieDto salarie;
-        // TODO implementer
-        private String pathParent = "";
-
-        
-        public String getPathParent() {
-			return pathParent;
-		}
-
-		public void setPathParent(String pathParent) {
-			this.pathParent = pathParent;
-		}
 
 		public SalarieDto getSalarie() {
             return salarie;

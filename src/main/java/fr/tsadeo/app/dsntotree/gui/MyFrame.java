@@ -283,15 +283,21 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
     }
     
     @Override
-    public void actionEditBlocItem(ItemBloc itemBloc, String pathParent) {
-    	 this.actionShowBlocToEditWithConfirmation(itemBloc, pathParent, itemBloc.getFirstRubrique(),
+    public void actionEditBlocItem(ItemBloc itemBloc, boolean selectInTree) {
+    	this.requestFocus();
+    	if (selectInTree) {
+    		 TreePath treePath = this.myTree.getPath(itemBloc);
+            this.myTree.expandPath(treePath);
+            this.myTree.setSelectionPath(treePath);
+    	}
+    	 this.actionShowBlocToEditWithConfirmation(itemBloc,  itemBloc.getFirstRubrique(),
                  false);
     }
 
     @Override
-    public void actionShowBlocItem(ItemBloc itemBloc, String pathParent) {
+    public void actionShowBlocItem(ItemBloc itemBloc) {
 
-        String pathItemBloc = ((pathParent != null)?pathParent.concat(" - "):"").concat(itemBloc.toString());
+        String pathItemBloc = this.myTree.getPathAsString(itemBloc);
         BlocTreeFrame blocTreeFrame = new BlocTreeFrame(this.dsn.getFile().getName(), pathItemBloc, this);
         ListItemBlocListenerManager.get().addItemBlocListener(blocTreeFrame);
         GuiApplication.centerFrame(blocTreeFrame, 0.25f, 0.65f);
@@ -610,25 +616,25 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 
     // ---------------------------------- implements ItemBlocListener
     @Override
-    public void onItemBlocSelected(ItemBloc itemBloc, String pathParent) {
+    public void onItemBlocSelected(ItemBloc itemBloc) {
 
-        this.actionShowBlocToEditWithConfirmation(itemBloc, pathParent, itemBloc.getFirstRubrique(),
+        this.actionShowBlocToEditWithConfirmation(itemBloc, itemBloc.getFirstRubrique(),
                 false);
     }
 
     @Override
-    public void onItemRubriqueSelected(ItemRubrique itemRubrique, String pathParent) {
+    public void onItemRubriqueSelected(ItemRubrique itemRubrique) {
 
         if (!itemRubrique.isError()) {
             boolean focus = !this.tfSearch.hasFocus();
             ItemBloc itemBloc = itemRubrique.getBlocContainer();
             if (itemBloc != null) {
-                this.actionShowBlocToEditWithConfirmation(itemBloc, pathParent, itemRubrique, focus);
+                this.actionShowBlocToEditWithConfirmation(itemBloc, itemRubrique, focus);
             }
         }
     }
 
-    private void actionShowBlocToEditWithConfirmation(ItemBloc itemBloc, String pathParent,
+    private void actionShowBlocToEditWithConfirmation(ItemBloc itemBloc, 
             ItemRubrique itemRubriqueToFocus, boolean focus) {
 
         ItemBloc editedItemBloc = this.myPanelBloc.getCurrentItemBloc();
@@ -646,12 +652,13 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
                 this.myPanelBloc.validerSaisie(false);
             }
         }
-        this.actionShowBlocToEdit(itemBloc, pathParent, itemRubriqueToFocus, focus);
+        this.actionShowBlocToEdit(itemBloc,  itemRubriqueToFocus, focus);
     }
 
-    private void actionShowBlocToEdit(ItemBloc itemBloc, String pathParent,
+    private void actionShowBlocToEdit(ItemBloc itemBloc, 
             ItemRubrique itemRubriqueToFocus, boolean focus) {
 
+    	String pathParent = this.myTree.getPathAsString(itemBloc);
         this.myPanelBloc.setItemBloc(itemBloc, pathParent, itemRubriqueToFocus, focus);
         this.repaint();
         this.revalidate();
