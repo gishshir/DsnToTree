@@ -43,6 +43,53 @@ public class DsnService implements IConstants, IJsonConstants {
         return listSalaries;
     }
 
+    /**
+     * Determine si il est possible de copier 'blocToDrop' dans le bloc parent
+     * 'parentTarget'
+     * 
+     * @param dsn
+     * @param parentTarget
+     * @return
+     */
+    public boolean canDropItemBloc(BlocTree treeRoot, ItemBloc parentTarget, ItemBloc blocToDrop) {
+
+        // si meme parent drop refuse
+        if (blocToDrop == null || parentTarget == null || blocToDrop.getParent() == parentTarget) {
+            return false;
+        }
+        // si parent de label different drop refuse
+        if (!parentTarget.getBlocLabel().equals(blocToDrop.getParent().getBlocLabel())) {
+            return false;
+        }
+
+        BlocTree treeBlocParent = treeRoot.findChild(parentTarget.getBlocLabel(), true);
+        if (treeBlocParent == null) {
+            return false;
+        }
+        if (treeBlocParent.hasChildrens()) {
+
+            BlocTree childTree = treeBlocParent.findChild(blocToDrop.getBlocLabel(), false);
+            if (childTree != null) {
+
+                int max = childTree.getCardinalite().getMax();
+
+                // compter le nombre de child de meme label deja existant dans
+                // le parent
+                int nbBlocs = 0;
+                if (parentTarget.hasChildren()) {
+                    for (ItemBloc blocChild : parentTarget.getChildrens()) {
+                        if (blocChild.getBlocLabel().equals(blocToDrop.getBlocLabel())) {
+                            nbBlocs++;
+                        }
+                    }
+                }
+                return nbBlocs < max;
+            }
+        }
+
+        return false;
+    }
+
     private SalarieDto createSalarieDto(int index, ItemBloc itemBloc) {
         SalarieDto salarieDto = new SalarieDto(index, itemBloc);
 

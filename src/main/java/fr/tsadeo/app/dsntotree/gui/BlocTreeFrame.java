@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.MySwingUtilities;
 
+import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
@@ -70,7 +71,25 @@ public class BlocTreeFrame extends AbstractFrame implements ItemBlocListener, ID
     }
 
     @Override
+    public BlocTree getTreeRoot() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
     public void onItemRubriqueSelected(ItemRubrique itemRubrique) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onItemBlocDragStarted() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onItemBlocDropEnded() {
         // TODO Auto-generated method stub
 
     }
