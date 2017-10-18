@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import fr.tsadeo.app.dsntotree.gui.ItemBlocListener;
+import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 
@@ -55,6 +56,27 @@ public class ListItemBlocListenerManager implements ItemBlocListener {
     public void onItemBlocModified(ItemBloc itemBloc, ModifiedState state, boolean refresh) {
         for (ItemBlocListener itemBlocListener : listItemBlocListener) {
             itemBlocListener.onItemBlocModified(itemBloc, state, refresh);
+        }
+    }
+
+    @Override
+    public BlocTree getTreeRoot() {
+        // nothing
+        return null;
+
+    }
+
+    @Override
+    public void onItemBlocDragStarted() {
+        for (ItemBlocListener itemBlocListener : listItemBlocListener) {
+            itemBlocListener.onItemBlocDragStarted();
+        }
+    }
+
+    @Override
+    public void onItemBlocDropEnded() {
+        for (ItemBlocListener itemBlocListener : listItemBlocListener) {
+            itemBlocListener.onItemBlocDropEnded();
         }
     }
 

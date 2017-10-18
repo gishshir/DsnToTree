@@ -193,12 +193,13 @@ public class ItemBloc extends AbstractItemTree implements Comparable<ItemBloc> {
         this.addChild(child, -1);
 
     }
+    
 
     private void addChild(ItemBloc child, int index) {
         if (this.childrens == null) {
             this.childrens = new ArrayList<ItemBloc>();
         }
-        if (index >= 0) {
+        if (index >= 0 && index <= this.childrens.size()) {
             this.childrens.add(index, child);
         } else {
             this.childrens.add(child);

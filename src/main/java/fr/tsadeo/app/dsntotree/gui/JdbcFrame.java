@@ -148,8 +148,8 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
 
             @Override
             protected void done() {
-            	
-            	BddAccessManagerFactory.get().setCurrentBddConnexionDto(test?connexionDto:null);
+
+                BddAccessManagerFactory.get().setCurrentBddConnexionDto(test ? connexionDto : null);
                 panelConnexion.setBddConnexionStatus(test ? ConnexionState.Ok : ConnexionState.Nok);
                 processTextArea.append(RC);
                 processTextArea.append(test ? "OK" : "Echec");
@@ -641,10 +641,10 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
     private static final class PanelSqlRequest extends JPanel {
 
         /**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		private final JTextArea taSql = new JTextArea(5, 50);
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+        private final JTextArea taSql = new JTextArea(5, 50);
         private final JTextArea taResult = new JTextArea(10, 100);
 
         // ------------------------------------- constructor

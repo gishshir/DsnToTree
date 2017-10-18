@@ -58,6 +58,8 @@ import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
+import fr.tsadeo.app.dsntotree.util.DragAndDropUtil;
+import fr.tsadeo.app.dsntotree.util.DragAndDropUtil.ITreeDndController;
 import fr.tsadeo.app.dsntotree.util.ListItemBlocListenerManager;
 
 public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionListener {
@@ -102,17 +104,21 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     private Action delChildAction;
 
     private final IMainActionListener mainActionListener;
+    private final ItemBlocListener itemBlocListener;
     private DocumentListener documentListener;
+    private ITreeDndController dndController;
 
-    public MyPanelBloc(IMainActionListener mainActionListener) {
+    public MyPanelBloc(IMainActionListener mainActionListener, ItemBlocListener itemBlocListener) {
 
         this.mainActionListener = mainActionListener;
+        this.itemBlocListener = itemBlocListener;
         this.setLayout(new BorderLayout());
         this.setBackground(TREE_BACKGROUND_COLOR);
 
         this.createTopPanel(this, BorderLayout.PAGE_START);
         this.createMiddlePanel(this, BorderLayout.CENTER);
         this.createBottomPanel(this, BorderLayout.PAGE_END);
+        
     }
 
     // ------------------------------------------------------- package methods
@@ -173,15 +179,14 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
 
         this.nextRubriqueAction = null;
         this.delRubriqueAction = null;
-        
+
         this.tabbedPane.setSelectedIndex(0);
 
     }
 
     void validerSaisie(boolean refresh) {
         populateItemBlocFromSaisie();
-        ListItemBlocListenerManager.get().onItemBlocModified(currentItemBloc, ModifiedState.valider,
-                refresh);
+        ListItemBlocListenerManager.get().onItemBlocModified(currentItemBloc, ModifiedState.valider, refresh);
         enableButtons(false);
     }
 
@@ -555,8 +560,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
 
     }
 
-    void setItemBloc(ItemBloc itemBloc, String path, ItemRubrique itemRubriqueToSelect,
-            boolean focus) {
+    void setItemBloc(ItemBloc itemBloc, String path, ItemRubrique itemRubriqueToSelect, boolean focus) {
 
         this.clear();
 
@@ -566,7 +570,6 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         this.currentItemRubrique = itemRubriqueToSelect;
 
         this.buildTitle(path);
-
 
         // liste des rubriques
         if (itemBloc.hasRubriques()) {
@@ -811,6 +814,9 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     // ajout d'un PanelChild à la position indiquée par l'index
     private void addPanelChildToList(ItemBloc itemChild, int index, String comment) {
         PanelChild panelChild = new PanelChild(itemChild);
+        // fonctionnalité de drag and drop (source)
+        DragAndDropUtil.get().createDefaultDragGestureRecognizer(panelChild);
+
         if (comment != null) {
             panelChild.commentLabel.setText(comment);
         }
@@ -923,8 +929,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     @Override
     public void actionAnnulerSaisie() {
         cancelModification();
-        ListItemBlocListenerManager.get().onItemBlocModified(currentItemBloc, ModifiedState.annuler,
-                true);
+        ListItemBlocListenerManager.get().onItemBlocModified(currentItemBloc, ModifiedState.annuler, true);
         enableButtons(false);
     }
 
@@ -1074,6 +1079,10 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
             this.addButtons(this);
             this.addCommentLabel(this);
             this.add(Box.createGlue());
+        }
+
+        public ItemBloc getItemBloc() {
+            return this.child;
         }
 
         private void waitEndAction() {

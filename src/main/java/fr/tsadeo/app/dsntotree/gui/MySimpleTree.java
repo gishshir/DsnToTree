@@ -2,6 +2,7 @@ package fr.tsadeo.app.dsntotree.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -27,6 +28,9 @@ import javax.swing.tree.TreePath;
 import fr.tsadeo.app.dsntotree.model.IItemTree;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
+import fr.tsadeo.app.dsntotree.service.ServiceFactory;
+import fr.tsadeo.app.dsntotree.util.DragAndDropUtil.ITreeDndController;
+import fr.tsadeo.app.dsntotree.util.DragAndDropUtil.ItemBlocTransfertHandler;
 import fr.tsadeo.app.dsntotree.util.IConstants;
 
 public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiConstants, IConstants, ActionListener {
@@ -47,7 +51,8 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
      */
     private static final long serialVersionUID = 1L;
 
-    private IItemTree selectedItemTreee = null;
+    private IItemTree selectedItemTree = null;
+    private IItemTree droppableItemTree = null;
 
     private final IMainActionListener mainActionListener;
     private final ItemBlocListener itemBlocListener;
@@ -85,7 +90,58 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
         this.setCellRenderer(this.createCellRenderer());
         this.buildMouseListener();
 
+        this.manageDragAndDropItemBloc();
     }
+
+    private void manageDragAndDropItemBloc() {
+
+        this.setTransferHandler(new ItemBlocTransfertHandler( 
+        		this.mainActionListener,
+        		new ITreeDndController() {
+        		
+        	private TreePath path;
+        	
+        	
+        	
+            @Override
+            public boolean canPerformAction(ItemBloc blocToDrop, Point dropPoint) {
+
+            	ItemBloc parentTarget = this.getTarget(dropPoint);
+                boolean canDrop = parentTarget == null?false:ServiceFactory.getDsnService().canDropItemBloc(itemBlocListener.getTreeRoot(), parentTarget,
+                        blocToDrop);
+                
+                if (canDrop && this.path != null) {
+                	BlocNode blocNode = MySimpleTree.this.getBlocNodeFromPath(this.path, true); 
+                	MySimpleTree.this.droppableItemTree = blocNode == null?null:blocNode
+                			.getItemBloc();
+                } else {
+                	MySimpleTree.this.droppableItemTree = null;
+                }
+                return canDrop;
+            }
+
+			@Override
+			public ItemBloc getTarget(Point dropPoint) {
+				
+				this.path =  MySimpleTree.this.getPathForLocation(dropPoint.x, dropPoint.y);
+	            return path == null ? null :  MySimpleTree.this.getItemBlocFromPath(path, true);
+			}
+
+			@Override
+			public void onItemBlocDropEnded() {
+				MySimpleTree.this.droppableItemTree = null;
+				MySimpleTree.this.itemBlocListener.onItemBlocDropEnded();
+			}
+
+			@Override
+			public void onItemBlocDragStarted() {
+				MySimpleTree.this.itemBlocListener.onItemBlocDragStarted();
+			}
+
+        }));
+
+    }
+
 
     protected String getPathAsString(TreePath path) {
 
@@ -94,11 +150,10 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
         if (path != null) {
             for (int i = 1; i < path.getPathCount(); i++) {
                 Object obj = path.getPath()[i];
-                if (i == path.getPathCount() -1){
-                	sb.append("Bloc: ").append(obj.toString());
-                }
-                else {
-                  sb.append(obj.toString()).append(TIRET_WITH_SPACE);
+                if (i == path.getPathCount() - 1) {
+                    sb.append("Bloc: ").append(obj.toString());
+                } else {
+                    sb.append(obj.toString()).append(TIRET_WITH_SPACE);
                 }
             }
         }
@@ -106,11 +161,13 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
         return sb.toString();
     }
 
-    protected BlocNode getBlocNodeFromPath(TreePath path) {
+    protected BlocNode getBlocNodeFromPath(TreePath path, boolean extendToRubrique) {
 
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
         if (!node.isRoot() && !node.isLeaf()) {
             return (BlocNode) node;
+        } else if (extendToRubrique && node.isLeaf()) {
+        	return this.getBlocNodeFromPath(path.getParentPath(), extendToRubrique);
         }
         return null;
     }
@@ -138,19 +195,23 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
 
     private void actionShowNode(TreePath path) {
         LOG.config("path :" + path);
-        ItemBloc itemBloc = this.getItemBlocFromPath(path);
+        ItemBloc itemBloc = this.getItemBlocFromPath(path, true);
         if (itemBloc != null) {
             this.mainActionListener.actionShowBlocItem(itemBloc);
         }
     }
 
-    private ItemBloc getItemBlocFromPath(TreePath path) {
+    public ItemBloc getItemBlocFromSelection() {
+        return getItemBlocFromPath(this.getSelectionPath(), true);
+    }
+
+    private ItemBloc getItemBlocFromPath(TreePath path, boolean extendToRubrique) {
 
         IItemTree itemTree = this.getIItemTreeFromPath(path);
         if (itemTree != null) {
             if (itemTree.isBloc()) {
                 return (ItemBloc) itemTree;
-            } else {
+            } else if (extendToRubrique){
                 ItemRubrique itemRubrique = (ItemRubrique) itemTree;
                 return itemRubrique.getBlocContainer();
             }
@@ -229,21 +290,23 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
         if (itemTree != null) {
 
             if (itemTree.isBloc()) {
-//                String pathParent = this.getPathAsString(path.getParentPath());
+                // String pathParent =
+                // this.getPathAsString(path.getParentPath());
                 ItemBloc itemBloc = (ItemBloc) itemTree;
                 if (this.itemBlocListener != null) {
                     this.itemBlocListener.onItemBlocSelected(itemBloc);
                 }
-                this.selectedItemTreee = itemBloc;
+                this.selectedItemTree = itemBloc;
             } else {
                 ItemRubrique itemRubrique = (ItemRubrique) itemTree;
                 row = this.getRowForPath(path.getParentPath());
 
-//                String pathParent = this.getPathAsString(path.getParentPath().getParentPath());
+                // String pathParent =
+                // this.getPathAsString(path.getParentPath().getParentPath());
                 if (this.itemBlocListener != null) {
                     this.itemBlocListener.onItemRubriqueSelected(itemRubrique);
                 }
-                this.selectedItemTreee = itemRubrique;
+                this.selectedItemTree = itemRubrique;
             }
         }
 
@@ -307,9 +370,17 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
                     if (item.getNumLine() > 0) {
                         label.setToolTipText("ligne: " + item.getNumLine());
                     }
+                    
+                    boolean droppable = item == droppableItemTree;
+                    boolean selected = item == selectedItemTree;
+
                     label.setOpaque(true);
-                    label.setBackground(item == selectedItemTreee ? Color.gray : TREE_BACKGROUND_COLOR);
-                    if (item.isError()) {
+                    label.setBackground(droppable?TREE_BACKGROUND_DROPPABLE_COLOR:(selected ? Color.gray :
+                    	TREE_BACKGROUND_COLOR));
+                    if (droppable) {
+                    	label.setForeground(TREE_DROPPABLE_COLOR);
+                    }
+                    else if (item.isError()) {
                         label.setForeground(TREE_ERROR_COLOR);
                     } else if (item.isModified()) {
                         label.setForeground(TREE_MODIFIED_COLOR);
@@ -366,7 +437,6 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
             this.expandBlocLabel(new TreePath(this.top), blocLabel, expand);
         }
     }
-    
 
     void cancelSearch() {
         this.selectedIndex = Integer.MIN_VALUE;
@@ -501,7 +571,7 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
                 for (int i = 0; i < this.getChildCount(); i++) {
                     TreeNode treeChild = this.getChildAt(i);
                     if (treeChild != null && treeChild instanceof BlocNode) {
-                            list.add((BlocNode) treeChild);
+                        list.add((BlocNode) treeChild);
                     }
 
                 }

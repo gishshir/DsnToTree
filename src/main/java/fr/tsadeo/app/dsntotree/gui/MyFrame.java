@@ -4,15 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetAdapter;
-import java.awt.dnd.DropTargetContext;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -23,7 +14,6 @@ import java.util.logging.Logger;
 import javax.swing.ActionMap;
 import javax.swing.BoxLayout;
 import javax.swing.InputMap;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -31,7 +21,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JToggleButton;
 import javax.swing.KeyStroke;
 import javax.swing.MySwingUtilities;
 import javax.swing.ScrollPaneConstants;
@@ -52,6 +41,7 @@ import fr.tsadeo.app.dsntotree.gui.action.ShowOpenDialogAction;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
 import fr.tsadeo.app.dsntotree.gui.component.StateTextField;
 import fr.tsadeo.app.dsntotree.gui.salarie.SalariesFrame;
+import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ErrorMessage;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
@@ -68,10 +58,11 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
     private static final long serialVersionUID = 1L;
 
     private Dsn dsn;
+    private boolean dnsSavedOneTime = false;
 
     private MyTree myTree;
 
-//    private FilterPanel filterPanel;
+    // private FilterPanel filterPanel;
     private BusinessPanel businessPanel;
 
     private MyPanelBloc myPanelBloc;
@@ -83,13 +74,14 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
     private int searchNoResult = Integer.MAX_VALUE;
     private Color tfSearchBg;
 
+    private boolean blocDragStarted = false;
+
     private final FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("Fichiers texte", "txt");
 
     public void addComponentsToPane(Container pane) {
         pane.setLayout(new BorderLayout());
 
         createPanelTop(pane, BorderLayout.PAGE_START);
-//        createFilterPanel(pane, BorderLayout.LINE_START);
         createBusinessPanel(pane, BorderLayout.LINE_START);
         createSplitPanel(pane, this.createPanelTree(), this.createPanelBloc(), BorderLayout.CENTER, 500);
         createTextArea(pane, BorderLayout.PAGE_END);
@@ -98,30 +90,9 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
     private JComponent createPanelBloc() {
 
         ListItemBlocListenerManager.get().addItemBlocListener(this);
-        this.myPanelBloc = new MyPanelBloc(this);
+        this.myPanelBloc = new MyPanelBloc(this, this);
 
         return this.myPanelBloc;
-    }
-
-    private void fireFileDroppedWithConfirmation(File file) {
-
-        if (this.isDsnModified()) {
-
-            int respons = JOptionPane.showConfirmDialog(this,
-                    "La DSN a été modifiée. \nVoulez-vous sauvegarder les modifications?", "DSN modifiée",
-                    JOptionPane.YES_NO_CANCEL_OPTION);
-            if (respons == JOptionPane.YES_OPTION) {
-                this.actionSaveDsn(false);
-            } else if (respons == JOptionPane.CANCEL_OPTION) {
-                processTextArea.append("Drag and drop annulé par l'utilisateur!");
-            } else {
-                this.fireFileDropped(file);
-            }
-
-        } else {
-            this.fireFileDropped(file);
-        }
-
     }
 
     private void fireFileDropped(File file) {
@@ -135,59 +106,23 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
     private JComponent createPanelTree() {
 
         this.myTree = new MyTree(this, this);
-        new DropTarget(this.myTree, new FileDropper());
+        // FIXME retablir
+//         new DropTarget(this, new FileDropper(this));
 
         JScrollPane scrollPane = new JScrollPane(this.myTree);
         return scrollPane;
     }
 
-    private void createFilterPanel(Container container, String layout) {
-//        this.filterPanel = new FilterPanel(this.buildFilterActionListener());
-    	
-//        JScrollPane scrollPane = new JScrollPane(this.filterPanel);
-//        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-//        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-//        container.add(scrollPane, layout);
-    }
-    
+
     private void createBusinessPanel(Container container, String layout) {
-      this.businessPanel = new BusinessPanel(this);
-  	
-      JScrollPane scrollPane = new JScrollPane(this.businessPanel);
-      scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-      scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-      container.add(scrollPane, layout);
-  }
+        this.businessPanel = new BusinessPanel(this);
 
-    private ActionListener buildFilterActionListener() {
-        ActionListener al = new ActionListener() {
-
-            // @Override
-            public void actionPerformed(final ActionEvent e) {
-
-                waitEndAction();
-                MySwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-
-                        if (e.getSource() instanceof JCheckBox) {
-                            JCheckBox cb = (JCheckBox) e.getSource();
-                            LOG.config(cb.getText() + " - " + cb.isSelected());
-                            MyFrame.this.myTree.expandBloc(cb.getText().substring(0, 2), cb.isSelected());
-                        } else if (e.getActionCommand().equals(ALL) && e.getSource() instanceof JToggleButton) {
-                            JToggleButton tb = (JToggleButton) e.getSource();
-                            MyFrame.this.myTree.expandBloc(ALL, tb.isSelected());
-                        }
-                        setFocusOnSearch();
-                        currentActionEnded();
-                    }
-                });
-
-            }
-
-        };
-
-        return al;
+        JScrollPane scrollPane = new JScrollPane(this.businessPanel);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        container.add(scrollPane, layout);
     }
+
 
     private void createPanelButton(Container container, String layout) {
 
@@ -223,7 +158,6 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
                 "Accéder BDD", "Récupérer un message depuis la base", active, container, layout);
     }
 
-   
     private void createButtonShowErrors(Container container, String layout) {
 
         btShowErrors = new StateButton();
@@ -272,6 +206,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         // Set up the content pane.
         addComponentsToPane(this.getContentPane());
         this.fc.setFileFilter(this.fileFilter);
+        
 
     }
 
@@ -281,17 +216,68 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
             this.tfSearch.requestFocusInWindow();
         }
     }
-    
+
+    // ---------------------------------------- implementing IMainActionListener
+
+    @Override
+    public void actionItemBlocDroppedWithConfirmation(ItemBloc parentTarget, ItemBloc blocToDrop) {
+
+        String message = "Voulez-vous copier le bloc ".concat(blocToDrop.toString())
+                .concat("\ndans le bloc parent ".concat(parentTarget.toString()).concat(" ?"));
+        int respons = JOptionPane.showConfirmDialog(this, message, "Copie d'un bloc ", JOptionPane.YES_NO_OPTION);
+        if (respons == JOptionPane.YES_OPTION) {
+
+            LOG.config(" to ItemBloc " + parentTarget.toString());
+            ItemBloc newBloc = ServiceFactory.getDsnService().createNewChild(blocToDrop, true, true);
+            parentTarget.addChild(newBloc);
+            parentTarget.setChildrenModified(true);
+            ServiceFactory.getDsnService().reorderListChildBloc(this.getTreeRoot(), parentTarget);
+            this.validerBlocModification(parentTarget, true);
+        }
+    }
+
+    @Override
+    public void actionFileDroppedWithConfirmation(File file) {
+
+    	LOG.info("actionFileDroppedWithConfirmation(): ".concat(file.getName()));
+        if (this.isDsnModified()) {
+
+            int respons = JOptionPane.showConfirmDialog(this,
+                    "La DSN a été modifiée. \nVoulez-vous sauvegarder les modifications?", "DSN modifiée",
+                    JOptionPane.YES_NO_CANCEL_OPTION);
+            if (respons == JOptionPane.YES_OPTION) {
+                this.actionSaveDsn(false);
+            } else if (respons == JOptionPane.CANCEL_OPTION) {
+                processTextArea.append("Drag and drop annulé par l'utilisateur!");
+            } else {
+                this.fireFileDropped(file);
+            }
+
+        } else {
+            this.fireFileDropped(file);
+        }
+
+    }
+
+    @Override
+    public void actionDisplayProcessMessage(String message, boolean append) {
+        if (append) {
+            this.processTextArea.append(SAUT_LIGNE);
+            this.processTextArea.append(message);
+        } else {
+            this.processTextArea.setText(message);
+        }
+    }
+
     @Override
     public void actionEditBlocItem(ItemBloc itemBloc, boolean selectInTree) {
-    	this.requestFocus();
-    	if (selectInTree) {
-    		 TreePath treePath = this.myTree.getPath(itemBloc);
+        this.requestFocus();
+        if (selectInTree) {
+            TreePath treePath = this.myTree.getPath(itemBloc);
             this.myTree.expandPath(treePath);
             this.myTree.setSelectionPath(treePath);
-    	}
-    	 this.actionShowBlocToEditWithConfirmation(itemBloc,  itemBloc.getFirstRubrique(),
-                 false);
+        }
+        this.actionShowBlocToEditWithConfirmation(itemBloc, itemBloc.getFirstRubrique(), false);
     }
 
     @Override
@@ -352,6 +338,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
             return;
         }
         this.processTextArea.setText(null);
+        this.dnsSavedOneTime = false;
         if (this.isDsnModified()) {
 
             int respons = JOptionPane.showConfirmDialog(this,
@@ -389,7 +376,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
                         myTree.createNodes(dsn.getRoot(), true);
                         myTree.expandBloc(BLOC_11, true);
 
-//                        filterPanel.buildListBlocCheckbox(dsn);
+                        // filterPanel.buildListBlocCheckbox(dsn);
 
                     } else {
                         myTree.showListRubriques(dsn.getRoot(), dsn.getRubriques());
@@ -414,7 +401,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
                                 JOptionPane.INFORMATION_MESSAGE);
                     }
 
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     currentActionEnded();
                     processTextArea.setText("ERROR: " + e.getMessage());
                     myTree.createNodes(null, true);
@@ -496,18 +483,20 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
                 try {
                     ServiceFactory.getDsnService().updateDsnWithTree(dsn);
 
-                    if (currentDirectory == null || !dsn.getFile().exists()) {
+                    if (!MyFrame.this.dnsSavedOneTime || currentDirectory == null || dsn.getFile() == null) {
                         File fileToSave = MyFrame.this
                                 .showSaveFileDialog(dsn.getFile() == null ? "dsn.txt" : dsn.getFile().getName());
                         if (fileToSave != null) {
                             dsn.setFile(fileToSave);
                             file = ServiceFactory.getWriteDsnService().write(dsn);
                         }
-
+                    } else {
+                        file = ServiceFactory.getWriteDsnService().write(dsn);
                     }
 
                 } catch (Exception ex) {
                     exception = ex;
+                    file = null;
                 }
                 return file;
             }
@@ -518,6 +507,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
                 currentActionEnded();
 
                 if (file != null) {
+                    MyFrame.this.dnsSavedOneTime = true;
                     JOptionPane.showMessageDialog(MyFrame.this, "DSN sauvegardée!", "Information",
                             JOptionPane.INFORMATION_MESSAGE);
                     processTextArea.append("Sauvegarde du fichier ".concat(file.getAbsolutePath().concat(SAUT_LIGNE)));
@@ -560,7 +550,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
                 this.actionSaveDsn(false);
                 this.actionShowOpenFileDialog();
             } else if (respons == JOptionPane.NO_OPTION) {
-               this.actionShowOpenFileDialog();
+                this.actionShowOpenFileDialog();
             }
 
         } else {
@@ -568,6 +558,9 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         }
     }
 
+    /**
+     * retourne le fichier à sauvegarder ou null si annulation
+     */
     private File showSaveFileDialog(String filename) {
 
         if (this.currentDirectory != null) {
@@ -594,6 +587,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             this.currentDirectory = file.getParentFile();
+            this.dnsSavedOneTime = false;
 
             processTextArea.append("DSN: ".concat(file.getName()).concat(POINT).concat(SAUT_LIGNE).concat(SAUT_LIGNE));
             this.actionReadFileAndShowTree(file, false, null);
@@ -618,15 +612,25 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 
     // ---------------------------------- implements ItemBlocListener
     @Override
+    public BlocTree getTreeRoot() {
+        return this.dsn == null ? null : this.dsn.getTreeRoot();
+    }
+
+    @Override
     public void onItemBlocSelected(ItemBloc itemBloc) {
 
-        this.actionShowBlocToEditWithConfirmation(itemBloc, itemBloc.getFirstRubrique(),
-                false);
+        if (blocDragStarted) {
+            return;
+        }
+        this.actionShowBlocToEditWithConfirmation(itemBloc, itemBloc.getFirstRubrique(), false);
     }
 
     @Override
     public void onItemRubriqueSelected(ItemRubrique itemRubrique) {
 
+        if (blocDragStarted) {
+            return;
+        }
         if (!itemRubrique.isError()) {
             boolean focus = !this.tfSearch.hasFocus();
             ItemBloc itemBloc = itemRubrique.getBlocContainer();
@@ -636,8 +640,18 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         }
     }
 
-    private void actionShowBlocToEditWithConfirmation(ItemBloc itemBloc, 
-            ItemRubrique itemRubriqueToFocus, boolean focus) {
+    @Override
+    public void onItemBlocDragStarted() {
+        blocDragStarted = true;
+    }
+
+    @Override
+    public void onItemBlocDropEnded() {
+        blocDragStarted = false;
+    }
+
+    private void actionShowBlocToEditWithConfirmation(ItemBloc itemBloc, ItemRubrique itemRubriqueToFocus,
+            boolean focus) {
 
         ItemBloc editedItemBloc = this.myPanelBloc.getCurrentItemBloc();
         if (editedItemBloc == itemBloc) {
@@ -654,13 +668,12 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
                 this.myPanelBloc.validerSaisie(false);
             }
         }
-        this.actionShowBlocToEdit(itemBloc,  itemRubriqueToFocus, focus);
+        this.actionShowBlocToEdit(itemBloc, itemRubriqueToFocus, focus);
     }
 
-    private void actionShowBlocToEdit(ItemBloc itemBloc, 
-            ItemRubrique itemRubriqueToFocus, boolean focus) {
+    private void actionShowBlocToEdit(ItemBloc itemBloc, ItemRubrique itemRubriqueToFocus, boolean focus) {
 
-    	String pathParent = this.myTree.getPathAsString(itemBloc);
+        String pathParent = this.myTree.getPathAsString(itemBloc);
         this.myPanelBloc.setItemBloc(itemBloc, pathParent, itemRubriqueToFocus, focus);
         this.repaint();
         this.revalidate();
@@ -704,7 +717,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         this.tfSearch.waitEndAction();
 
         this.myPanelBloc.waitEndAction();
-//        this.filterPanel.waitEndAction();
+        // this.filterPanel.waitEndAction();
         this.businessPanel.waitEndAction();
 
     }
@@ -718,42 +731,12 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         this.tfSearch.actionEnded();
 
         this.myPanelBloc.currentActionEnded();
-//        this.filterPanel.currentActionEnded();
+        // this.filterPanel.currentActionEnded();
         this.businessPanel.currentActionEnded();
 
         this.setCursor(Cursor.getDefaultCursor());
     }
 
     // ======================================== INNER CLASS
-    private class FileDropper extends DropTargetAdapter {
 
-        @Override
-        public void drop(DropTargetDropEvent dtde) {
-
-            try {
-                DropTargetContext context = dtde.getDropTargetContext();
-                dtde.acceptDrop(DnDConstants.ACTION_COPY);
-
-                Transferable trans = dtde.getTransferable();
-                File file;
-                Object obj = trans.getTransferData(DataFlavor.javaFileListFlavor);
-                if (obj instanceof List) {
-                    List<?> list = (List<?>) obj;
-                    for (Object item : list) {
-                        if (item instanceof File) {
-                            file = (File) item;
-                            LOG.config("Drop: " + file.getAbsolutePath());
-                            context.dropComplete(true);
-                            fireFileDroppedWithConfirmation(file);
-                        }
-                    }
-                }
-
-            } catch (Exception e) {
-                processTextArea.setText("ERROR: " + e.getMessage());
-            }
-
-        }
-
-    }
 }
