@@ -58,8 +58,8 @@ import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
+import fr.tsadeo.app.dsntotree.util.DragAndDropUtil;
 import fr.tsadeo.app.dsntotree.util.DragAndDropUtil.ITreeDndController;
-import fr.tsadeo.app.dsntotree.util.DragAndDropUtil.ItemBlocDragHandler;
 import fr.tsadeo.app.dsntotree.util.ListItemBlocListenerManager;
 
 public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionListener {
@@ -118,6 +118,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         this.createTopPanel(this, BorderLayout.PAGE_START);
         this.createMiddlePanel(this, BorderLayout.CENTER);
         this.createBottomPanel(this, BorderLayout.PAGE_END);
+        
     }
 
     // ------------------------------------------------------- package methods
@@ -814,7 +815,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     private void addPanelChildToList(ItemBloc itemChild, int index, String comment) {
         PanelChild panelChild = new PanelChild(itemChild);
         // fonctionnalité de drag and drop (source)
-        new ItemBlocDragHandler(panelChild, this.itemBlocListener);
+        DragAndDropUtil.get().createDefaultDragGestureRecognizer(panelChild);
 
         if (comment != null) {
             panelChild.commentLabel.setText(comment);

@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
-import java.awt.dnd.DropTarget;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -48,7 +47,6 @@ import fr.tsadeo.app.dsntotree.model.ErrorMessage;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
-import fr.tsadeo.app.dsntotree.util.DragAndDropUtil.FileDropper;
 import fr.tsadeo.app.dsntotree.util.ListDsnListenerManager;
 import fr.tsadeo.app.dsntotree.util.ListItemBlocListenerManager;
 import fr.tsadeo.app.dsntotree.util.SettingsUtils;
@@ -84,7 +82,6 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         pane.setLayout(new BorderLayout());
 
         createPanelTop(pane, BorderLayout.PAGE_START);
-        // createFilterPanel(pane, BorderLayout.LINE_START);
         createBusinessPanel(pane, BorderLayout.LINE_START);
         createSplitPanel(pane, this.createPanelTree(), this.createPanelBloc(), BorderLayout.CENTER, 500);
         createTextArea(pane, BorderLayout.PAGE_END);
@@ -109,20 +106,13 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
     private JComponent createPanelTree() {
 
         this.myTree = new MyTree(this, this);
-        new DropTarget(this, new FileDropper(this));
+        // FIXME retablir
+//         new DropTarget(this, new FileDropper(this));
 
         JScrollPane scrollPane = new JScrollPane(this.myTree);
         return scrollPane;
     }
 
-    // private void createFilterPanel(Container container, String layout) {
-    // this.filterPanel = new FilterPanel(this.buildFilterActionListener());
-
-    // JScrollPane scrollPane = new JScrollPane(this.filterPanel);
-    // scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-    // scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-    // container.add(scrollPane, layout);
-    // }
 
     private void createBusinessPanel(Container container, String layout) {
         this.businessPanel = new BusinessPanel(this);
@@ -133,37 +123,6 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         container.add(scrollPane, layout);
     }
 
-    // private ActionListener buildFilterActionListener() {
-    // ActionListener al = new ActionListener() {
-    //
-    // // @Override
-    // public void actionPerformed(final ActionEvent e) {
-    //
-    // waitEndAction();
-    // MySwingUtilities.invokeLater(new Runnable() {
-    // public void run() {
-    //
-    // if (e.getSource() instanceof JCheckBox) {
-    // JCheckBox cb = (JCheckBox) e.getSource();
-    // LOG.config(cb.getText() + " - " + cb.isSelected());
-    // MyFrame.this.myTree.expandBloc(cb.getText().substring(0, 2),
-    // cb.isSelected());
-    // } else if (e.getActionCommand().equals(ALL) && e.getSource() instanceof
-    // JToggleButton) {
-    // JToggleButton tb = (JToggleButton) e.getSource();
-    // MyFrame.this.myTree.expandBloc(ALL, tb.isSelected());
-    // }
-    // setFocusOnSearch();
-    // currentActionEnded();
-    // }
-    // });
-    //
-    // }
-    //
-    // };
-    //
-    // return al;
-    // }
 
     private void createPanelButton(Container container, String layout) {
 
@@ -247,6 +206,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         // Set up the content pane.
         addComponentsToPane(this.getContentPane());
         this.fc.setFileFilter(this.fileFilter);
+        
 
     }
 
@@ -271,6 +231,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
             ItemBloc newBloc = ServiceFactory.getDsnService().createNewChild(blocToDrop, true, true);
             parentTarget.addChild(newBloc);
             parentTarget.setChildrenModified(true);
+            ServiceFactory.getDsnService().reorderListChildBloc(this.getTreeRoot(), parentTarget);
             this.validerBlocModification(parentTarget, true);
         }
     }
@@ -278,6 +239,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
     @Override
     public void actionFileDroppedWithConfirmation(File file) {
 
+    	LOG.info("actionFileDroppedWithConfirmation(): ".concat(file.getName()));
         if (this.isDsnModified()) {
 
             int respons = JOptionPane.showConfirmDialog(this,

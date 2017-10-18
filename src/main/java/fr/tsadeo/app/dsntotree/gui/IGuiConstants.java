@@ -53,12 +53,16 @@ public interface IGuiConstants {
     public final static String CANCEL_SEARCH_ACTION = "cancel-search";
     public final static String NEXT_SEARCH_ACTION = "next-search";
 
+    public final static Color TREE_BACKGROUND_DROPPABLE_COLOR = Color.YELLOW;
     public final static Color TREE_BACKGROUND_COLOR = Color.BLACK;
     public final static Color TREE_ERROR_COLOR = Color.RED;
     public final static Color TREE_CREATED_COLOR = Color.PINK;
     public final static Color TREE_MODIFIED_COLOR = Color.cyan;
     public final static Color TREE_NORMAL_COLOR = Color.white;
+    public final static Color TREE_DROPPABLE_COLOR = Color.black;
 
+    public final static Color DRAG_START_COLOR = Color.cyan;
+    
     public final static String SHOW_OPEN_DIALOG_ACTION = "show-opendialog";
     public final static String SHOW_ERROR_DIALOG_ACTION = "show-errordialog";
     public final static String SAVE_DSN_ACTION = "save-dsn";
