@@ -22,6 +22,7 @@ public class MyTree extends MySimpleTree implements IGuiConstants {
     // ------------------------------- constructor
     MyTree(IMainActionListener mainActionListener, ItemBlocListener itemBlocListener) {
         super(mainActionListener, itemBlocListener, "DSN");
+        this.setTransferHandler(this.getItemBlocTransferHandler());
     }
 
     private void removeAllFromNode(DefaultMutableTreeNode node) {

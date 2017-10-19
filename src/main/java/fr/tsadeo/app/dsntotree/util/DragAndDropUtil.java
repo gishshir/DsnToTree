@@ -36,6 +36,7 @@ import javax.swing.TransferHandler;
 import fr.tsadeo.app.dsntotree.gui.IGuiConstants;
 import fr.tsadeo.app.dsntotree.gui.IMainActionListener;
 import fr.tsadeo.app.dsntotree.gui.MyPanelBloc.PanelChild;
+import fr.tsadeo.app.dsntotree.gui.MySimpleTree;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 
 public class DragAndDropUtil {
@@ -290,6 +291,54 @@ public class DragAndDropUtil {
         }
 
     }
+    
+    public static class MyTreeDropper extends DropTargetAdapter {
+    	
+		private final MySimpleTree myTree;
+		
+		
+    	public MyTreeDropper(MySimpleTree component) {
+    		this.myTree = component;
+    	}
+    	@Override
+        public void drop(DropTargetDropEvent e) {
+    		
+    		ItemBlocTransfertHandler importer =
+                  (ItemBlocTransfertHandler)  myTree.getTransferHandler();
+            
+            if (importer == null) {
+                e.rejectDrop();
+                return;
+            }
+           
+            boolean canImport = false;
+            e.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+            try {
+            canImport =  importer.canImport(e.getTransferable(), e.getLocation());
+            DragAndDropUtil.LOG.config("MyTreeDropper.drop() canImport: " + canImport);
+            }
+            catch (Exception ex) {
+            	ex.printStackTrace();
+            }
+            
+            if (canImport) {
+            	
+                boolean success;
+
+                try {
+                    success = importer.importData(e.getTransferable(), e.getLocation());
+                } catch (RuntimeException re) {
+                    success = false;
+                }
+
+                e.dropComplete(success);
+            } else {
+                e.rejectDrop();
+            }
+        }
+
+    	
+    }
 
     public static class FileDropper extends DropTargetAdapter {
 
@@ -300,32 +349,38 @@ public class DragAndDropUtil {
         }
 
         @Override
-        public void drop(DropTargetDropEvent dtde) {
+		public void drop(DropTargetDropEvent dtde) {
 
-            try {
-                DropTargetContext context = dtde.getDropTargetContext();
-                dtde.acceptDrop(DnDConstants.ACTION_COPY);
+			try {
 
-                Transferable trans = dtde.getTransferable();
-                File file;
-                Object obj = trans.getTransferData(DataFlavor.javaFileListFlavor);
-                if (obj instanceof List) {
-                    List<?> list = (List<?>) obj;
-                    for (Object item : list) {
-                        if (item instanceof File) {
-                            file = (File) item;
-                            LOG.config("Drop: " + file.getAbsolutePath());
-                            context.dropComplete(true);
-                            this.actionListener.actionFileDroppedWithConfirmation(file);
-                        }
-                    }
-                }
+				DropTargetContext context = dtde.getDropTargetContext();
+				dtde.acceptDrop(DnDConstants.ACTION_COPY);
 
-            } catch (Exception e) {
-                this.actionListener.actionDisplayProcessMessage("ERROR:".concat(e.getMessage()), true);
-            }
+				Transferable trans = dtde.getTransferable();
 
-        }
+				if (trans.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+					File file;
+					Object obj = trans.getTransferData(DataFlavor.javaFileListFlavor);
+					if (obj instanceof List) {
+						List<?> list = (List<?>) obj;
+						for (Object item : list) {
+							if (item instanceof File) {
+								file = (File) item;
+								LOG.config("Drop: " + file.getAbsolutePath());
+								context.dropComplete(true);
+								this.actionListener.actionFileDroppedWithConfirmation(file);
+							}
+						}
+					}
+				} else {
+					context.dropComplete(false);
+				}
+
+			} catch (Exception e) {
+				this.actionListener.actionDisplayProcessMessage("ERROR:".concat(e.getMessage()), true);
+			}
+
+		}
 
     }
 
@@ -340,7 +395,7 @@ public class DragAndDropUtil {
         private final IMainActionListener actionListener;
 
         private ItemBloc itemBlocToDrop;
-        private File file;
+//        private File file;
 
         public ItemBlocTransfertHandler(IMainActionListener actionListener,
         	 ITreeDndController controller) {
@@ -356,34 +411,36 @@ public class DragAndDropUtil {
 		}
 
 
-
-		@Override
-        public boolean importData(TransferSupport support) {
-			ItemBloc blocTarget = controller.getTarget(support.getDropLocation().getDropPoint());
+        public boolean importData(Transferable trans, Point dropPoint){
+        	ItemBloc blocTarget = controller.getTarget(dropPoint);
             if (itemBlocToDrop != null && blocTarget != null) {
                 actionListener.actionItemBlocDroppedWithConfirmation(blocTarget, itemBlocToDrop);
                 this.controller.onItemBlocDropEnded();
             }
-            else if (file != null) {
-                this.actionListener.actionFileDroppedWithConfirmation(file);
-                this.controller.onItemBlocDropEnded();
-            } 
+//            else if (file != null) {
+//                this.actionListener.actionFileDroppedWithConfirmation(file);
+//                this.controller.onItemBlocDropEnded();
+//            } 
             else {
                 return false;
             }
             return true;
         }
+		@Override
+        public boolean importData(TransferSupport support) {
+			return this.importData(support.getTransferable(), support.getDropLocation().getDropPoint());
+        }
+		
 
         private void init() {
             this.itemBlocToDrop = null;
-            this.file = null;
+//            this.file = null;
         }
-
-        private boolean isItemBlocToDrop(TransferSupport support) throws Exception {
+        private boolean isItemBlocToDrop(Transferable trans, Point dropPoint) throws Exception {
 
         	this.controller.onItemBlocDragStarted();
         	        	
-            Transferable trans = support.getTransferable();
+           
             if (trans.isDataFlavorSupported(DragAndDropUtil.get().getItemBlocDataFlavor())) {
 
                 Object obj = trans.getTransferData(DragAndDropUtil.get().getItemBlocDataFlavor());
@@ -391,7 +448,7 @@ public class DragAndDropUtil {
 
                     this.itemBlocToDrop = (ItemBloc) obj;
 
-                    if (controller.canPerformAction(itemBlocToDrop, support.getDropLocation().getDropPoint())) {
+                    if (controller.canPerformAction(itemBlocToDrop, dropPoint)) {
                        LOG.fine("Drop " + itemBlocToDrop.toString() + " to...");
                         return true;
                     }
@@ -400,10 +457,8 @@ public class DragAndDropUtil {
             this.controller.onItemBlocDropEnded();
             return false;
         }
-
-//        private boolean isFileToDrop(TransferSupport info) throws Exception {
+//        private boolean isFileToDrop(Transferable trans) throws Exception {
 //
-//            Transferable trans = info.getTransferable();
 //            if (trans.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
 //
 //                Object obj = trans.getTransferData(DataFlavor.javaFileListFlavor);
@@ -412,7 +467,7 @@ public class DragAndDropUtil {
 //                    for (Object item : list) {
 //                        if (item instanceof File) {
 //                            file = (File) item;
-//                            LOG.config("Drop: " + file.getAbsolutePath());
+//                            LOG.config("Drop file: " + file.getAbsolutePath());
 //                            return true;
 //                        }
 //                    }
@@ -421,28 +476,32 @@ public class DragAndDropUtil {
 //
 //            return false;
 //        }
+        public boolean canImport(Transferable trans, Point dropPoint) {
+        	 this.init();
+            
+             try {
 
+                 if (this.isItemBlocToDrop(trans,dropPoint)) {
+                    return true;
+                 }
+                 // InvalideDnDOperation !!
+//                 return  this.isFileToDrop(trans);
+
+             } catch (Exception ex) {
+             	LOG.severe(ex.toString());
+             }
+             this.init();
+             return false;
+        }
         @Override
-        public boolean canImport(TransferSupport info) {
+        public boolean canImport(TransferSupport support) {
 
             this.init();
-            if (!info.isDrop()) {
+            if (!support.isDrop()) {
                 return false;
             }
 
-            try {
-
-                if (this.isItemBlocToDrop(info)) {
-                   return true;
-                }
-                // InvalideDnDOperation !!
-//                return  this.dropFile(info);
-
-            } catch (Exception ex) {
-            	LOG.severe(ex.toString());
-            }
-            this.init();
-            return false;
+            return canImport(support.getTransferable(), support.getDropLocation().getDropPoint());
         }
 
     }

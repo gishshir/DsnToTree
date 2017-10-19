@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.dnd.DropTarget;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -31,6 +32,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.TreePath;
 
 import fr.tsadeo.app.dsntotree.business.SalarieDto;
+import fr.tsadeo.app.dsntotree.gui.ItemBlocListener.ModifiedState;
 import fr.tsadeo.app.dsntotree.gui.action.CancelSearchAction;
 import fr.tsadeo.app.dsntotree.gui.action.FocusSearchAction;
 import fr.tsadeo.app.dsntotree.gui.action.NextSearchAction;
@@ -47,6 +49,7 @@ import fr.tsadeo.app.dsntotree.model.ErrorMessage;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
+import fr.tsadeo.app.dsntotree.util.DragAndDropUtil.FileDropper;
 import fr.tsadeo.app.dsntotree.util.ListDsnListenerManager;
 import fr.tsadeo.app.dsntotree.util.ListItemBlocListenerManager;
 import fr.tsadeo.app.dsntotree.util.SettingsUtils;
@@ -106,8 +109,6 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
     private JComponent createPanelTree() {
 
         this.myTree = new MyTree(this, this);
-        // FIXME retablir
-//         new DropTarget(this, new FileDropper(this));
 
         JScrollPane scrollPane = new JScrollPane(this.myTree);
         return scrollPane;
@@ -207,7 +208,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         addComponentsToPane(this.getContentPane());
         this.fc.setFileFilter(this.fileFilter);
         
-
+        new DropTarget(this, new FileDropper(this));
     }
 
     @Override
@@ -233,6 +234,8 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
             parentTarget.setChildrenModified(true);
             ServiceFactory.getDsnService().reorderListChildBloc(this.getTreeRoot(), parentTarget);
             this.validerBlocModification(parentTarget, true);
+            
+            ListItemBlocListenerManager.get().onItemBlocModified(parentTarget, ModifiedState.valider, true);
         }
     }
 
