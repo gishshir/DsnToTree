@@ -3,6 +3,7 @@ package fr.tsadeo.app.dsntotree.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Point;
+import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -13,10 +14,13 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
+import javax.swing.DropMode;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
+import javax.swing.TransferHandler;
+import javax.swing.JTree.DropLocation;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -31,6 +35,7 @@ import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
 import fr.tsadeo.app.dsntotree.util.DragAndDropUtil.ITreeDndController;
 import fr.tsadeo.app.dsntotree.util.DragAndDropUtil.ItemBlocTransfertHandler;
+import fr.tsadeo.app.dsntotree.util.DragAndDropUtil.MyTreeDropper;
 import fr.tsadeo.app.dsntotree.util.IConstants;
 
 public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiConstants, IConstants, ActionListener {
@@ -90,57 +95,60 @@ public class MySimpleTree extends JTree implements TreeSelectionListener, IGuiCo
         this.setCellRenderer(this.createCellRenderer());
         this.buildMouseListener();
 
-        this.manageDragAndDropItemBloc();
+
     }
 
-    private void manageDragAndDropItemBloc() {
+    private TransferHandler transferHandler;
+    protected TransferHandler getItemBlocTransferHandler () {
+    	if (this.transferHandler == null) {
+    		this.transferHandler = new ItemBlocTransfertHandler( 
+            		this.mainActionListener,
+            		new ITreeDndController() {
+            		
+            	private TreePath path;
+            	
+                @Override
+                public boolean canPerformAction(ItemBloc blocToDrop, Point dropPoint) {
 
-        this.setTransferHandler(new ItemBlocTransfertHandler( 
-        		this.mainActionListener,
-        		new ITreeDndController() {
-        		
-        	private TreePath path;
-        	
-        	
-        	
-            @Override
-            public boolean canPerformAction(ItemBloc blocToDrop, Point dropPoint) {
-
-            	ItemBloc parentTarget = this.getTarget(dropPoint);
-                boolean canDrop = parentTarget == null?false:ServiceFactory.getDsnService().canDropItemBloc(itemBlocListener.getTreeRoot(), parentTarget,
-                        blocToDrop);
-                
-                if (canDrop && this.path != null) {
-                	BlocNode blocNode = MySimpleTree.this.getBlocNodeFromPath(this.path, true); 
-                	MySimpleTree.this.droppableItemTree = blocNode == null?null:blocNode
-                			.getItemBloc();
-                } else {
-                	MySimpleTree.this.droppableItemTree = null;
+                	ItemBloc parentTarget = this.getTarget(dropPoint);
+                    boolean canDrop = parentTarget == null?false:ServiceFactory.getDsnService().canDropItemBloc(itemBlocListener.getTreeRoot(), parentTarget,
+                            blocToDrop);
+                    if (canDrop && this.path != null) {
+                    	BlocNode blocNode = MySimpleTree.this.getBlocNodeFromPath(this.path, true); 
+                    	LOG.config("BlocNode target: " + blocNode.toString());
+                    	MySimpleTree.this.droppableItemTree = blocNode == null?null:blocNode
+                    			.getItemBloc();
+                    } else {
+                    	MySimpleTree.this.droppableItemTree = null;
+                    }
+                    return canDrop;
                 }
-                return canDrop;
-            }
 
-			@Override
-			public ItemBloc getTarget(Point dropPoint) {
-				
-				this.path =  MySimpleTree.this.getPathForLocation(dropPoint.x, dropPoint.y);
-	            return path == null ? null :  MySimpleTree.this.getItemBlocFromPath(path, true);
-			}
+    			@Override
+    			public ItemBloc getTarget(Point dropPoint) {
+    				
+    				this.path =  MySimpleTree.this.getPathForLocation(dropPoint.x, dropPoint.y);
+    	            return path == null ? null :  MySimpleTree.this.getItemBlocFromPath(path, true);
+    			}
 
-			@Override
-			public void onItemBlocDropEnded() {
-				MySimpleTree.this.droppableItemTree = null;
-				MySimpleTree.this.itemBlocListener.onItemBlocDropEnded();
-			}
+    			@Override
+    			public void onItemBlocDropEnded() {
+    				MySimpleTree.this.droppableItemTree = null;
+    				MySimpleTree.this.itemBlocListener.onItemBlocDropEnded();
+    			}
 
-			@Override
-			public void onItemBlocDragStarted() {
-				MySimpleTree.this.itemBlocListener.onItemBlocDragStarted();
-			}
+    			@Override
+    			public void onItemBlocDragStarted() {
+    				MySimpleTree.this.itemBlocListener.onItemBlocDragStarted();
+    			}
 
-        }));
+            });
 
+    	}
+    	return this.transferHandler;
     }
+
+   
 
 
     protected String getPathAsString(TreePath path) {
