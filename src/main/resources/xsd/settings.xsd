@@ -7,7 +7,14 @@
 	<xs:complexType name="Settings">
 		<xs:sequence>
 			<xs:element name="bdd" type="Bdd" minOccurs="0" maxOccurs="1" />
+			<xs:element name="norme" type="Norme" minOccurs="0" maxOccurs="1" />
 		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Norme">
+	<xs:sequence>
+			<xs:element name="dsnnormefile" type="xs:string" />
+	</xs:sequence>
 	</xs:complexType>
 
 	<xs:complexType name="Bdd">

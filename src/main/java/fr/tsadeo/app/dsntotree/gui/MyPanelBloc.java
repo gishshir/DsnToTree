@@ -7,6 +7,9 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -39,6 +42,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AbstractDocument;
 
+import fr.tsadeo.app.dsntotree.dico.IDictionnary;
 import fr.tsadeo.app.dsntotree.dto.BlocChildDto;
 import fr.tsadeo.app.dsntotree.dto.BlocChildrenDto;
 import fr.tsadeo.app.dsntotree.gui.ItemBlocListener.ModifiedState;
@@ -59,7 +63,6 @@ import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
 import fr.tsadeo.app.dsntotree.util.DragAndDropUtil;
-import fr.tsadeo.app.dsntotree.util.DragAndDropUtil.ITreeDndController;
 import fr.tsadeo.app.dsntotree.util.ListItemBlocListenerManager;
 
 public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionListener {
@@ -104,14 +107,11 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     private Action delChildAction;
 
     private final IMainActionListener mainActionListener;
-    private final ItemBlocListener itemBlocListener;
     private DocumentListener documentListener;
-    private ITreeDndController dndController;
 
-    public MyPanelBloc(IMainActionListener mainActionListener, ItemBlocListener itemBlocListener) {
+    public MyPanelBloc(IMainActionListener mainActionListener) {
 
         this.mainActionListener = mainActionListener;
-        this.itemBlocListener = itemBlocListener;
         this.setLayout(new BorderLayout());
         this.setBackground(TREE_BACKGROUND_COLOR);
 
@@ -238,6 +238,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         JPanel bottomPanel = new JPanel();
         container.add(bottomPanel, layout);
     }
+    
 
     private DocumentListener getDocumentListener() {
 
@@ -367,6 +368,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     private void createBlocPanelTitle(Container container, String layout) {
 
         this.panelTitle = new JPanel();
+        
         this.panelTitle.setMinimumSize(container.getSize());
         this.panelTitle.setBackground(TREE_BACKGROUND_COLOR);
         this.panelTitle.setForeground(TREE_NORMAL_COLOR);
@@ -552,14 +554,26 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         return this.currentItemBloc;
     }
 
-    private void buildTitle(String path) {
+    private void buildTitle(ItemBloc itemBloc, String path) {
 
-        JLabel labelTitle = new JLabel(path);
+    	JPanel panel = new JPanel();
+    	panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    	panel.setBackground(this.panelTitle.getBackground());
+    	panel.setAlignmentX(CENTER_ALIGNMENT);
+        this.panelTitle.add(panel);
+    	
+    	JLabel labelTitle = new JLabel(path);
         labelTitle.setForeground(TREE_NORMAL_COLOR);
-        this.panelTitle.add(labelTitle);
-
+        panel.add(labelTitle);
+        
+        JLabel labelLibelle = new JLabel(ServiceFactory.getDsnService().getBlocLibelle(itemBloc));
+        labelLibelle.setForeground(TREE_NORMAL_COLOR);
+        panel.add(labelLibelle);
     }
 
+    /*
+     * Point d'entrée principal pour setter un ItemBloc dans le paneau d'edition
+     */
     void setItemBloc(ItemBloc itemBloc, String path, ItemRubrique itemRubriqueToSelect, boolean focus) {
 
         this.clear();
@@ -569,7 +583,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         this.currentItemBloc = itemBloc;
         this.currentItemRubrique = itemRubriqueToSelect;
 
-        this.buildTitle(path);
+        this.buildTitle(itemBloc, path);
 
         // liste des rubriques
         if (itemBloc.hasRubriques()) {
@@ -792,9 +806,9 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
             this.repaint();
         }
     }
-
     private void addPanelRubriqueToList(ItemRubrique itemRubrique, boolean toBeSelected, boolean toBeFocused) {
-        PanelRubrique panelRubrique = new PanelRubrique(itemRubrique, this.getDocumentListener());
+        PanelRubrique panelRubrique = new PanelRubrique(itemRubrique, 
+        		this.getDocumentListener(), ServiceFactory.getDsnService().getRubriqueLibelle(itemRubrique));
         this.panelListRubriques.add(panelRubrique);
         panelRubrique.selectRubrique(toBeSelected, toBeFocused);
 
@@ -1157,12 +1171,13 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         private boolean deleted = false;
 
         // --------------------------- constructor
-        private PanelRubrique(ItemRubrique itemRubrique, DocumentListener documentListener) {
+        private PanelRubrique(ItemRubrique itemRubrique, DocumentListener documentListener,
+        		String tooltipText) {
             this.itemRubrique = itemRubrique;
             this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
             this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-            this.addLabelAndTextfield(this, documentListener);
+            this.addLabelAndTextfield(this, documentListener, tooltipText);
             this.addButtons(this);
         }
 
@@ -1188,12 +1203,17 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
             return this.itemRubrique.isCreated();
         }
 
-        private void addLabelAndTextfield(Container container, DocumentListener documentListener) {
+        private void addLabelAndTextfield(Container container,
+        		DocumentListener documentListener, String tooltipText) {
+        	
+        	this.setToolTipText(tooltipText);
 
             this.labRubriqueLabel = new JLabel(itemRubrique.getBlocAndRubriqueLabel());
+            
             this.tfRubriqueValue = new StateTextField(20);
             this.tfRubriqueValue.setMaximumSize(new Dimension(400, 20));
             this.tfRubriqueValue.setMinimumSize(new Dimension(100, 20));
+            
             this.originForeground = this.tfRubriqueValue.getForeground();
             this.originBackground = this.tfRubriqueValue.getBackground();
 

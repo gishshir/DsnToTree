@@ -93,7 +93,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
     private JComponent createPanelBloc() {
 
         ListItemBlocListenerManager.get().addItemBlocListener(this);
-        this.myPanelBloc = new MyPanelBloc(this, this);
+        this.myPanelBloc = new MyPanelBloc(this);
 
         return this.myPanelBloc;
     }

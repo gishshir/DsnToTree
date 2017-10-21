@@ -26,6 +26,17 @@ public class DsnService implements IConstants, IJsonConstants {
 
     private static final Logger LOG = Logger.getLogger(DsnService.class.getName());
     private static final String NA = "UNKNOWN";
+    
+
+
+    public String getBlocLibelle(ItemBloc itemBloc) {
+    	return ServiceFactory.getDictionnaryService().getDsnDictionnary().getLibelle(itemBloc.getBlocLabel());
+    }
+
+    public String getRubriqueLibelle(ItemRubrique itemRubrique) {
+    	return ServiceFactory.getDictionnaryService().getDsnDictionnary().getLibelle(itemRubrique.getBlocLabel(), itemRubrique.getRubriqueLabel());
+    }
+
 
     public List<SalarieDto> buildListSalarieDtos(Dsn dsn) {
 
