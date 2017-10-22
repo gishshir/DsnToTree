@@ -24,6 +24,6 @@ public class KeyAndLibelle {
 
 	@Override
 	public String toString() {
-		return key.concat("-").concat(libelle);
+		return key.concat(" : ").concat(libelle);
 	}
 }

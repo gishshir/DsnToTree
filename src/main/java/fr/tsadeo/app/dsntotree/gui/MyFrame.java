@@ -287,12 +287,12 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
     public void actionShowBlocItem(ItemBloc itemBloc) {
 
         String pathItemBloc = this.myTree.getPathAsString(itemBloc);
-        BlocTreeFrame blocTreeFrame = new BlocTreeFrame(this.dsn.getFile().getName(), pathItemBloc, this);
+        String description = ServiceFactory.getDsnService().getBlocLibelle(itemBloc);
+        BlocTreeFrame blocTreeFrame = new BlocTreeFrame(this.dsn.getFile().getName(), pathItemBloc, description, this);
         ListItemBlocListenerManager.get().addItemBlocListener(blocTreeFrame);
         GuiApplication.centerFrame(blocTreeFrame, 0.25f, 0.65f);
 
         blocTreeFrame.setItemBloc(itemBloc);
-
         blocTreeFrame.setVisible(true);
     }
 

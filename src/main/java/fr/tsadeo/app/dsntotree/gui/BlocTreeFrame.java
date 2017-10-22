@@ -34,6 +34,7 @@ public class BlocTreeFrame extends AbstractFrame implements ItemBlocListener, ID
     private MySimpleTree simpleTree;
     private ItemBloc itemBloc;
     private JPanel panelBlocPath;
+	private String description;
 
     // ------------------------------------ implementing IDsnListener
     @Override
@@ -112,10 +113,11 @@ public class BlocTreeFrame extends AbstractFrame implements ItemBlocListener, ID
     }
 
     // ---------------------------------------------- constructor
-    protected BlocTreeFrame(String title, String pathItemBloc, IMainActionListener listener) {
+    protected BlocTreeFrame(String title, String pathItemBloc, String description, IMainActionListener listener) {
         super("DSN: " + title, JFrame.DISPOSE_ON_CLOSE);
         this.mainActionListener = listener;
         this.pathItemBloc = pathItemBloc;
+        this.description = description;
 
         ListDsnListenerManager.get().addDsnListener(this);
 
@@ -189,10 +191,10 @@ public class BlocTreeFrame extends AbstractFrame implements ItemBlocListener, ID
         JLabel labelBloc = new JLabel(this.pathItemBloc);
         labelBloc.setForeground(TREE_NORMAL_COLOR);
         panel.add(labelBloc);
-//        
-//        JLabel labelLibelle = new JLabel(ServiceFactory.getDsnService().getBlocLibelle(itemBloc));
-//        labelLibelle.setForeground(TREE_NORMAL_COLOR);
-//        panel.add(labelLibelle);
+        
+        JLabel labelLibelle = new JLabel(this.description);
+        labelLibelle.setForeground(TREE_NORMAL_COLOR);
+        panel.add(labelLibelle);
 
     }
 
