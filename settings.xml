@@ -13,4 +13,7 @@
 		</bddAccesses>
 		<sqls/>
 	</bdd>
+	<norme>
+	    <dsnnormefile>doc/dsn_cahier_technique_p3.6.pdf</dsnnormefile>
+	</norme>
 </settings>

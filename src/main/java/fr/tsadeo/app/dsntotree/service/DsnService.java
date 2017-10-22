@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 
 import fr.tsadeo.app.dsntotree.bdd.model.DataDsn;
 import fr.tsadeo.app.dsntotree.business.SalarieDto;
+import fr.tsadeo.app.dsntotree.dico.KeyAndLibelle;
 import fr.tsadeo.app.dsntotree.dto.BlocChildDto;
 import fr.tsadeo.app.dsntotree.dto.BlocChildrenDto;
 import fr.tsadeo.app.dsntotree.model.BlocTree;
@@ -26,6 +27,21 @@ public class DsnService implements IConstants, IJsonConstants {
 
     private static final Logger LOG = Logger.getLogger(DsnService.class.getName());
     private static final String NA = "UNKNOWN";
+    
+
+
+    public String getBlocLibelle(BlocTree blocTree) {
+    	return blocTree == null?null: ServiceFactory.getDictionnaryService().getDsnDictionnary().getLibelle(blocTree.getBlocLabel());
+    }
+    public String getBlocLibelle(ItemBloc itemBloc) {
+    	
+    	return itemBloc == null?null: ServiceFactory.getDictionnaryService().getDsnDictionnary().getLibelle(itemBloc.getBlocLabel());
+    }
+
+    public String getRubriqueLibelle(ItemRubrique itemRubrique) {
+    	return itemRubrique==null?null:ServiceFactory.getDictionnaryService().getDsnDictionnary().getLibelle(itemRubrique.getBlocLabel(), itemRubrique.getRubriqueLabel());
+    }
+
 
     public List<SalarieDto> buildListSalarieDtos(Dsn dsn) {
 
@@ -276,13 +292,14 @@ public class DsnService implements IConstants, IJsonConstants {
         }
 
         // list bloc enfants potentiels
-        List<String> listOtherBlocLabel = blocChildrenDto.getListOtherBlocLabel();
+        List<KeyAndLibelle> listOtherBlocLabel = blocChildrenDto.getListOtherBlocLabel();
         BlocTree blocTree = treeRoot == null ? null : treeRoot.findChild(itemBloc.getBlocLabel(), true);
 
         if (blocTree != null && blocTree.hasChildrens()) {
             for (BlocTree childTree : blocTree.getChildrens()) {
                 if (!mapBlocLabelToListDto.keySet().contains(childTree.getBlocLabel())) {
-                    listOtherBlocLabel.add(childTree.getBlocLabel());
+                    listOtherBlocLabel.add(new KeyAndLibelle(childTree.getBlocLabel(), 
+                    		ServiceFactory.getDsnService().getBlocLibelle(childTree)));
                 }
             }
         }

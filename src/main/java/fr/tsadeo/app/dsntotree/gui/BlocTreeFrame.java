@@ -7,6 +7,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -33,6 +34,7 @@ public class BlocTreeFrame extends AbstractFrame implements ItemBlocListener, ID
     private MySimpleTree simpleTree;
     private ItemBloc itemBloc;
     private JPanel panelBlocPath;
+	private String description;
 
     // ------------------------------------ implementing IDsnListener
     @Override
@@ -111,10 +113,11 @@ public class BlocTreeFrame extends AbstractFrame implements ItemBlocListener, ID
     }
 
     // ---------------------------------------------- constructor
-    protected BlocTreeFrame(String title, String pathItemBloc, IMainActionListener listener) {
+    protected BlocTreeFrame(String title, String pathItemBloc, String description, IMainActionListener listener) {
         super("DSN: " + title, JFrame.DISPOSE_ON_CLOSE);
         this.mainActionListener = listener;
         this.pathItemBloc = pathItemBloc;
+        this.description = description;
 
         ListDsnListenerManager.get().addDsnListener(this);
 
@@ -179,9 +182,19 @@ public class BlocTreeFrame extends AbstractFrame implements ItemBlocListener, ID
 
     private void buildBlocPath() {
 
+        JPanel panel = new JPanel();
+    	panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    	panel.setBackground(this.panelBlocPath.getBackground());
+    	panel.setAlignmentX(CENTER_ALIGNMENT);
+        this.panelBlocPath.add(panel);
+    	
         JLabel labelBloc = new JLabel(this.pathItemBloc);
         labelBloc.setForeground(TREE_NORMAL_COLOR);
-        this.panelBlocPath.add(labelBloc);
+        panel.add(labelBloc);
+        
+        JLabel labelLibelle = new JLabel(this.description);
+        labelLibelle.setForeground(TREE_NORMAL_COLOR);
+        panel.add(labelLibelle);
 
     }
 

@@ -93,7 +93,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
     private JComponent createPanelBloc() {
 
         ListItemBlocListenerManager.get().addItemBlocListener(this);
-        this.myPanelBloc = new MyPanelBloc(this, this);
+        this.myPanelBloc = new MyPanelBloc(this);
 
         return this.myPanelBloc;
     }
@@ -287,12 +287,12 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
     public void actionShowBlocItem(ItemBloc itemBloc) {
 
         String pathItemBloc = this.myTree.getPathAsString(itemBloc);
-        BlocTreeFrame blocTreeFrame = new BlocTreeFrame(this.dsn.getFile().getName(), pathItemBloc, this);
+        String description = ServiceFactory.getDsnService().getBlocLibelle(itemBloc);
+        BlocTreeFrame blocTreeFrame = new BlocTreeFrame(this.dsn.getFile().getName(), pathItemBloc, description, this);
         ListItemBlocListenerManager.get().addItemBlocListener(blocTreeFrame);
         GuiApplication.centerFrame(blocTreeFrame, 0.25f, 0.65f);
 
         blocTreeFrame.setItemBloc(itemBloc);
-
         blocTreeFrame.setVisible(true);
     }
 

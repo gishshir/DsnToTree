@@ -3,6 +3,7 @@ package fr.tsadeo.app.dsntotree.util;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 
 import org.junit.Test;
 
@@ -35,6 +36,12 @@ public class SettingsUtilsTest extends AbstractTest {
 	        assertNotNull(result.getInstance());
 	        assertNotNull(result.getUser());
 	        assertNotNull(result.getPassword());
+	        
+	        File file = SettingsUtils.get().getNormeDsnFile();
+	        assertNotNull(file);
+	        assertTrue(file.exists());
+	        assertTrue(file.isFile());
+	        assertTrue(file.canRead());
 	        
 	    }
 

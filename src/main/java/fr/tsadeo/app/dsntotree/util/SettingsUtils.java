@@ -73,6 +73,12 @@ public class SettingsUtils {
         this.applicationSettings = appSettings;
     }
 
+    public File getNormeDsnFile() {
+    	if (this.applicationSettings != null && this.applicationSettings.getNorme() != null) {
+    		return new File(this.applicationSettings.getNorme().getDsnnormefile());
+    	}
+    	return null;
+    }
     public OracleBddAccess getDefaultOracleBddAccess() {
 
         List<OracleBddAccess> list = this.getListOracleBddAccess();

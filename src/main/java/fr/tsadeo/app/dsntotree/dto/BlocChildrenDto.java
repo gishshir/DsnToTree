@@ -3,11 +3,13 @@ package fr.tsadeo.app.dsntotree.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.tsadeo.app.dsntotree.dico.KeyAndLibelle;
+
 public class BlocChildrenDto {
 
-	private final List<String> listOtherBlocLabel = new ArrayList<String>();
+	private final List<KeyAndLibelle> listOtherBlocLabel = new ArrayList<KeyAndLibelle>();
 	private final List<BlocChildDto> listBlocChildDto = new ArrayList<BlocChildDto>();
-	public List<String> getListOtherBlocLabel() {
+	public List<KeyAndLibelle> getListOtherBlocLabel() {
 		return listOtherBlocLabel;
 	}
 	public List<BlocChildDto> getListBlocChildDto() {

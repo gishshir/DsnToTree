@@ -1,6 +1,7 @@
 package fr.tsadeo.app.dsntotree.util;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -107,8 +108,11 @@ public class DragAndDropUtil {
     			public void mouseEntered(MouseEvent e) {
     				
     				if (e.getSource() instanceof PanelChild) {
+    					
     					PanelChild src = (PanelChild)e.getSource();
-    					src.setBackground(IGuiConstants.DRAG_START_COLOR);
+    					if (src.getParent().isVisible()) {
+    					  src.setBackground(IGuiConstants.DRAG_START_COLOR);
+    					}
     				}
     			}
 
@@ -116,7 +120,9 @@ public class DragAndDropUtil {
     			public void mouseExited(MouseEvent e) {
     				if (e.getSource() instanceof PanelChild) {
     					PanelChild src = (PanelChild)e.getSource();
-    					src.setBackground(null);
+    					if (src.getParent().isVisible()) {
+    					   src.setBackground(null);
+    					}
     				}
     			}
             	
@@ -150,7 +156,7 @@ public class DragAndDropUtil {
         }
         @Override
         protected  void startingDrag() {
-        	if (this.panelChild != null) {
+        	if (this.panelChild != null && this.panelChild.getParent().isVisible()) {
         	  this.panelChild.setBackground(DRAG_START_COLOR);
         	}
         }
@@ -213,6 +219,11 @@ public class DragAndDropUtil {
         @Override
         public void dragGestureRecognized(DragGestureEvent evt) {
         	
+        	if (evt.getSource() instanceof Component) {
+        		if (!((Component)evt.getSource()).isVisible()) {
+        			return;
+        		}
+        	}
             ItemBloc itemBloc = this.getItemBloc(evt);
             if (itemBloc != null) {
                 LOG.fine("startDrag() bloc " + itemBloc.toString());

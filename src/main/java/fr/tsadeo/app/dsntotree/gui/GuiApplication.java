@@ -7,6 +7,7 @@ import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.MySwingUtilities;
 
+import fr.tsadeo.app.dsntotree.service.ServiceFactory;
 import fr.tsadeo.app.dsntotree.util.IConstants;
 import fr.tsadeo.app.dsntotree.util.SettingsUtils;
 
@@ -42,11 +43,18 @@ public class GuiApplication implements IConstants {
 
     public static void start() {
     	
-    	try {
-			readSettings();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    		new Thread() {
+    			public void run() {
+    				try {
+						readSettings();
+						ServiceFactory.getDictionnaryService().getDsnDictionnary();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}		
+    			}
+    		}.start();
+			
 
         // Schedule a job for the event-dispatching thread:
         // creating and showing this application's GUI.
