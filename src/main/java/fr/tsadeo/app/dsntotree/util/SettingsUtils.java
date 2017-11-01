@@ -14,8 +14,8 @@ import fr.tsadeo.app.dsntotree.model.xml.OracleBddAccess;
 import fr.tsadeo.app.dsntotree.model.xml.Settings;
 
 public class SettingsUtils {
-	
-	private static final Logger log = Logger.getLogger(SettingsUtils.class.getName());
+
+    private static final Logger log = Logger.getLogger(SettingsUtils.class.getName());
 
     private static SettingsUtils instance;
 
@@ -30,55 +30,63 @@ public class SettingsUtils {
 
     private SettingsUtils() {
     }
-    
-    public boolean hasApplicationSettings() {
-    	return this.applicationSettings != null;
-    }
-    
-    public void readApplicationSettings(File settingsFile) throws Exception {
-    	
-    	this.applicationSettings = this.readSettings(settingsFile);
-    }
-    public Settings readSettings(File settingsFile) throws Exception {
-    	
-    	if (settingsFile == null || !settingsFile.isFile() || !settingsFile.canRead()) {
-    		return null;
-    	}
 
-    	InputStream is = null;
-    	try {
-		
-    		is = new FileInputStream(settingsFile);
+    public boolean hasApplicationSettings() {
+        return this.applicationSettings != null;
+    }
+
+    public void readApplicationSettings(File settingsFile) throws Exception {
+
+        this.applicationSettings = this.readSettings(settingsFile);
+    }
+
+    public Settings readSettings(File settingsFile) throws Exception {
+
+        if (settingsFile == null || !settingsFile.isFile() || !settingsFile.canRead()) {
+            return null;
+        }
+
+        InputStream is = null;
+        try {
+
+            is = new FileInputStream(settingsFile);
             JAXBContext jc = JAXBContext.newInstance("fr.tsadeo.app.dsntotree.model.xml");
             Unmarshaller u = jc.createUnmarshaller();
             Object o = u.unmarshal(is);
             @SuppressWarnings("unchecked")
-			JAXBElement<Settings> jbElement = o == null?null:(JAXBElement<Settings>)o;
-            return o == null ? null :  jbElement.getValue();
-            
-		} catch (Exception e) {
-			log.severe("Erreur lors de la lecture du fichier " + settingsFile.getName());
-			e.printStackTrace();
-		} finally {
-			if (is != null) {
-				is.close();
-			}
-		}
-    	return null;
-        
+            JAXBElement<Settings> jbElement = o == null ? null : (JAXBElement<Settings>) o;
+            return o == null ? null : jbElement.getValue();
+
+        } catch (Exception e) {
+            log.severe("Erreur lors de la lecture du fichier " + settingsFile.getName());
+            e.printStackTrace();
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+        return null;
+
     }
 
-    
     public void setApplicationSettings(Settings appSettings) {
         this.applicationSettings = appSettings;
     }
 
-    public File getNormeDsnFile() {
-    	if (this.applicationSettings != null && this.applicationSettings.getNorme() != null) {
-    		return new File(this.applicationSettings.getNorme().getDsnnormefile());
-    	}
-    	return null;
+    public String getDsnEncoding() {
+        if (this.applicationSettings != null && this.applicationSettings.getDsn() != null) {
+            return this.applicationSettings.getDsn().getEncoding();
+        }
+        return null;
     }
+
+    public File getNormeDsnFile() {
+        if (this.applicationSettings != null && this.applicationSettings.getNorme() != null) {
+            return new File(this.applicationSettings.getNorme().getDsnnormefile());
+        }
+        return null;
+    }
+
     public OracleBddAccess getDefaultOracleBddAccess() {
 
         List<OracleBddAccess> list = this.getListOracleBddAccess();
@@ -93,8 +101,8 @@ public class SettingsUtils {
     }
 
     public List<OracleBddAccess> getListOracleBddAccess() {
-        if (this.applicationSettings == null || this.applicationSettings.getBdd() == null ||
-        		this.applicationSettings.getBdd().getBddAccesses() == null) {
+        if (this.applicationSettings == null || this.applicationSettings.getBdd() == null
+                || this.applicationSettings.getBdd().getBddAccesses() == null) {
             return null;
         }
 

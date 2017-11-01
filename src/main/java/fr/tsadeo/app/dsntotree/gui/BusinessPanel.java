@@ -52,6 +52,10 @@ public class BusinessPanel extends JPanel implements IGuiConstants {
         this.btShowDsnNorme.actionEnded();
     }
 
+    void activeNormeButton(boolean active) {
+        this.btShowDsnNorme.setEnabled(true);
+    }
+
     void activeButtons(boolean active) {
         this.btShowSalaries.setEnabled(true);
         this.btShowDsnNorme.setEnabled(true);

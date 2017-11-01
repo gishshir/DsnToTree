@@ -14,6 +14,8 @@ import fr.tsadeo.app.dsntotree.model.CardinaliteEnum;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ErrorMessage;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
+import fr.tsadeo.app.dsntotree.model.NatureDsn;
+import fr.tsadeo.app.dsntotree.model.PhaseDsn;
 import fr.tsadeo.app.dsntotree.util.IConstants;
 import fr.tsadeo.app.dsntotree.util.IJsonConstants;
 import fr.tsadeo.app.dsntotree.util.JsonUtils;
@@ -37,10 +39,16 @@ public abstract class AbstractReadDsn implements IConstants, IJsonConstants {
         return itemBlocError;
     }
 
+    public BlocTree buildRootTree(PhaseDsn phase, NatureDsn nature) {
+
+        return this.buildRootTree(this.jsonUtils.getJsonEnteteForDsnAsStream(phase),
+                this.jsonUtils.getJsonForDsnAsStream(phase, nature));
+    }
+
     /*
      * Description de la structure arborescente de la DSN (phase/nature)
      */
-    protected BlocTree buildRootTree(InputStream enteteInputStream, InputStream jsonInputStream) {
+    private BlocTree buildRootTree(InputStream enteteInputStream, InputStream jsonInputStream) {
 
         if (enteteInputStream == null || jsonInputStream == null) {
             return null;

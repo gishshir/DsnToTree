@@ -47,14 +47,15 @@ import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ErrorMessage;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
+import fr.tsadeo.app.dsntotree.service.IDictionnaryListener;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
 import fr.tsadeo.app.dsntotree.util.DragAndDropUtil.FileDropper;
 import fr.tsadeo.app.dsntotree.util.ListDsnListenerManager;
 import fr.tsadeo.app.dsntotree.util.ListItemBlocListenerManager;
 import fr.tsadeo.app.dsntotree.util.SettingsUtils;
-import fr.tsadeo.app.dsntotree.util.StringUtils;
 
-public class MyFrame extends AbstractFrame implements DocumentListener, ItemBlocListener, IMainActionListener {
+public class MyFrame extends AbstractFrame
+        implements DocumentListener, ItemBlocListener, IMainActionListener, IDictionnaryListener {
 
     private static final Logger LOG = Logger.getLogger(MyFrame.class.getName());
 
@@ -201,6 +202,8 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 
     public MyFrame() {
         super("Visualisation et édition d'un message DSN sous forme arborescente", JFrame.EXIT_ON_CLOSE);
+
+        ServiceFactory.getDictionnaryService().addListener(this);
 
         // Set up the content pane.
         addComponentsToPane(this.getContentPane());
@@ -424,11 +427,11 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
 
     private String getPhaseNatureType() {
 
-        String phase = dsn.getPhase() == null ? "NA" : dsn.getPhase();
-        String nature = dsn.getNature() == null ? "NA" : dsn.getNature();
-        String type = dsn.getType() == null ? "NA" : dsn.getType();
+        // String phase = dsn.getPhase() == null ? "NA" : dsn.getPhase();
+        // String nature = dsn.getNature() == null ? "NA" : dsn.getNature();
+        // String type = dsn.getType() == null ? "NA" : dsn.getType();
 
-        return StringUtils.concat("Phase: ", phase, " - Nature: ", nature, " - Type: ", type);
+        return dsn.toString();
     }
 
     @Override
@@ -616,6 +619,12 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
             processTextArea.setText("Open command cancelled by user.".concat(SAUT_LIGNE));
         }
         processTextArea.setCaretPosition(processTextArea.getDocument().getLength());
+    }
+
+    // -------------------------------------- implementing IDictionnaryListener
+    @Override
+    public void dsnDictionnaryReady() {
+        this.businessPanel.activeNormeButton(true);
     }
 
     // -------------------------------------- implementing DocumentListener

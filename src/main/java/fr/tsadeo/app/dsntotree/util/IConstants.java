@@ -17,6 +17,8 @@ public interface IConstants {
     public static final String RUBRIQUE_PREFIX = "S21.G00";
 
     public static final String UTF8 = "UTF-8";
+    public static final String ISO_8859_1 = "ISO-8859-1";
+
     public static final String BLOC_00 = "00";
     public static final String BLOC_05 = "05";
     public static final String BLOC_11 = "11";
@@ -36,6 +38,7 @@ public interface IConstants {
 
     public static final String PREFIX_PHASE_2 = "P02";
     public static final String PREFIX_PHASE_3 = "P03";
+    public static final String PREFIX_PHASE_18 = "P18";
 
     public static final String JSON_PHASE2_PATH = "phase2";
     public static final String JSON_PHASE3_PATH = "phase3";
