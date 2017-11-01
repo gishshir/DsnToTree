@@ -117,7 +117,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         this.createTopPanel(this, BorderLayout.PAGE_START);
         this.createMiddlePanel(this, BorderLayout.CENTER);
         this.createBottomPanel(this, BorderLayout.PAGE_END);
-        
+
     }
 
     // ------------------------------------------------------- package methods
@@ -173,7 +173,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         this.panelChildrens.setVisible(false);
         this.panelListChildrens.setVisible(false);
         this.panelOtherChildrens.setVisible(false);
-        
+
         this.panelListRubriques.removeAll();
         this.panelListChildrens.removeAll();
 
@@ -232,18 +232,18 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
 
         this.tabbedPane.addTab("rubriques", this.createListRubriquePanel());
         this.tabbedPane.addTab("blocs enfants", this.createChildrenPanel());
-        
+
         this.tabbedPane.addChangeListener(new ChangeListener() {
-			
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				if (e.getSource() == tabbedPane) {
-					int index = tabbedPane.getSelectedIndex();
-					panelListChildrens.setVisible(index == 1);
-					panelOtherChildrens.setVisible(index == 1);
-				}
-			}
-		});
+
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                if (e.getSource() == tabbedPane) {
+                    int index = tabbedPane.getSelectedIndex();
+                    panelListChildrens.setVisible(index == 1);
+                    panelOtherChildrens.setVisible(index == 1);
+                }
+            }
+        });
 
     }
 
@@ -252,7 +252,6 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         JPanel bottomPanel = new JPanel();
         container.add(bottomPanel, layout);
     }
-    
 
     private DocumentListener getDocumentListener() {
 
@@ -382,7 +381,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     private void createBlocPanelTitle(Container container, String layout) {
 
         this.panelTitle = new JPanel();
-        
+
         this.panelTitle.setMinimumSize(container.getSize());
         this.panelTitle.setBackground(TREE_BACKGROUND_COLOR);
         this.panelTitle.setForeground(TREE_NORMAL_COLOR);
@@ -576,19 +575,21 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
 
     private void buildTitle(ItemBloc itemBloc, String path) {
 
-    	JPanel panel = new JPanel();
-    	panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-    	panel.setBackground(this.panelTitle.getBackground());
-    	panel.setAlignmentX(CENTER_ALIGNMENT);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBackground(this.panelTitle.getBackground());
+        panel.setAlignmentX(CENTER_ALIGNMENT);
         this.panelTitle.add(panel);
-    	
-    	JLabel labelTitle = new JLabel(path);
+
+        JLabel labelTitle = new JLabel(path);
         labelTitle.setForeground(TREE_NORMAL_COLOR);
         panel.add(labelTitle);
-        
-        JLabel labelLibelle = new JLabel(ServiceFactory.getDsnService().getBlocLibelle(itemBloc));
-        labelLibelle.setForeground(TREE_NORMAL_COLOR);
-        panel.add(labelLibelle);
+
+        if (itemBloc != null) {
+            JLabel labelLibelle = new JLabel(ServiceFactory.getDsnService().getBlocLibelle(itemBloc.getBlocLabel()));
+            labelLibelle.setForeground(TREE_NORMAL_COLOR);
+            panel.add(labelLibelle);
+        }
     }
 
     /*
@@ -683,7 +684,8 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         }
         this.clearListOtherChild();
         for (KeyAndLibelle otherChildLabel : blocChildrenDto.getListOtherBlocLabel()) {
-            DefaultComboBoxModel<KeyAndLibelle> model = (DefaultComboBoxModel<KeyAndLibelle>) this.cbOtherChildComboBox.getModel();
+            DefaultComboBoxModel<KeyAndLibelle> model = (DefaultComboBoxModel<KeyAndLibelle>) this.cbOtherChildComboBox
+                    .getModel();
             model.addElement(otherChildLabel);
         }
         this.btAddBloc.setEnabled(blocChildrenDto.hasOtherChild());
@@ -751,7 +753,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     // combo box
     public void actionAddOtherChild() {
 
-        KeyAndLibelle childToAdd = (KeyAndLibelle)this.cbOtherChildComboBox.getSelectedItem();
+        KeyAndLibelle childToAdd = (KeyAndLibelle) this.cbOtherChildComboBox.getSelectedItem();
         ItemBloc newChild = ServiceFactory.getDsnService().createNewChild(this.currentItemBloc, childToAdd.getKey());
         this.addChildBloc(newChild, -1, "(new)");
     }
@@ -761,7 +763,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     public void actionShowChild(PanelChild panelChild) {
 
         if (panelChild.child != null) {
-            this.mainActionListener.actionShowBlocItem(panelChild.child);
+            this.mainActionListener.actionShowBlocFrame(panelChild.child);
         }
     }
 
@@ -826,9 +828,10 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
             this.repaint();
         }
     }
+
     private void addPanelRubriqueToList(ItemRubrique itemRubrique, boolean toBeSelected, boolean toBeFocused) {
-        PanelRubrique panelRubrique = new PanelRubrique(itemRubrique, 
-        		this.getDocumentListener(), ServiceFactory.getDsnService().getRubriqueLibelle(itemRubrique));
+        PanelRubrique panelRubrique = new PanelRubrique(itemRubrique, this.getDocumentListener(),
+                ServiceFactory.getDsnService().getRubriqueLibelle(itemRubrique));
         this.panelListRubriques.add(panelRubrique);
         panelRubrique.selectRubrique(toBeSelected, toBeFocused);
 
@@ -848,7 +851,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     // ajout d'un PanelChild à la position indiquée par l'index
     private void addPanelChildToList(ItemBloc itemChild, int index, String comment) {
         PanelChild panelChild = new PanelChild(itemChild,
-        		ServiceFactory.getDsnService().getBlocLibelle(itemChild));
+                ServiceFactory.getDsnService().getBlocLibelle(itemChild.getBlocLabel()));
         // fonctionnalité de drag and drop (source)
         DragAndDropUtil.get().createDefaultDragGestureRecognizer(panelChild);
 
@@ -1193,8 +1196,7 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
         private boolean deleted = false;
 
         // --------------------------- constructor
-        private PanelRubrique(ItemRubrique itemRubrique, DocumentListener documentListener,
-        		String tooltipText) {
+        private PanelRubrique(ItemRubrique itemRubrique, DocumentListener documentListener, String tooltipText) {
             this.itemRubrique = itemRubrique;
             this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
             this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -1225,17 +1227,16 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
             return this.itemRubrique.isCreated();
         }
 
-        private void addLabelAndTextfield(Container container,
-        		DocumentListener documentListener, String tooltipText) {
-        	
-        	this.setToolTipText(tooltipText);
+        private void addLabelAndTextfield(Container container, DocumentListener documentListener, String tooltipText) {
+
+            this.setToolTipText(tooltipText);
 
             this.labRubriqueLabel = new JLabel(itemRubrique.getBlocAndRubriqueLabel());
-            
+
             this.tfRubriqueValue = new StateTextField(20);
             this.tfRubriqueValue.setMaximumSize(new Dimension(400, 20));
             this.tfRubriqueValue.setMinimumSize(new Dimension(100, 20));
-            
+
             this.originForeground = this.tfRubriqueValue.getForeground();
             this.originBackground = this.tfRubriqueValue.getBackground();
 

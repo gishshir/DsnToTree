@@ -27,21 +27,17 @@ public class DsnService implements IConstants, IJsonConstants {
 
     private static final Logger LOG = Logger.getLogger(DsnService.class.getName());
     private static final String NA = "UNKNOWN";
-    
 
-
-    public String getBlocLibelle(BlocTree blocTree) {
-    	return blocTree == null?null: ServiceFactory.getDictionnaryService().getDsnDictionnary().getLibelle(blocTree.getBlocLabel());
-    }
-    public String getBlocLibelle(ItemBloc itemBloc) {
-    	
-    	return itemBloc == null?null: ServiceFactory.getDictionnaryService().getDsnDictionnary().getLibelle(itemBloc.getBlocLabel());
+    public String getBlocLibelle(String blocLabel) {
+        return blocLabel == null ? null
+                : ServiceFactory.getDictionnaryService().getDsnDictionnary().getLibelle(blocLabel);
     }
 
     public String getRubriqueLibelle(ItemRubrique itemRubrique) {
-    	return itemRubrique==null?null:ServiceFactory.getDictionnaryService().getDsnDictionnary().getLibelle(itemRubrique.getBlocLabel(), itemRubrique.getRubriqueLabel());
+        return itemRubrique == null ? null
+                : ServiceFactory.getDictionnaryService().getDsnDictionnary().getLibelle(itemRubrique.getBlocLabel(),
+                        itemRubrique.getRubriqueLabel());
     }
-
 
     public List<SalarieDto> buildListSalarieDtos(Dsn dsn) {
 
@@ -298,8 +294,7 @@ public class DsnService implements IConstants, IJsonConstants {
         if (blocTree != null && blocTree.hasChildrens()) {
             for (BlocTree childTree : blocTree.getChildrens()) {
                 if (!mapBlocLabelToListDto.keySet().contains(childTree.getBlocLabel())) {
-                    listOtherBlocLabel.add(new KeyAndLibelle(childTree.getBlocLabel(), 
-                    		ServiceFactory.getDsnService().getBlocLibelle(childTree)));
+                    listOtherBlocLabel.add(new KeyAndLibelle(childTree.getBlocLabel(), childTree.getDsnLibelle()));
                 }
             }
         }

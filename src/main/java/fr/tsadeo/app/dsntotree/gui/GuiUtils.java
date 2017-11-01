@@ -1,6 +1,8 @@
 package fr.tsadeo.app.dsntotree.gui;
 
 import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
@@ -27,9 +29,25 @@ public class GuiUtils {
     }
 
     public static void createButton(JButton button, Action action, String actionName, int keyStrokeWhenFocusedWindow,
+            String iconPath, String name, String tooltip, boolean enabled, Container container,
+            GridBagConstraints constraints, GridBagLayout layout) {
+
+        layout.setConstraints(button, constraints);
+        container.add(button);
+
+        createButton(button, action, actionName, keyStrokeWhenFocusedWindow, iconPath, name, tooltip, enabled);
+    }
+
+    public static void createButton(JButton button, Action action, String actionName, int keyStrokeWhenFocusedWindow,
             String iconPath, String name, String tooltip, boolean enabled, Container container, String layout) {
 
         container.add(button, layout);
+        createButton(button, action, actionName, keyStrokeWhenFocusedWindow, iconPath, name, tooltip, enabled);
+
+    }
+
+    private static void createButton(JButton button, Action action, String actionName, int keyStrokeWhenFocusedWindow,
+            String iconPath, String name, String tooltip, boolean enabled) {
 
         InputMap im = button.getInputMap(JComponent.WHEN_FOCUSED);
         ActionMap am = button.getActionMap();
@@ -41,7 +59,7 @@ public class GuiUtils {
 
         button.setAction(action);
         button.setIcon(GuiUtils.createImageIcon(iconPath));
-        button.setText(name== null?"":name);
+        button.setText(name == null ? "" : name);
         button.setToolTipText(tooltip);
         button.setMnemonic(keyStrokeWhenFocusedWindow);
 

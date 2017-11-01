@@ -6,17 +6,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import fr.tsadeo.app.dsntotree.gui.MyTree;
+import fr.tsadeo.app.dsntotree.util.StringUtils;
 
 /**
  * The Class BlocDependencies.
  */
 public class BlocTree {
-	
-	private static final Logger LOG = Logger.getLogger(BlocTree.class.getName());
+
+    private static final Logger LOG = Logger.getLogger(BlocTree.class.getName());
 
     /** Father block name property. */
     private String blocLabel;
+    // libelle depuis la norme dsn
+    private String dsnLibelle;
 
     private CardinaliteEnum cardinalite;
 
@@ -24,8 +26,8 @@ public class BlocTree {
 
     private BlocTree parent;
     private List<BlocTree> childrens;
-    
-    //map child.blocLabel to child order
+
+    // map child.blocLabel to child order
     private Map<String, Integer> mapChildLabelToOrder = new HashMap<String, Integer>();
 
     /**
@@ -33,6 +35,10 @@ public class BlocTree {
      */
     public BlocTree() {
         // Constructor
+    }
+
+    public boolean isRoot() {
+        return this.parent == null;
     }
 
     /**
@@ -62,15 +68,16 @@ public class BlocTree {
     }
 
     public int getChildOrder(String childLabel) {
-    	Integer order = this.mapChildLabelToOrder == null?null:this.mapChildLabelToOrder.get(childLabel);
-    	return order == null?0:order;
+        Integer order = this.mapChildLabelToOrder == null ? null : this.mapChildLabelToOrder.get(childLabel);
+        return order == null ? 0 : order;
     }
+
     public void addChild(BlocTree child) {
         if (child != null) {
-        	if (this.childrens == null) {
-        		this.childrens = new ArrayList<BlocTree>();
-        		this.mapChildLabelToOrder = new HashMap<String, Integer>();
-        	}
+            if (this.childrens == null) {
+                this.childrens = new ArrayList<BlocTree>();
+                this.mapChildLabelToOrder = new HashMap<String, Integer>();
+            }
             this.childrens.add(child);
             this.mapChildLabelToOrder.put(child.getBlocLabel(), this.childrens.size() - 1);
             child.setParent(this);
@@ -79,7 +86,7 @@ public class BlocTree {
 
     public void showChildrens(String prefix) {
 
-    	LOG.config(prefix + this);
+        LOG.config(prefix + this);
         if (this.hasChildrens()) {
 
             for (BlocTree child : childrens) {
@@ -90,9 +97,10 @@ public class BlocTree {
     }
 
     public boolean hasChildrens() {
-    	
-    	return this.childrens != null && !this.childrens.isEmpty();
+
+        return this.childrens != null && !this.childrens.isEmpty();
     }
+
     public BlocTree findChild(String blocLabel, boolean recursif) {
 
         if (this.hasChildrens()) {
@@ -116,8 +124,15 @@ public class BlocTree {
         return null;
     }
 
+    public String getDsnLibelle() {
+        return dsnLibelle;
+    }
 
-	/**
+    public void setDsnLibelle(String dsnLibelle) {
+        this.dsnLibelle = dsnLibelle;
+    }
+
+    /**
      * Gets the bloc rattachement.
      *
      * @return the bloc rattachement
@@ -147,8 +162,9 @@ public class BlocTree {
      */
     @Override
     public String toString() {
-        return blocLabel.concat(" (").concat(cardinalite.getMin() + "").concat(",")
-        		.concat(cardinalite.getMax()== Integer.MAX_VALUE?"n":cardinalite.getMax()+"").concat(")");
+        return StringUtils.concat(blocLabel, " - ", this.dsnLibelle == null ? "" : this.dsnLibelle, " (",
+                cardinalite.getMin() + ",", cardinalite.getMax() == Integer.MAX_VALUE ? "n" : cardinalite.getMax() + "",
+                ")");
     }
 
 }
