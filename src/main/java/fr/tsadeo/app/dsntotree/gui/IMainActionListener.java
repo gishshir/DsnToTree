@@ -23,7 +23,9 @@ public interface IMainActionListener {
 
     public void actionShowDsnTreeWithConfirmation(Dsn dsn, String messageDialog);
 
-    public void actionShowBlocItem(ItemBloc itemBloc);
+    public void actionShowBlocFrame(ItemBloc itemBloc);
+
+    public void actionShowDnsNormeFrame();
 
     public void actionEditBlocItem(ItemBloc itemBloc, boolean selectInTree);
 

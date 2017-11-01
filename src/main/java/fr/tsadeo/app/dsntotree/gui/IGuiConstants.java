@@ -28,13 +28,14 @@ public interface IGuiConstants {
     public static final String PATH_ADD_RUB_ICO = PATH_IMAGES + "addrub.gif";
     public static final String PATH_ADD_BLOC_ICO = PATH_IMAGES + "addbloc.gif";
     public static final String PATH_SHOW_BLOC_ICO = PATH_IMAGES + "showbloc.png";
+    public static final String PATH_SHOW_NORME_ICO = PATH_IMAGES + "norme.png";
     public static final String PATH_DEL_ICO = PATH_IMAGES + "delrub.gif";
     public static final String PATH_ERROR_ICO = PATH_IMAGES + "errors.png";
     public static final String PATH_FIND_ICO = PATH_IMAGES + "find.gif";
     public static final String PATH_DUPLICATE_ICO = PATH_IMAGES + "duplicate.gif";
     public static final String PATH_BDD_ICO = PATH_IMAGES + "bdd.png";
     public static final String PATH_EDIT_ICO = PATH_IMAGES + "edit.png";
-    
+
     public static final String PATH_TEST_CONNEXION_ICO = PATH_IMAGES + "connexion.png";
     public static final String PATH_CONNEXION_OK_ICO = PATH_IMAGES + "ok.gif";
     public static final String PATH_CONNEXION_NOK_ICO = PATH_IMAGES + "nok.gif";
@@ -62,11 +63,12 @@ public interface IGuiConstants {
     public final static Color TREE_DROPPABLE_COLOR = Color.black;
 
     public final static Color DRAG_START_COLOR = Color.cyan;
-    
+
     public final static String SHOW_OPEN_DIALOG_ACTION = "show-opendialog";
     public final static String SHOW_ERROR_DIALOG_ACTION = "show-errordialog";
     public final static String SAVE_DSN_ACTION = "save-dsn";
     public final static String SHOW_JDBC_ACTION = "show-jdbc";
+    public final static String SHOW_NORME_ACTION = "show-norme";
     public final static String SHOW_SALARIES_ACTION = "show-salaries";
     public final static String SHOW_SALARIE_ACTION = "show-salarie";
     public final static String EDIT_SALARIE_ACTION = "edit-salarie";

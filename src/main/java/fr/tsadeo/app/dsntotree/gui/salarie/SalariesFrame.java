@@ -173,7 +173,8 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener, Do
 
         this.btEditSalarie = new SalarieStateButton();
         GuiUtils.createButton(this.btEditSalarie, new EditSalarieAction(this.mainActionListener), EDIT_SALARIE_ACTION,
-                KeyEvent.VK_E, PATH_EDIT_SALARIE_ICO, null, "Editer les rubriques du salarié", false, container, layout);
+                KeyEvent.VK_E, PATH_EDIT_SALARIE_ICO, null, "Editer les rubriques du salarié", false, container,
+                layout);
     }
 
     private void createPanelSearch(Container container, String layout) {
@@ -206,7 +207,7 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener, Do
 
         private SalarieDto salarie;
 
-		public SalarieDto getSalarie() {
+        public SalarieDto getSalarie() {
             return salarie;
         }
 

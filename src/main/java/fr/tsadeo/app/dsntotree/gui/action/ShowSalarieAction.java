@@ -27,7 +27,7 @@ public class ShowSalarieAction extends AbstractAction {
 				
 				SalarieStateButton btSalarie = (SalarieStateButton) src;
 				if (btSalarie.getSalarie() != null) {
-				listener.actionShowBlocItem(btSalarie.getSalarie().getItemBloc());
+				listener.actionShowBlocFrame(btSalarie.getSalarie().getItemBloc());
 				}
 			}
 		}

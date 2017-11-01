@@ -32,7 +32,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.TreePath;
 
 import fr.tsadeo.app.dsntotree.business.SalarieDto;
-import fr.tsadeo.app.dsntotree.gui.ItemBlocListener.ModifiedState;
 import fr.tsadeo.app.dsntotree.gui.action.CancelSearchAction;
 import fr.tsadeo.app.dsntotree.gui.action.FocusSearchAction;
 import fr.tsadeo.app.dsntotree.gui.action.NextSearchAction;
@@ -53,6 +52,7 @@ import fr.tsadeo.app.dsntotree.util.DragAndDropUtil.FileDropper;
 import fr.tsadeo.app.dsntotree.util.ListDsnListenerManager;
 import fr.tsadeo.app.dsntotree.util.ListItemBlocListenerManager;
 import fr.tsadeo.app.dsntotree.util.SettingsUtils;
+import fr.tsadeo.app.dsntotree.util.StringUtils;
 
 public class MyFrame extends AbstractFrame implements DocumentListener, ItemBlocListener, IMainActionListener {
 
@@ -114,7 +114,6 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         return scrollPane;
     }
 
-
     private void createBusinessPanel(Container container, String layout) {
         this.businessPanel = new BusinessPanel(this);
 
@@ -123,7 +122,6 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         container.add(scrollPane, layout);
     }
-
 
     private void createPanelButton(Container container, String layout) {
 
@@ -207,7 +205,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
         // Set up the content pane.
         addComponentsToPane(this.getContentPane());
         this.fc.setFileFilter(this.fileFilter);
-        
+
         new DropTarget(this, new FileDropper(this));
     }
 
@@ -234,7 +232,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
             parentTarget.setChildrenModified(true);
             ServiceFactory.getDsnService().reorderListChildBloc(this.getTreeRoot(), parentTarget);
             this.validerBlocModification(parentTarget, true);
-            
+
             ListItemBlocListenerManager.get().onItemBlocModified(parentTarget, ModifiedState.valider, true);
         }
     }
@@ -242,7 +240,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
     @Override
     public void actionFileDroppedWithConfirmation(File file) {
 
-    	LOG.info("actionFileDroppedWithConfirmation(): ".concat(file.getName()));
+        LOG.info("actionFileDroppedWithConfirmation(): ".concat(file.getName()));
         if (this.isDsnModified()) {
 
             int respons = JOptionPane.showConfirmDialog(this,
@@ -284,11 +282,25 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
     }
 
     @Override
-    public void actionShowBlocItem(ItemBloc itemBloc) {
+    public void actionShowDnsNormeFrame() {
+
+        if (this.dsn != null && this.dsn.getTreeRoot() != null) {
+            DsnNormeFrame dnsNormeFrame = new DsnNormeFrame(this.getPhaseNatureType(), this);
+
+            GuiApplication.centerFrame(dnsNormeFrame, 0.35f, 0.65f);
+
+            dnsNormeFrame.setBlocTree(dsn.getTreeRoot());
+            dnsNormeFrame.setVisible(true);
+        }
+    }
+
+    @Override
+    public void actionShowBlocFrame(ItemBloc itemBloc) {
 
         String pathItemBloc = this.myTree.getPathAsString(itemBloc);
-        String description = ServiceFactory.getDsnService().getBlocLibelle(itemBloc);
-        BlocTreeFrame blocTreeFrame = new BlocTreeFrame(this.dsn.getFile().getName(), pathItemBloc, description, this);
+        String description = itemBloc == null ? null
+                : ServiceFactory.getDsnService().getBlocLibelle(itemBloc.getBlocLabel());
+        ShowBlocFrame blocTreeFrame = new ShowBlocFrame(this.dsn.getFile().getName(), pathItemBloc, description, this);
         ListItemBlocListenerManager.get().addItemBlocListener(blocTreeFrame);
         GuiApplication.centerFrame(blocTreeFrame, 0.25f, 0.65f);
 
@@ -387,11 +399,7 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
                     myPanelBloc.setTreeRoot(dsn.getTreeRoot());
                     businessPanel.activeButtons(true);
 
-                    String phase = dsn.getPhase() == null ? "NA" : dsn.getPhase();
-                    String nature = dsn.getNature() == null ? "NA" : dsn.getNature();
-                    String type = dsn.getType() == null ? "NA" : dsn.getType();
-                    processTextArea.append("Phase: ".concat(phase).concat(" - Nature: ").concat(nature)
-                            .concat(" - Type: ").concat(type).concat(SAUT_LIGNE));
+                    processTextArea.append(getPhaseNatureType().concat(SAUT_LIGNE));
 
                     btSave.setEnabled(dsn.getDsnState().isModified());
                     btShowErrors.setEnabled(dsn.getDsnState().isError());
@@ -412,6 +420,15 @@ public class MyFrame extends AbstractFrame implements DocumentListener, ItemBloc
             }
         });
 
+    }
+
+    private String getPhaseNatureType() {
+
+        String phase = dsn.getPhase() == null ? "NA" : dsn.getPhase();
+        String nature = dsn.getNature() == null ? "NA" : dsn.getNature();
+        String type = dsn.getType() == null ? "NA" : dsn.getType();
+
+        return StringUtils.concat("Phase: ", phase, " - Nature: ", nature, " - Type: ", type);
     }
 
     @Override

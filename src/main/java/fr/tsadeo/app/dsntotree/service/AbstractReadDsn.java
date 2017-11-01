@@ -22,7 +22,7 @@ public abstract class AbstractReadDsn implements IConstants, IJsonConstants {
 
     protected final JsonUtils jsonUtils = new JsonUtils();
     protected final DsnService dsnService = ServiceFactory.getDsnService();
-    
+
     protected abstract Logger getLog();
 
     protected ItemBloc getOrBuildItemBlocErreur(Dsn dsn) {
@@ -75,8 +75,11 @@ public abstract class AbstractReadDsn implements IConstants, IJsonConstants {
         if (jsonObject != null) {
 
             String blocLabel = null;
+            String dsnLibelle = null;
+
             if (jsonObject.has(IJsonConstants.JSON_BLOC) && !jsonObject.isNull(JSON_BLOC)) {
                 blocLabel = jsonObject.getString(JSON_BLOC);
+                dsnLibelle = ServiceFactory.getDsnService().getBlocLibelle(blocLabel);
             }
             String cardinalite = null;
             if (jsonObject.has(IJsonConstants.JSON_CARDINALITE)
@@ -109,6 +112,7 @@ public abstract class AbstractReadDsn implements IConstants, IJsonConstants {
             } else {
                 blocDependencies = new BlocTree();
                 blocDependencies.setBlocLabel(blocLabel);
+                blocDependencies.setDsnLibelle(dsnLibelle);
                 blocDependencies.setActif(actif);
                 blocDependencies.setCardinalite(this.getCardinalite(cardinalite));
             }
