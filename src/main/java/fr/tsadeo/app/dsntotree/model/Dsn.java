@@ -13,14 +13,13 @@ public class Dsn implements IConstants {
 
     private File file;
 
+    private final PhaseNatureType phaseNatureType = new PhaseNatureType();
+
     private String phase;
-    private PhaseDsn phaseDsn;
 
     private String nature;
-    private NatureDsn natureDsn;
 
     private String type;
-    private TypeDsn typeDsn;
 
     private ItemBloc itemRoot;
     private BlocTree treeRoot;
@@ -71,9 +70,6 @@ public class Dsn implements IConstants {
 
     private List<ItemRubrique> rubriques;
 
-    public PhaseDsn getPhaseDsn() {
-        return this.phaseDsn;
-    }
 
     public String getPhase() {
         return phase;
@@ -81,7 +77,11 @@ public class Dsn implements IConstants {
 
     public void setPhase(String phase) {
         this.phase = phase;
-        this.phaseDsn = PhaseDsn.getPhaseDsnFromPhase(phase);
+        this.phaseNatureType.setPhase(PhaseDsn.getPhaseDsnFromPhase(phase));
+    }
+
+    public PhaseNatureType getPhaseNatureType() {
+        return phaseNatureType;
     }
 
     public List<ItemRubrique> getRubriques() {
@@ -139,9 +139,6 @@ public class Dsn implements IConstants {
         return blocs;
     }
 
-    public NatureDsn getNatureDsn() {
-        return this.natureDsn;
-    }
 
     public String getNature() {
         return nature;
@@ -149,7 +146,7 @@ public class Dsn implements IConstants {
 
     public void setNature(String nature) {
         this.nature = nature;
-        this.natureDsn = NatureDsn.getNatureDsn(nature);
+        this.phaseNatureType.setNature(NatureDsn.getNatureDsn(nature));
     }
 
     public String getType() {
@@ -158,26 +155,26 @@ public class Dsn implements IConstants {
 
     public void setType(String type) {
         this.type = type;
-        this.typeDsn = TypeDsn.getNatureDsn(type);
+        this.phaseNatureType.setType(TypeDsn.getNatureDsn(type));
     }
 
     private String displayPhase() {
-        if (this.phaseDsn != null) {
-            return this.phaseDsn.toString();
+        if (this.phaseNatureType.getPhase() != null) {
+            return this.phaseNatureType.getPhase().toString();
         }
         return StringUtils.concat("Phase: NON CONNUE (", this.phase, ")");
     }
 
     private String displayNature() {
-        if (this.natureDsn != null) {
-            return this.natureDsn.toString();
+        if (this.phaseNatureType.getNature() != null) {
+            return this.phaseNatureType.getNature().toString();
         }
         return StringUtils.concat("nature: NON CONNUE (", this.nature, ")");
     }
 
     private String displayType() {
-        if (this.typeDsn != null) {
-            return this.typeDsn.toString();
+        if (this.phaseNatureType.getType() != null) {
+            return this.phaseNatureType.getType().toString();
         }
         return StringUtils.concat("type: NON CONNU (", this.type, ")");
     }

@@ -19,6 +19,11 @@ public class MyTree extends MySimpleTree implements IGuiConstants {
      */
     private static final long serialVersionUID = 1L;
 
+    //---------------------------------------- overriding AbstractDsnTree
+  	@Override
+  	protected Logger getLog() {
+  		return LOG;
+  	}
     // ------------------------------- constructor
     MyTree(IMainActionListener mainActionListener, ItemBlocListener itemBlocListener) {
         super(mainActionListener, itemBlocListener, "DSN");

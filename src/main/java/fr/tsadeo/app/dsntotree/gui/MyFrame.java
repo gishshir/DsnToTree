@@ -47,6 +47,10 @@ import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ErrorMessage;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
+import fr.tsadeo.app.dsntotree.model.NatureDsn;
+import fr.tsadeo.app.dsntotree.model.PhaseDsn;
+import fr.tsadeo.app.dsntotree.model.PhaseNatureType;
+import fr.tsadeo.app.dsntotree.model.TypeDsn;
 import fr.tsadeo.app.dsntotree.service.IDictionnaryListener;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
 import fr.tsadeo.app.dsntotree.util.DragAndDropUtil.FileDropper;
@@ -55,7 +59,7 @@ import fr.tsadeo.app.dsntotree.util.ListItemBlocListenerManager;
 import fr.tsadeo.app.dsntotree.util.SettingsUtils;
 
 public class MyFrame extends AbstractFrame
-        implements DocumentListener, ItemBlocListener, IMainActionListener, IDictionnaryListener {
+        implements DocumentListener, ItemBlocListener, ISearchActionListener , IMainActionListener, IDictionnaryListener {
 
     private static final Logger LOG = Logger.getLogger(MyFrame.class.getName());
 
@@ -287,14 +291,14 @@ public class MyFrame extends AbstractFrame
     @Override
     public void actionShowDnsNormeFrame() {
 
-        if (this.dsn != null && this.dsn.getTreeRoot() != null) {
-            DsnNormeFrame dnsNormeFrame = new DsnNormeFrame(this.getPhaseNatureType(), this);
+        DsnNormeFrame dnsNormeFrame = new DsnNormeFrame(SettingsUtils.get().getNormeDsnFile().getName(), this);
 
-            GuiApplication.centerFrame(dnsNormeFrame, 0.35f, 0.65f);
+        GuiApplication.centerFrame(dnsNormeFrame, 0.35f, 0.65f);
 
-            dnsNormeFrame.setBlocTree(dsn.getTreeRoot());
-            dnsNormeFrame.setVisible(true);
-        }
+        PhaseNatureType phaseNatureType = this.dsn != null ? this.dsn.getPhaseNatureType()
+                : new PhaseNatureType(PhaseDsn.PHASE_3, NatureDsn.DSN_MENSUELLE, TypeDsn.NORMALE);
+        dnsNormeFrame.setPhaseNaturePhase(phaseNatureType);
+        dnsNormeFrame.setVisible(true);
     }
 
     @Override
@@ -445,7 +449,7 @@ public class MyFrame extends AbstractFrame
 
     @Override
     public void searchNext() {
-        if (this.myTree.search(this.tfSearch.getText(), true)) {
+        if (this.myTree.search(this.tfSearch.getText(), false, true)) {
             ListDsnListenerManager.get().onSearch(this.tfSearch.getText(), true);
         }
     }
@@ -454,9 +458,9 @@ public class MyFrame extends AbstractFrame
         String search = tfSearch.getText();
         int searchLenght = search != null ? search.length() : 0;
         if (searchLenght > 3 && searchLenght < this.searchNoResult) {
-            if (this.myTree.search(this.tfSearch.getText(), false)) {
+            if (this.myTree.search(this.tfSearch.getText(), false, false)) {
                 this.searchNoResult = Integer.MAX_VALUE;
-                this.tfSearch.setBackground(this.tfSearchBg);
+                this.tfSearch.setBackground(SEARCH_SUCCESS_COLOR);
 
                 ListDsnListenerManager.get().onSearch(search, false);
             } else {

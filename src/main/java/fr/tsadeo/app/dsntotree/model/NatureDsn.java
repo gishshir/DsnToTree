@@ -1,5 +1,6 @@
 package fr.tsadeo.app.dsntotree.model;
 
+import fr.tsadeo.app.dsntotree.dico.KeyAndLibelle;
 import fr.tsadeo.app.dsntotree.util.StringUtils;
 
 public enum NatureDsn {
@@ -45,6 +46,9 @@ public enum NatureDsn {
         return natureDsn;
     }
 
+    public KeyAndLibelle getKeyAndLibelle() {
+        return new KeyAndLibelle(this.code, this.libelle);
+    }
     private boolean hasCode(String code) {
         return this.code.equals(code);
     }

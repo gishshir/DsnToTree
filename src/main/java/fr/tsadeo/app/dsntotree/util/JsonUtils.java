@@ -4,13 +4,14 @@ import java.io.InputStream;
 
 import fr.tsadeo.app.dsntotree.model.NatureDsn;
 import fr.tsadeo.app.dsntotree.model.PhaseDsn;
+import fr.tsadeo.app.dsntotree.model.PhaseNatureType;
 
 public class JsonUtils implements IJsonConstants, IConstants {
 
-    public InputStream getJsonForDsnAsStream(PhaseDsn phase, NatureDsn nature) {
+    public InputStream getJsonForDsnAsStream(PhaseNatureType phaseNatureType) {
 
-        String path = this.getPathForPhase(phase);
-        String filename = this.getFilenameForNature(nature);
+        String path = this.getPathForPhase(phaseNatureType.getPhase());
+        String filename = this.getFilenameForNature(phaseNatureType.getNature());
         return path == null || filename == null ? null : this.getJsonFileAsStream(path, filename);
     }
 

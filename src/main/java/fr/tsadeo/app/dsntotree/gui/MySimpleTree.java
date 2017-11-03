@@ -60,6 +60,60 @@ public class MySimpleTree extends AbstractDsnTree
     private MyTreePopupMenu popup;
     private TreePath currentPath;
 
+    //---------------------------------------- overriding AbstractDsnTree
+	@Override
+	protected Logger getLog() {
+		return LOG;
+	}
+	@Override
+	protected TreePath searchNode(TreePath treePath, String lowerCase, boolean next) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+    /*
+     * Recherche une rubrique contenant le texte recherché
+     */
+    @Override
+    protected TreePath searchValue(TreePath parent, String search, boolean next) {
+
+        TreePath result = null;
+        TreeNode node = (TreeNode) parent.getLastPathComponent();
+        // si on a atteint la fin du fichier et en next alors
+        // on réinitialise le selectedIndex
+        if (next && this.getRowForPath(parent) == this.getRowCount() - 1) {
+            this.selectedIndex = Integer.MIN_VALUE;
+        }
+        if (node.isLeaf()) {
+            ItemRubrique itemRubrique = ((RubriqueNode) node).getItemRubrique();
+            if (itemRubrique.toString().toLowerCase().indexOf(search) > -1) {
+
+                if (!next || (next && this.getRowForPath(parent) > this.selectedIndex)) {
+
+                    this.setSelectionPath(parent);
+                    this.scrollPathToVisible(parent);
+                    selectedIndex = this.getRowForPath(parent);
+                    return parent;
+                }
+            }
+        }
+
+        if (node.getChildCount() >= 0) {
+
+            for (int i = 0; i < node.getChildCount(); i++) {
+                TreeNode child = node.getChildAt(i);
+                TreePath path = parent.pathByAddingChild(child);
+                result = searchValue(path, search, next);
+                if (result != null) {
+                    return result;
+                }
+            }
+        }
+        return null;
+    }
+
     // ------------------------------------------ implementing ActionListener
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -306,46 +360,6 @@ public class MySimpleTree extends AbstractDsnTree
 
     }
 
-    /*
-     * Recherche une rubrique contenant le texte recherché
-     */
-    private TreePath searchValue(TreePath parent, String search, boolean next) {
-
-        TreePath result = null;
-        TreeNode node = (TreeNode) parent.getLastPathComponent();
-        // si on a atteint la fin du fichier et en next alors
-        // on réinitialise le selectedIndex
-        if (next && this.getRowForPath(parent) == this.getRowCount() - 1) {
-            this.selectedIndex = Integer.MIN_VALUE;
-        }
-        if (node.isLeaf()) {
-            ItemRubrique itemRubrique = ((RubriqueNode) node).getItemRubrique();
-            if (itemRubrique.toString().toLowerCase().indexOf(search) > -1) {
-
-                if (!next || (next && this.getRowForPath(parent) > this.selectedIndex)) {
-
-                    this.setSelectionPath(parent);
-                    this.scrollPathToVisible(parent);
-                    selectedIndex = this.getRowForPath(parent);
-                    return parent;
-                }
-            }
-        }
-
-        if (node.getChildCount() >= 0) {
-
-            for (int i = 0; i < node.getChildCount(); i++) {
-                TreeNode child = node.getChildAt(i);
-                TreePath path = parent.pathByAddingChild(child);
-                result = searchValue(path, search, next);
-                if (result != null) {
-                    return result;
-                }
-            }
-        }
-        return null;
-    }
-
     private DefaultTreeCellRenderer createCellRenderer() {
 
         DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer() {
@@ -430,17 +444,6 @@ public class MySimpleTree extends AbstractDsnTree
     void cancelSearch() {
         this.selectedIndex = Integer.MIN_VALUE;
         this.clearSelection();
-    }
-
-    boolean search(String search, boolean next) {
-
-        TreePath result = this.searchValue(new TreePath(this.getTop()), search.toLowerCase(), next);
-        if (result != null) {
-            LOG.config("Search OK (".concat(search).concat(") ").concat(result.toString()));
-            return true;
-        }
-
-        return false;
     }
 
     protected void createTreeNode(DefaultMutableTreeNode parent, ItemBloc itemBloc, boolean withChildren) {
@@ -573,5 +576,6 @@ public class MySimpleTree extends AbstractDsnTree
             return true;
         }
     }
+
 
 }

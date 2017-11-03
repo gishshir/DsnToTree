@@ -1,5 +1,6 @@
 package fr.tsadeo.app.dsntotree.model;
 
+import fr.tsadeo.app.dsntotree.dico.KeyAndLibelle;
 import fr.tsadeo.app.dsntotree.util.IConstants;
 
 public enum PhaseDsn implements IConstants {
@@ -38,6 +39,10 @@ public enum PhaseDsn implements IConstants {
             }
         }
         return natureDsn;
+    }
+
+    public KeyAndLibelle getKeyAndLibelle() {
+        return new KeyAndLibelle(this.prefix, this.libelle);
     }
 
     private boolean hasPrefix(String prefix) {

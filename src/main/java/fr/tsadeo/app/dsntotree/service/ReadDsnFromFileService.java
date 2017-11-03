@@ -111,7 +111,7 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
         ItemBloc root = new ItemBloc(0, "", "DSN");
         root.setRoot(true);
 
-        BlocTree treeRoot = this.buildRootTree(dsn.getPhaseDsn(), dsn.getNatureDsn());
+        BlocTree treeRoot = this.buildRootTree(dsn.getPhaseNatureType());
 
         dsn.setTreeRoot(treeRoot);
         if (treeRoot == null) {

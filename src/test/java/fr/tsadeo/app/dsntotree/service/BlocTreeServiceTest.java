@@ -9,6 +9,7 @@ import org.junit.Test;
 import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.NatureDsn;
 import fr.tsadeo.app.dsntotree.model.PhaseDsn;
+import fr.tsadeo.app.dsntotree.model.PhaseNatureType;
 import fr.tsadeo.app.dsntotree.util.SettingsUtils;
 
 public class BlocTreeServiceTest extends AbstractTest {
@@ -29,7 +30,7 @@ public class BlocTreeServiceTest extends AbstractTest {
 
             for (NatureDsn nature : NatureDsn.values()) {
 
-                BlocTree root = service.buildRootTree(phase, nature);
+                BlocTree root = service.buildRootTree(new PhaseNatureType(phase, nature, null));
                 assertNotNull(root);
                 assertTrue(root.hasChildrens());
 

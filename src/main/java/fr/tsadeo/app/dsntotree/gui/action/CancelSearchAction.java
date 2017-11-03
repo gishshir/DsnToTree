@@ -4,19 +4,19 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import fr.tsadeo.app.dsntotree.gui.IMainActionListener;
+import fr.tsadeo.app.dsntotree.gui.ISearchActionListener;
 
 public class CancelSearchAction extends AbstractAction {
 
     /**
 	 * 
 	 */
-	private final IMainActionListener listener;
+	private final ISearchActionListener  listener;
 
 	/**
 	 * @param myFrame
 	 */
-	public CancelSearchAction(IMainActionListener listener) {
+	public CancelSearchAction(ISearchActionListener listener) {
 		this.listener = listener;
 	}
 

@@ -102,7 +102,7 @@ public class ReadDsnFromDatasService extends AbstractReadDsn {
         root.setRoot(true);
 
         // description de l'arborscence en fonction de la phase et de la nature
-        BlocTree treeRoot = this.buildRootTree(dsn.getPhaseDsn(), dsn.getNatureDsn());
+        BlocTree treeRoot = this.buildRootTree(dsn.getPhaseNatureType());
 
         dsn.setTreeRoot(treeRoot);
         if (treeRoot == null) {
