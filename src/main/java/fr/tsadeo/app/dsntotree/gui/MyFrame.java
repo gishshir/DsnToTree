@@ -39,6 +39,7 @@ import fr.tsadeo.app.dsntotree.gui.action.SaveDsnAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowErrorAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowJdbcFrameAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowOpenDialogAction;
+import fr.tsadeo.app.dsntotree.gui.component.SearchPanel;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
 import fr.tsadeo.app.dsntotree.gui.component.StateTextField;
 import fr.tsadeo.app.dsntotree.gui.salarie.SalariesFrame;
@@ -78,9 +79,11 @@ public class MyFrame extends AbstractFrame
     private SalariesFrame salariesFrame;
 
     private StateButton btOpen, btSave, btShowErrors, btShowJdbc;
-    private StateTextField tfSearch;
+//    private StateTextField tfSearch;
     private int searchNoResult = Integer.MAX_VALUE;
-    private Color tfSearchBg;
+//    private Color tfSearchBg;
+    
+    private SearchPanel searchPanel;
 
     private boolean blocDragStarted = false;
 
@@ -170,29 +173,9 @@ public class MyFrame extends AbstractFrame
     }
 
     private void createSearchPanel(Container container, String layout) {
-
-        JPanel panelSearch = new JPanel();
-        JLabel labelRechercher = new JLabel("rechercher...");
-        labelRechercher.setIcon(GuiUtils.createImageIcon(PATH_FIND_ICO));
-        panelSearch.add(labelRechercher);
-        this.tfSearch = new StateTextField(15);
-        this.tfSearch.setFont(FONT);
-        this.tfSearchBg = this.tfSearch.getBackground();
-        this.tfSearch.getDocument().addDocumentListener(this);
-
-        InputMap im = this.tfSearch.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        ActionMap am = this.tfSearch.getActionMap();
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CANCEL_SEARCH_ACTION);
-        am.put(CANCEL_SEARCH_ACTION, new CancelSearchAction(this));
-
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), NEXT_SEARCH_ACTION);
-        am.put(NEXT_SEARCH_ACTION, new NextSearchAction(this));
-
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK), FOCUS_SEARCH_ACTION);
-        am.put(FOCUS_SEARCH_ACTION, new FocusSearchAction(this));
-
-        panelSearch.add(this.tfSearch);
-        container.add(panelSearch, layout);
+    	
+    	this.searchPanel = new SearchPanel(this, this);
+        container.add(this.searchPanel, layout);
     }
 
     private void createPanelTop(Container container, String layout) {
@@ -218,8 +201,8 @@ public class MyFrame extends AbstractFrame
 
     @Override
     public void setFocusOnSearch() {
-        if (this.tfSearch != null) {
-            this.tfSearch.requestFocusInWindow();
+        if (this.searchPanel != null) {
+            this.searchPanel.requestFocusOnSearch();
         }
     }
 
@@ -431,17 +414,12 @@ public class MyFrame extends AbstractFrame
 
     private String getPhaseNatureType() {
 
-        // String phase = dsn.getPhase() == null ? "NA" : dsn.getPhase();
-        // String nature = dsn.getNature() == null ? "NA" : dsn.getNature();
-        // String type = dsn.getType() == null ? "NA" : dsn.getType();
-
         return dsn.toString();
     }
 
     @Override
     public void actionCancelSearch() {
-        tfSearch.setText("");
-        tfSearch.setBackground(tfSearchBg);
+        this.searchPanel.cancelSearch();
         searchNoResult = Integer.MAX_VALUE;
         MyFrame.this.myTree.cancelSearch();
         ListDsnListenerManager.get().onSearchCanceled();
@@ -449,27 +427,28 @@ public class MyFrame extends AbstractFrame
 
     @Override
     public void searchNext() {
-        if (this.myTree.search(this.tfSearch.getText(), false, true)) {
-            ListDsnListenerManager.get().onSearch(this.tfSearch.getText(), true);
+    	String search = this.searchPanel.getSearchText();
+        if (this.myTree.search(search, false, true)) {
+            ListDsnListenerManager.get().onSearch(search, true);
         }
     }
 
     private void search() {
-        String search = tfSearch.getText();
+    	String search = this.searchPanel.getSearchText();
         int searchLenght = search != null ? search.length() : 0;
         if (searchLenght > 3 && searchLenght < this.searchNoResult) {
-            if (this.myTree.search(this.tfSearch.getText(), false, false)) {
+            if (this.myTree.search(search, false, false)) {
                 this.searchNoResult = Integer.MAX_VALUE;
-                this.tfSearch.setBackground(SEARCH_SUCCESS_COLOR);
+                this.searchPanel.setSearchColor(SEARCH_SUCCESS_COLOR);
 
                 ListDsnListenerManager.get().onSearch(search, false);
             } else {
-                this.tfSearch.setBackground(ERROR_COLOR);
+                this.searchPanel.setSearchColor(ERROR_COLOR);
                 this.searchNoResult = search.length();
             }
         } else {
             if (searchLenght <= 3) {
-                this.tfSearch.setBackground(this.tfSearchBg);
+                this.searchPanel.setDefaultBackground();
                 this.searchNoResult = Integer.MAX_VALUE;
             }
         }
@@ -665,7 +644,7 @@ public class MyFrame extends AbstractFrame
             return;
         }
         if (!itemRubrique.isError()) {
-            boolean focus = !this.tfSearch.hasFocus();
+            boolean focus = !this.searchPanel.hasSearchFocus();
             ItemBloc itemBloc = itemRubrique.getBlocContainer();
             if (itemBloc != null) {
                 this.actionShowBlocToEditWithConfirmation(itemBloc, itemRubrique, focus);
@@ -747,7 +726,7 @@ public class MyFrame extends AbstractFrame
         this.btSave.waitEndAction();
         this.btShowErrors.waitEndAction();
         this.btShowJdbc.waitEndAction();
-        this.tfSearch.waitEndAction();
+        this.searchPanel.waitEndAction();
 
         this.myPanelBloc.waitEndAction();
         // this.filterPanel.waitEndAction();
@@ -761,7 +740,7 @@ public class MyFrame extends AbstractFrame
         this.btSave.actionEnded();
         this.btShowErrors.actionEnded();
         this.btShowJdbc.actionEnded();
-        this.tfSearch.actionEnded();
+        this.searchPanel.actionEnded();
 
         this.myPanelBloc.currentActionEnded();
         // this.filterPanel.currentActionEnded();

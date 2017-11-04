@@ -1,37 +1,26 @@
 package fr.tsadeo.app.dsntotree.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 
-import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.InputMap;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import fr.tsadeo.app.dsntotree.dico.KeyAndLibelle;
-import fr.tsadeo.app.dsntotree.gui.action.CancelSearchAction;
-import fr.tsadeo.app.dsntotree.gui.action.FocusSearchAction;
-import fr.tsadeo.app.dsntotree.gui.action.NextSearchAction;
-import fr.tsadeo.app.dsntotree.gui.component.StateTextField;
+import fr.tsadeo.app.dsntotree.gui.component.SearchPanel;
 import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.NatureDsn;
 import fr.tsadeo.app.dsntotree.model.PhaseDsn;
@@ -65,8 +54,8 @@ DocumentListener{
     private JPanel panelTop;
 
     private JTextArea taComment;
-    private StateTextField tfSearch;
-    private Color tfSearchBg;
+    private SearchPanel searchPanel;
+    
     private int searchNoResult = Integer.MAX_VALUE;
     private boolean searchInNode = true;
 
@@ -94,7 +83,6 @@ DocumentListener{
             this.cbListNatures.setSelectedIndex(phaseNatureType.getNature() == null ? NatureDsn.DSN_MENSUELLE.ordinal()
                     : phaseNatureType.getNature().ordinal());
         }
-        // this.updateTree();
     }
 
     // -------------------------------------- implementing DocumentListener
@@ -117,45 +105,46 @@ DocumentListener{
 
 	@Override
 	public void setFocusOnSearch() {
-		if (this.tfSearch != null) {
-            this.tfSearch.requestFocusInWindow();
+		if (this.searchPanel != null) {
+            this.searchPanel.requestFocusOnSearch();
         }
 	}
 
 	@Override
 	public void searchNext() {
-		if (this.dsnNormeTree.search(this.tfSearch.getText(), this.searchInNode,  true)) {
-            ListDsnListenerManager.get().onSearch(this.tfSearch.getText(), true);
+		String search = this.searchPanel.getSearchText();
+		if (this.dsnNormeTree.search(search, this.searchInNode,  true)) {
+            ListDsnListenerManager.get().onSearch(search, true);
         }
 	}
 
     // ------------------------------------ private methode
 	 private void search() {
-	        String search = tfSearch.getText();
+	        String search = this.searchPanel.getSearchText();
 	        int searchLenght = search != null ? search.length() : 0;
 	        if (searchLenght > 1 && searchLenght < this.searchNoResult) {
 	        	
-	            if (this.dsnNormeTree.search(this.tfSearch.getText(), true, false)) {
+	            if (this.dsnNormeTree.search(search, true, false)) {
 	            	this.searchInNode = true;
 	                this.searchNoResult = Integer.MAX_VALUE;
-	                this.tfSearch.setBackground(SEARCH_SUCCESS_COLOR);
+	                this.searchPanel.setSearchColor(SEARCH_SUCCESS_COLOR);
 
 	                ListDsnListenerManager.get().onSearch(search, false);
 	            }
-	            else if (this.dsnNormeTree.search(this.tfSearch.getText(), false, false)) {
+	            else if (this.dsnNormeTree.search(search, false, false)) {
 	            	this.searchInNode = false;
 	                this.searchNoResult = Integer.MAX_VALUE;
-	                this.tfSearch.setBackground(SEARCH_SUCCESS_COLOR);
+	                this.searchPanel.setSearchColor(SEARCH_SUCCESS_COLOR);
 
 	                ListDsnListenerManager.get().onSearch(search, false);
 	            }
 	            else {
-	                this.tfSearch.setBackground(ERROR_COLOR);
+	            	this.searchPanel.setSearchColor(ERROR_COLOR);
 	                this.searchNoResult = search.length();
 	            }
 	        } else {
 	            if (searchLenght <= 3) {
-	                this.tfSearch.setBackground(this.tfSearchBg);
+	                this.searchPanel.setDefaultBackground();
 	                this.searchNoResult = Integer.MAX_VALUE;
 	                this.searchInNode = true;
 	            }
@@ -165,28 +154,8 @@ DocumentListener{
 
     private void createSearchPanel(Container container, String layout) {
 
-        JPanel panelSearch = new JPanel();
-        JLabel labelRechercher = new JLabel("rechercher...");
-        labelRechercher.setIcon(GuiUtils.createImageIcon(PATH_FIND_ICO));
-        panelSearch.add(labelRechercher);
-        this.tfSearch = new StateTextField(15);
-        this.tfSearch.setFont(FONT);
-        this.tfSearchBg = this.tfSearch.getBackground();
-        this.tfSearch.getDocument().addDocumentListener(this);
-
-        InputMap im = this.tfSearch.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        ActionMap am = this.tfSearch.getActionMap();
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CANCEL_SEARCH_ACTION);
-        am.put(CANCEL_SEARCH_ACTION, new CancelSearchAction(this));
-
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), NEXT_SEARCH_ACTION);
-        am.put(NEXT_SEARCH_ACTION, new NextSearchAction(this));
-
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK), FOCUS_SEARCH_ACTION);
-        am.put(FOCUS_SEARCH_ACTION, new FocusSearchAction(this));
-
-        panelSearch.add(this.tfSearch);
-        container.add(panelSearch, layout);
+    	this.searchPanel = new SearchPanel(this, this);
+    	container.add(this.searchPanel, layout);
     }
 
     private void updateTree() {
