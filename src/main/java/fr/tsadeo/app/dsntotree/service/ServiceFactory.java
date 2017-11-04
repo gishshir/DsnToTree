@@ -8,7 +8,14 @@ public class ServiceFactory {
     private static DsnService dsnService;
     private static ReadDatasFromSqlRequestService readDatasFromSqlRequestService;
     private static DictionnaryService dictionnaryService;
+    private static BlocTreeService blocTreeService;
     
+    public static BlocTreeService getBlocTreeService() {
+        if (blocTreeService == null) {
+            blocTreeService = new BlocTreeService();
+        }
+        return blocTreeService;
+    }
     public static DictionnaryService getDictionnaryService() {
     	if (dictionnaryService == null) {
     		dictionnaryService = new DictionnaryService();

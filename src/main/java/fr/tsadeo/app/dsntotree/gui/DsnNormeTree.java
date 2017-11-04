@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.JLabel;
 import javax.swing.JTree;
@@ -24,6 +25,7 @@ public class DsnNormeTree extends AbstractDsnTree implements IConstants {
      * 
      */
     private static final long serialVersionUID = 1L;
+    private static final Logger LOG = Logger.getLogger(DsnNormeTree.class.getName());
 
     private BlocTree selectedBlocTree;
 
@@ -32,6 +34,122 @@ public class DsnNormeTree extends AbstractDsnTree implements IConstants {
         this.setCellRenderer(this.createCellRenderer());
     }
 
+    //---------------------------------------------- overriding AbstractDsnTree
+	@Override
+	protected Logger getLog() {
+		return LOG;
+	}
+
+	@Override
+	protected TreePath searchNode(TreePath parent, String search, boolean next) {
+
+		TreePath result = null;
+		TreeNode node = (TreeNode) parent.getLastPathComponent();
+		// si on a atteint la fin du fichier et en next alors
+		// on réinitialise le selectedIndex
+		if (next && this.getRowForPath(parent) == this.getRowCount() - 1) {
+			this.selectedIndex = Integer.MIN_VALUE;
+		}
+
+        if (node.isLeaf()) {
+        	// on recherche xx.xxx
+        	TreeNode nodeBloc = node.getParent();
+        	if (nodeBloc instanceof BlocTreeNode) {
+        		String blocLabel = ((BlocTreeNode) nodeBloc).getBlocTree().getBlocLabel();
+        		String keyRubrique = ((BlocTreeRubriqueNode) node).getKeyRubrique();
+        		String blocAndRubrique = blocLabel.concat(".").concat(keyRubrique);
+                if (blocAndRubrique.indexOf(search) > -1) {
+
+                    if (!next || (next && this.getRowForPath(parent) > this.selectedIndex)) {
+
+                        this.setSelectionPath(parent);
+                        this.scrollPathToVisible(parent);
+                        LOG.info("found: " + search + " !!!!!");
+                        selectedIndex = this.getRowForPath(parent);
+                        return parent;
+                    }
+                }
+
+        	}
+                    } else 
+		if ( node instanceof BlocTreeNode) {
+			BlocTree blocTree = ((BlocTreeNode) node).getBlocTree();
+			if (blocTree.getBlocLabel().toLowerCase().indexOf(search) > -1) {
+				if (!next || (next && this.getRowForPath(parent) > this.selectedIndex)) {
+
+					this.setSelectionPath(parent);
+					this.scrollPathToVisible(parent);
+					selectedIndex = this.getRowForPath(parent);
+					return parent;
+				}
+			}
+		}
+		 if (node.getChildCount() >= 0) {
+
+             for (int i = 0; i < node.getChildCount(); i++) {
+                 TreeNode child = node.getChildAt(i);
+                 TreePath path = parent.pathByAddingChild(child);
+                 result = searchNode(path, search, next);
+                 if (result != null) {
+                     return result;
+                 }
+             }
+         }
+         return null;
+	}
+
+
+    @Override
+    protected TreePath searchValue(TreePath parent, String search, boolean next) {
+    	  TreePath result = null;
+          TreeNode node = (TreeNode) parent.getLastPathComponent();
+          // si on a atteint la fin du fichier et en next alors
+          // on réinitialise le selectedIndex
+          if (next && this.getRowForPath(parent) == this.getRowCount() - 1) {
+              this.selectedIndex = Integer.MIN_VALUE;
+          }
+          
+          if (node.isLeaf()) {
+              String libelleRubrique = ((BlocTreeRubriqueNode) node).getLibelleRubrique();
+              if (libelleRubrique.toLowerCase().indexOf(search) > -1) {
+
+                  if (!next || (next && this.getRowForPath(parent) > this.selectedIndex)) {
+
+                      this.setSelectionPath(parent);
+                      this.scrollPathToVisible(parent);
+                      LOG.info("found: " + search + " !!!!!");
+                      selectedIndex = this.getRowForPath(parent);
+                      return parent;
+                  }
+              }
+          } else 
+			if (node instanceof BlocTreeNode) {
+				BlocTree blocTree = ((BlocTreeNode) node).getBlocTree();
+				if (blocTree.toString().toLowerCase().indexOf(search) > -1) {
+					if (!next || (next && this.getRowForPath(parent) > this.selectedIndex)) {
+
+						this.setSelectionPath(parent);
+						this.scrollPathToVisible(parent);
+						selectedIndex = this.getRowForPath(parent);
+						return parent;
+					}
+				}
+			}
+
+          if (node.getChildCount() >= 0) {
+
+              for (int i = 0; i < node.getChildCount(); i++) {
+                  TreeNode child = node.getChildAt(i);
+                  TreePath path = parent.pathByAddingChild(child);
+                  result = searchValue(path, search, next);
+                  if (result != null) {
+                      return result;
+                  }
+              }
+          }
+          return null;
+	}
+    //--------------------------------------------------------
     // visualisation bloc et rubriques sous forme arborescente
     void createNodes(BlocTree rootBloc, boolean root) {
 
@@ -54,9 +172,11 @@ public class DsnNormeTree extends AbstractDsnTree implements IConstants {
         this.repaint();
     }
 
-    // ------------------------------------------- private methods
 
-    void expandBloc(String blocLabel, boolean expand) {
+    // ------------------------------------------- private methods
+    
+
+	void expandBloc(String blocLabel, boolean expand) {
 
         if (blocLabel.equals(ALL)) {
             this.expandRoot(expand);
@@ -104,17 +224,13 @@ public class DsnNormeTree extends AbstractDsnTree implements IConstants {
                         hasFocus);
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
                 if (node.getUserObject() != null && node.getUserObject() instanceof BlocTree) {
-                    BlocTree blocTree = (BlocTree) node.getUserObject();
-
-                    boolean selected = blocTree == selectedBlocTree;
 
                     label.setOpaque(true);
-                    label.setBackground(selected ? Color.gray : TREE_BACKGROUND_COLOR);
+                    label.setBackground(sel ? Color.gray : TREE_BACKGROUND_COLOR);
                     label.setForeground(TREE_NORMAL_COLOR);
                 } else if (node instanceof BlocTreeRubriqueNode) {
 
-                    boolean selected = false;
-                    label.setBackground(selected ? Color.gray : TREE_BACKGROUND_COLOR);
+                    label.setBackground(sel ? Color.gray : TREE_BACKGROUND_COLOR);
                     label.setForeground(TREE_CREATED_COLOR);
                 }
 
@@ -138,7 +254,7 @@ public class DsnNormeTree extends AbstractDsnTree implements IConstants {
         if (listRubriques != null) {
             for (KeyAndLibelle keyAndLibelle : listRubriques) {
                 BlocTreeRubriqueNode rubrique = new BlocTreeRubriqueNode(
-                        keyAndLibelle.getKey() + " - " + keyAndLibelle.getLibelle());
+                        keyAndLibelle);
                 node.add(rubrique);
             }
         }
@@ -196,13 +312,19 @@ public class DsnNormeTree extends AbstractDsnTree implements IConstants {
     private static class BlocTreeRubriqueNode extends DefaultMutableTreeNode {
 
         private static final long serialVersionUID = 1L;
+        
+        private final KeyAndLibelle keyAndLibelle;
 
+        private String getKeyRubrique() {
+            return this.keyAndLibelle.getKey();
+        }
         private String getLibelleRubrique() {
-            return (String) super.getUserObject();
+            return this.keyAndLibelle.getLibelle();
         }
 
-        protected BlocTreeRubriqueNode(String libelleRubrique) {
-            super(libelleRubrique);
+        protected BlocTreeRubriqueNode(KeyAndLibelle keyAndLibelle) {
+            super(keyAndLibelle);
+            this.keyAndLibelle = keyAndLibelle;
         }
 
         @Override
@@ -211,5 +333,6 @@ public class DsnNormeTree extends AbstractDsnTree implements IConstants {
         }
 
     }
+
 
 }

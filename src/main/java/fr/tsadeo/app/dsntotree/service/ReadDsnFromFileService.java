@@ -17,11 +17,12 @@ import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ErrorMessage;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
+import fr.tsadeo.app.dsntotree.util.SettingsUtils;
 
 public class ReadDsnFromFileService extends AbstractReadDsn {
 
-	private static final Logger LOG = Logger.getLogger(ReadDsnFromFileService.class.getName());
-	
+    private static final Logger LOG = Logger.getLogger(ReadDsnFromFileService.class.getName());
+
     public static void main(String[] args) {
 
         if (args == null || args.length == 0) {
@@ -75,10 +76,10 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
         return dsn;
     }
 
-	@Override
-	protected Logger getLog() {
-		return LOG;
-	}
+    @Override
+    protected Logger getLog() {
+        return LOG;
+    }
 
     private void buildDsnTree(Dsn dsn) {
 
@@ -110,8 +111,7 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
         ItemBloc root = new ItemBloc(0, "", "DSN");
         root.setRoot(true);
 
-        BlocTree treeRoot = this.buildRootTree(this.jsonUtils.getJsonEnteteForDsnAsStream(dsn),
-                this.jsonUtils.getJsonForDsnAsStream(dsn));
+        BlocTree treeRoot = this.buildRootTree(dsn.getPhaseNatureType());
 
         dsn.setTreeRoot(treeRoot);
         if (treeRoot == null) {
@@ -272,7 +272,8 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
             InputStream in = null;
             try {
                 in = new FileInputStream(dsnFile);
-                dsn = this.readDsnListLines(dsnFile, IOUtils.readLines(in, UTF8));
+                String encoding = SettingsUtils.get().getDsnEncoding();
+                dsn = this.readDsnListLines(dsnFile, IOUtils.readLines(in, encoding == null ? ISO_8859_1 : encoding));
 
                 this.extractDsnPhase(dsn);
                 this.extractNatureTypeDsn(dsn);

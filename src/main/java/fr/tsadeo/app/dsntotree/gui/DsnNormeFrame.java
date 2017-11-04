@@ -1,17 +1,32 @@
 package fr.tsadeo.app.dsntotree.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
+import fr.tsadeo.app.dsntotree.dico.KeyAndLibelle;
+import fr.tsadeo.app.dsntotree.gui.component.SearchPanel;
 import fr.tsadeo.app.dsntotree.model.BlocTree;
+import fr.tsadeo.app.dsntotree.model.NatureDsn;
+import fr.tsadeo.app.dsntotree.model.PhaseDsn;
+import fr.tsadeo.app.dsntotree.model.PhaseNatureType;
+import fr.tsadeo.app.dsntotree.service.ServiceFactory;
+import fr.tsadeo.app.dsntotree.util.ListDsnListenerManager;
 
 /**
  * Frame présentant l'arborescence des blocs avec les libelles issus de la norme
@@ -20,47 +35,223 @@ import fr.tsadeo.app.dsntotree.model.BlocTree;
  * @author sfauche
  *
  */
-public class DsnNormeFrame extends AbstractFrame {
+public class DsnNormeFrame extends AbstractFrame implements ActionListener, ISearchActionListener,
+DocumentListener{
 
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
 
+    private static final String COMMENT = "Le choix de la phase et de la nature de la DSN determine l'arborescence des blocs."
+            + "\nLa liste des rubriques est exhaustive et correspond au document PDF de norme en cours.";
+
     private DsnNormeTree dsnNormeTree;
 
-    private final IMainActionListener mainActionListener;
-    private final String description;
-    private BlocTree blocTreeRoot;
+    private PhaseNatureType phaseNatureType;
 
+    private JComboBox<KeyAndLibelle> cbListPhases, cbListNatures;
     private JPanel panelTop;
 
+    private JTextArea taComment;
+    private SearchPanel searchPanel;
+    
+    private int searchNoResult = Integer.MAX_VALUE;
+    private boolean searchInNode = true;
+
+    // ---------------------------------------- implementing ActionListener
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        this.updateTree();
+    }
+
     // ---------------------------------------------- constructor
-    protected DsnNormeFrame(String description, IMainActionListener listener) {
-        super("Norme DSN", JFrame.DISPOSE_ON_CLOSE);
-        this.mainActionListener = listener;
-        this.description = description;
+    protected DsnNormeFrame(String title, IMainActionListener listener) {
+        super("Norme DSN: ".concat(title), JFrame.DISPOSE_ON_CLOSE);
 
         // Set up the content pane.
         addComponentsToPane(this.getContentPane());
 
     }
 
-    void setBlocTree(BlocTree blocTree) {
-        this.blocTreeRoot = blocTree;
+    void setPhaseNaturePhase(PhaseNatureType phaseNatureType) {
+
+        if (phaseNatureType != null) {
+
+            this.cbListPhases.setSelectedIndex(phaseNatureType.getPhase() == null ? PhaseDsn.PHASE_3.ordinal()
+                    : phaseNatureType.getPhase().ordinal());
+            this.cbListNatures.setSelectedIndex(phaseNatureType.getNature() == null ? NatureDsn.DSN_MENSUELLE.ordinal()
+                    : phaseNatureType.getNature().ordinal());
+        }
+    }
+
+    // -------------------------------------- implementing DocumentListener
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        search();
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        search();
+    }
+    //------------------------------------- implementing ISearchListner
+	@Override
+	public void actionCancelSearch() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setFocusOnSearch() {
+		if (this.searchPanel != null) {
+            this.searchPanel.requestFocusOnSearch();
+        }
+	}
+
+	@Override
+	public void searchNext() {
+		String search = this.searchPanel.getSearchText();
+		if (this.dsnNormeTree.search(search, this.searchInNode,  true)) {
+            ListDsnListenerManager.get().onSearch(search, true);
+        }
+	}
+
+    // ------------------------------------ private methode
+	 private void search() {
+	        String search = this.searchPanel.getSearchText();
+	        int searchLenght = search != null ? search.length() : 0;
+	        if (searchLenght > 1 && searchLenght < this.searchNoResult) {
+	        	
+	            if (this.dsnNormeTree.search(search, true, false)) {
+	            	this.searchInNode = true;
+	                this.searchNoResult = Integer.MAX_VALUE;
+	                this.searchPanel.setSearchColor(SEARCH_SUCCESS_COLOR);
+
+	                ListDsnListenerManager.get().onSearch(search, false);
+	            }
+	            else if (this.dsnNormeTree.search(search, false, false)) {
+	            	this.searchInNode = false;
+	                this.searchNoResult = Integer.MAX_VALUE;
+	                this.searchPanel.setSearchColor(SEARCH_SUCCESS_COLOR);
+
+	                ListDsnListenerManager.get().onSearch(search, false);
+	            }
+	            else {
+	            	this.searchPanel.setSearchColor(ERROR_COLOR);
+	                this.searchNoResult = search.length();
+	            }
+	        } else {
+	            if (searchLenght <= 3) {
+	                this.searchPanel.setDefaultBackground();
+	                this.searchNoResult = Integer.MAX_VALUE;
+	                this.searchInNode = true;
+	            }
+	        }
+	    }
+
+
+    private void createSearchPanel(Container container, String layout) {
+
+    	this.searchPanel = new SearchPanel(this, this);
+    	container.add(this.searchPanel, layout);
+    }
+
+    private void updateTree() {
+
+        if (this.dsnNormeTree != null) {
+
+            PhaseNatureType phaseNatureTypeSaisie = this.getPhaseNatureTypeFromSaisie();
+
+            if (phaseNatureTypeSaisie == null) {
+                return;
+            }
+            if (this.phaseNatureType == null || this.phaseNatureType.getPhase() != phaseNatureTypeSaisie.getPhase()
+                    || this.phaseNatureType.getNature() != phaseNatureTypeSaisie.getNature()) {
+
+            BlocTree blocTree = ServiceFactory.getBlocTreeService().buildRootTree(phaseNatureTypeSaisie);
+            if (blocTree != null) {
+
+                    this.dsnNormeTree.clearTree();
+                    this.setBlocTree(blocTree);
+                    this.phaseNatureType = phaseNatureTypeSaisie;
+            }
+            }
+        }
+        this.setFocusOnSearch();
+    }
+
+    private void setBlocTree(BlocTree blocTree) {
         this.dsnNormeTree.createNodes(blocTree, false);
         this.dsnNormeTree.expandBloc(BLOC_11, true);
 
-        this.buildDescription();
     }
 
-    // ------------------------------------ private methode
+    private PhaseNatureType getPhaseNatureTypeFromSaisie() {
+
+        KeyAndLibelle itemPhase = (KeyAndLibelle) this.cbListPhases.getSelectedItem();
+        KeyAndLibelle itemNature = (KeyAndLibelle) this.cbListNatures.getSelectedItem();
+
+        if (itemPhase == null || itemNature == null) {
+            return null;
+        }
+
+        PhaseDsn phase = PhaseDsn.getPhaseDsnFromPrefix(itemPhase.getKey());
+        NatureDsn nature = NatureDsn.getNatureDsn(itemNature.getKey());
+
+        return new PhaseNatureType(phase, nature, null);
+    }
+
+
 
     private void addComponentsToPane(Container pane) {
         pane.setLayout(new BorderLayout());
 
         createPanelTop(pane, BorderLayout.PAGE_START);
         createPanelMiddle(pane, BorderLayout.CENTER);
+        createPanelComment(pane, BorderLayout.PAGE_END);
+    }
+
+    private void populatePhaseNatureType() {
+
+        DefaultComboBoxModel<KeyAndLibelle> model = (DefaultComboBoxModel<KeyAndLibelle>) this.cbListPhases.getModel();
+        for (PhaseDsn phaseDsn : PhaseDsn.values()) {
+            model.addElement(phaseDsn.getKeyAndLibelle());
+        }
+
+        model = (DefaultComboBoxModel<KeyAndLibelle>) this.cbListNatures.getModel();
+        for (NatureDsn natureDsn : NatureDsn.values()) {
+            model.addElement(natureDsn.getKeyAndLibelle());
+        }
+
+    }
+
+    private void createPanelPhaseNatureType(Container container, String layout) {
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
+        this.cbListPhases = new JComboBox<>();
+        this.formatComboBox(this.cbListPhases);
+        panel.add(this.cbListPhases);
+        panel.add(Box.createRigidArea(DIM_HOR_RIGID_AREA_10));
+
+        this.cbListNatures = new JComboBox<>();
+        this.formatComboBox(this.cbListNatures);
+        panel.add(this.cbListNatures);
+
+        container.add(panel, layout);
+
+        this.populatePhaseNatureType();
+    }
+
+    private void formatComboBox(JComboBox<KeyAndLibelle> comboBox) {
+        comboBox.setModel(new DefaultComboBoxModel<KeyAndLibelle>());
+        Dimension size = new Dimension(250, 20);
+        comboBox.setPreferredSize(size);
+        comboBox.setMaximumSize(size);
+        comboBox.addActionListener(this);
     }
 
     private void createPanelMiddle(Container pane, String layout) {
@@ -71,31 +262,32 @@ public class DsnNormeFrame extends AbstractFrame {
 
     }
 
-    private void buildDescription() {
+    private void createPanelComment(Container pane, String layout) {
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(this.panelTop.getBackground());
-        panel.setAlignmentX(CENTER_ALIGNMENT);
-        this.panelTop.add(panel);
+        JPanel panelComment = new JPanel();
+        panelComment.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        JLabel labelLibelle = new JLabel(this.description);
-        labelLibelle.setForeground(TREE_NORMAL_COLOR);
-        panel.add(labelLibelle);
+        this.taComment = new JTextArea();
+        this.taComment.setText(COMMENT);
+        this.taComment.setMargin(new Insets(10, 10, 10, 10));
+        panelComment.add(this.taComment);
 
+        pane.add(panelComment, layout);
     }
+
 
     private void createPanelTop(Container container, String layout) {
 
         this.panelTop = new JPanel();
-        panelTop.setMinimumSize(container.getSize());
-        panelTop.setBackground(TREE_BACKGROUND_COLOR);
-        panelTop.setForeground(TREE_NORMAL_COLOR);
-
-        panelTop.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5),
-                BorderFactory.createLineBorder(Color.BLUE)));
+        this.panelTop.setLayout(new BoxLayout(this.panelTop, BoxLayout.Y_AXIS));
+        this.createSearchPanel(this.panelTop, null);
+        this.panelTop.add(Box.createRigidArea(DIM_VER_RIGID_AREA_5));
+        this.createPanelPhaseNatureType(this.panelTop, null);
+        this.panelTop.add(Box.createRigidArea(DIM_VER_RIGID_AREA_15));
         container.add(panelTop, layout);
 
     }
+
+
 
 }

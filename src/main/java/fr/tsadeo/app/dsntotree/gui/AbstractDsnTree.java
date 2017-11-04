@@ -1,5 +1,7 @@
 package fr.tsadeo.app.dsntotree.gui;
 
+import java.util.logging.Logger;
+
 import javax.swing.BorderFactory;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -28,8 +30,26 @@ public abstract class AbstractDsnTree extends JTree implements IGuiConstants {
         super.setBackground(TREE_BACKGROUND_COLOR);
         this.top = (DefaultMutableTreeNode) this.getModel().getRoot();
     }
+    
 
-    protected void clearTree() {
+    boolean search(String search, boolean node, boolean next) {
+
+        TreePath result = node?
+        		this.searchNode(new TreePath(this.getTop()), search.toLowerCase(), next):
+        		this.searchValue(new TreePath(this.getTop()), search.toLowerCase(), next);
+        if (result != null) {
+            getLog().config("Search OK (".concat(search).concat(") ").concat(result.toString()));
+            return true;
+        }
+
+        return false;
+    }
+
+    protected abstract Logger getLog();
+    protected abstract TreePath searchValue(TreePath treePath, String lowerCase, boolean next);
+    protected abstract TreePath searchNode(TreePath treePath, String lowerCase, boolean next);
+
+	protected void clearTree() {
         this.top.removeAllChildren();
     }
 

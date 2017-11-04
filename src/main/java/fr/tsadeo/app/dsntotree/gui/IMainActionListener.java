@@ -7,11 +7,6 @@ import fr.tsadeo.app.dsntotree.model.ItemBloc;
 
 public interface IMainActionListener {
 
-    public void actionCancelSearch();
-
-    public void setFocusOnSearch();
-
-    public void searchNext();
 
     public void actionSaveDsn(boolean reload);
 

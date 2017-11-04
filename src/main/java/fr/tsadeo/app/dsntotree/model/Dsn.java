@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.tsadeo.app.dsntotree.util.IConstants;
+import fr.tsadeo.app.dsntotree.util.StringUtils;
 
 public class Dsn implements IConstants {
 
@@ -12,8 +13,12 @@ public class Dsn implements IConstants {
 
     private File file;
 
+    private final PhaseNatureType phaseNatureType = new PhaseNatureType();
+
     private String phase;
+
     private String nature;
+
     private String type;
 
     private ItemBloc itemRoot;
@@ -65,12 +70,18 @@ public class Dsn implements IConstants {
 
     private List<ItemRubrique> rubriques;
 
+
     public String getPhase() {
         return phase;
     }
 
     public void setPhase(String phase) {
         this.phase = phase;
+        this.phaseNatureType.setPhase(PhaseDsn.getPhaseDsnFromPhase(phase));
+    }
+
+    public PhaseNatureType getPhaseNatureType() {
+        return phaseNatureType;
     }
 
     public List<ItemRubrique> getRubriques() {
@@ -92,20 +103,21 @@ public class Dsn implements IConstants {
             this.blocs.clear();
         }
     }
-    
+
     public void clearListRubriques() {
-    	if(this.rubriques != null) {
-    		this.rubriques.clear();
-    	}
+        if (this.rubriques != null) {
+            this.rubriques.clear();
+        }
     }
+
     public void addAllRubriques(List<ItemRubrique> listRubriques) {
-    	if (listRubriques == null) {
-    		return;
-    	}
-    	if (this.rubriques == null) {
-    		this.rubriques = new ArrayList<ItemRubrique>();
-    	}
-    	this.rubriques.addAll(listRubriques);
+        if (listRubriques == null) {
+            return;
+        }
+        if (this.rubriques == null) {
+            this.rubriques = new ArrayList<ItemRubrique>();
+        }
+        this.rubriques.addAll(listRubriques);
     }
 
     public void addBloc(ItemBloc itemBloc) {
@@ -127,12 +139,14 @@ public class Dsn implements IConstants {
         return blocs;
     }
 
+
     public String getNature() {
         return nature;
     }
 
     public void setNature(String nature) {
         this.nature = nature;
+        this.phaseNatureType.setNature(NatureDsn.getNatureDsn(nature));
     }
 
     public String getType() {
@@ -141,11 +155,34 @@ public class Dsn implements IConstants {
 
     public void setType(String type) {
         this.type = type;
+        this.phaseNatureType.setType(TypeDsn.getNatureDsn(type));
+    }
+
+    private String displayPhase() {
+        if (this.phaseNatureType.getPhase() != null) {
+            return this.phaseNatureType.getPhase().toString();
+        }
+        return StringUtils.concat("Phase: NON CONNUE (", this.phase, ")");
+    }
+
+    private String displayNature() {
+        if (this.phaseNatureType.getNature() != null) {
+            return this.phaseNatureType.getNature().toString();
+        }
+        return StringUtils.concat("nature: NON CONNUE (", this.nature, ")");
+    }
+
+    private String displayType() {
+        if (this.phaseNatureType.getType() != null) {
+            return this.phaseNatureType.getType().toString();
+        }
+        return StringUtils.concat("type: NON CONNU (", this.type, ")");
     }
 
     @Override
     public String toString() {
-        return "Phase: " + this.phase + " - nature: " + this.nature + " - type: " + type;
+        return StringUtils.concat(this.displayPhase(), " - ", this.displayNature(), " ", this.displayType());
+
     }
 
 }

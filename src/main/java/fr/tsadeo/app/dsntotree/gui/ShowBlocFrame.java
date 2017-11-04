@@ -57,7 +57,7 @@ public class ShowBlocFrame extends AbstractFrame implements ItemBlocListener, ID
 
     @Override
     public void onSearch(String search, boolean next) {
-        this.simpleTree.search(search, next);
+        this.simpleTree.search(search, false, next);
     }
 
     @Override

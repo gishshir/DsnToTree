@@ -49,6 +49,7 @@ public interface IGuiConstants {
 
     public final static Color HILIT_COLOR = Color.LIGHT_GRAY;
     public final static Color ERROR_COLOR = Color.PINK;
+    public final static Color SEARCH_SUCCESS_COLOR = Color.cyan;
     public final static Color EDIT_COLOR = Color.BLUE;
     public final static String FOCUS_SEARCH_ACTION = "focus-search";
     public final static String CANCEL_SEARCH_ACTION = "cancel-search";

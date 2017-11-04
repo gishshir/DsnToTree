@@ -1,20 +1,27 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" >
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
 
 	<xs:element name="settings" type="Settings" />
 
 	<xs:complexType name="Settings">
 		<xs:sequence>
+			<xs:element name="dsn" type="Dsn" />
 			<xs:element name="bdd" type="Bdd" minOccurs="0" maxOccurs="1" />
-			<xs:element name="norme" type="Norme" minOccurs="0" maxOccurs="1" />
+			<xs:element name="norme" type="Norme" minOccurs="0"
+				maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Dsn">
+		<xs:sequence>
+			<xs:element name="encoding" type="xs:string" />
 		</xs:sequence>
 	</xs:complexType>
 
 	<xs:complexType name="Norme">
-	<xs:sequence>
+		<xs:sequence>
 			<xs:element name="dsnnormefile" type="xs:string" />
-	</xs:sequence>
+		</xs:sequence>
 	</xs:complexType>
 
 	<xs:complexType name="Bdd">
@@ -26,8 +33,10 @@
 
 	<xs:complexType name="BddAccesses">
 		<xs:sequence>
-			<xs:element name="oracleBdd" type="OracleBddAccess" maxOccurs="unbounded" minOccurs="1" />
-			<xs:element name="postgreBdd" type="PostGreBddAccess" maxOccurs="unbounded" minOccurs="0" />
+			<xs:element name="oracleBdd" type="OracleBddAccess"
+				maxOccurs="unbounded" minOccurs="1" />
+			<xs:element name="postgreBdd" type="PostGreBddAccess"
+				maxOccurs="unbounded" minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
 
@@ -38,7 +47,8 @@
 			<xs:element name="instance" type="xs:string" />
 			<xs:element name="user" type="xs:string" />
 			<xs:element name="password" type="xs:string" />
-			<xs:element name="defaut" type="xs:boolean" maxOccurs="1" minOccurs="0" />
+			<xs:element name="defaut" type="xs:boolean" maxOccurs="1"
+				minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PostGreBddAccess">
@@ -53,7 +63,8 @@
 
 	<xs:complexType name="Sqls">
 		<xs:sequence>
-			<xs:element name="sql" type="Sql" maxOccurs="unbounded" minOccurs="0" />
+			<xs:element name="sql" type="Sql" maxOccurs="unbounded"
+				minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
 
@@ -64,5 +75,5 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	
+
 </xs:schema>

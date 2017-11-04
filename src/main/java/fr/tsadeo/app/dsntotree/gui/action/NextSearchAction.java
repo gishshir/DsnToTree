@@ -4,20 +4,19 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import fr.tsadeo.app.dsntotree.gui.IMainActionListener;
-import fr.tsadeo.app.dsntotree.gui.MyFrame;
+import fr.tsadeo.app.dsntotree.gui.ISearchActionListener;
 
 public class NextSearchAction extends AbstractAction {
 
     /**
 	 * 
 	 */
-	private final IMainActionListener listener;
+	private final ISearchActionListener listener;
 
 	/**
 	 * @param myFrame
 	 */
-	public NextSearchAction(IMainActionListener listener) {
+	public NextSearchAction(ISearchActionListener listener) {
 		this.listener = listener;
 	}
 
