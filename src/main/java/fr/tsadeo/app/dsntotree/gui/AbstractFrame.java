@@ -11,12 +11,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import fr.tsadeo.app.dsntotree.util.IConstants;
 
-public abstract class AbstractFrame extends JFrame implements IGuiConstants, IConstants, DocumentListener {
+public abstract class AbstractFrame extends JFrame implements IGuiConstants, IConstants {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,24 +22,6 @@ public abstract class AbstractFrame extends JFrame implements IGuiConstants, ICo
     protected final JFileChooser fc = new JFileChooser();
     protected File currentDirectory;
 
-    // ----------------------------------- implementing DocumentListener
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void changedUpdate(DocumentEvent e) {
-        // TODO Auto-generated method stub
-
-    }
 
     // --------------------------------------- constructor
     protected AbstractFrame(String title, int closeOperation) {

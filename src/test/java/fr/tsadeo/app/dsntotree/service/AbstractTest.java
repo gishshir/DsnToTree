@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 
 import org.junit.Assert;
 
-import fr.tsadeo.app.dsntotree.gui.MyFrame;
 import fr.tsadeo.app.dsntotree.util.IConstants;
 
 public abstract class AbstractTest {

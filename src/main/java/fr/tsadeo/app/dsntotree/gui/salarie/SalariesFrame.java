@@ -1,37 +1,29 @@
 package fr.tsadeo.app.dsntotree.gui.salarie;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import fr.tsadeo.app.dsntotree.business.SalarieDto;
 import fr.tsadeo.app.dsntotree.gui.AbstractFrame;
 import fr.tsadeo.app.dsntotree.gui.GuiUtils;
 import fr.tsadeo.app.dsntotree.gui.IMainActionListener;
+import fr.tsadeo.app.dsntotree.gui.ISearchActionListener;
 import fr.tsadeo.app.dsntotree.gui.action.EditSalarieAction;
-import fr.tsadeo.app.dsntotree.gui.action.FocusSearchSalarieAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowSalarieAction;
+import fr.tsadeo.app.dsntotree.gui.component.SearchPanel;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
-import fr.tsadeo.app.dsntotree.gui.component.StateTextField;
 
-public class SalariesFrame extends AbstractFrame implements ISalarieListener, DocumentListener {
+public class SalariesFrame extends AbstractFrame implements ISalarieListener,
+  ISearchActionListener{
 
     /**
      * 
@@ -42,9 +34,11 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener, Do
     private TableSalaries tableSalaries;
     private SalarieStateButton btShowRubriques, btDeleteSalarie, btEditSalarie;
 
-    private StateTextField tfSearch;
+//    private StateTextField tfSearch;
     private int searchNoResult = Integer.MAX_VALUE;
-    private Color tfSearchBg;
+//    private Color tfSearchBg;
+    
+    private SearchPanel searchPanel;
 
     // ------------------------------------- implementing ISalarieListener
     @Override
@@ -67,22 +61,11 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener, Do
 
     @Override
     public void setFocusOnSearch() {
-        if (this.tfSearch != null) {
-            this.tfSearch.requestFocusInWindow();
+        if (this.searchPanel != null) {
+            this.searchPanel.requestFocusOnSearch();
         }
     }
 
-    // -------------------------------------- implementing DocumentListener
-
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        search();
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        search();
-    }
 
     // ----------------------------------- constructor
     public SalariesFrame(IMainActionListener mainActionListener) {
@@ -98,28 +81,41 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener, Do
 
         this.tableSalaries.setDatas(listSalaries);
     }
-    // ------------------------------------ private methods
 
-    private void search() {
-        String search = tfSearch.getText();
+    //------------------------------------- implementing ISearchActionListener
+    @Override
+	public void actionCancelSearch() {
+    	this.searchPanel.cancelSearch();
+        searchNoResult = Integer.MAX_VALUE;
+	}
+
+	@Override
+	public void searchNext() {
+		// nothing
+	}
+    @Override
+    public void search() {
+        String search = this.searchPanel.getSearchText();
         int searchLenght = search != null ? search.length() : 0;
         if (searchLenght > 3 && searchLenght < this.searchNoResult) {
-            if (this.tableSalaries.search(this.tfSearch.getText())) {
+            if (this.tableSalaries.search(search)) {
                 this.searchNoResult = Integer.MAX_VALUE;
-                this.tfSearch.setBackground(this.tfSearchBg);
+                this.searchPanel.setSearchColor(SEARCH_SUCCESS_COLOR);
 
             } else {
-                this.tfSearch.setBackground(ERROR_COLOR);
+            	this.searchPanel.setSearchColor(ERROR_COLOR);
                 this.searchNoResult = search.length();
             }
         } else {
             if (searchLenght <= 3) {
-                this.tfSearch.setBackground(this.tfSearchBg);
+            	this.searchPanel.setDefaultBackground();
                 this.searchNoResult = Integer.MAX_VALUE;
                 this.tableSalaries.reinitSearch();
             }
         }
     }
+
+    // ------------------------------------ private methods
 
     private void addComponentsToPane(Container pane) {
         pane.setLayout(new BorderLayout());
@@ -179,22 +175,8 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener, Do
 
     private void createPanelSearch(Container container, String layout) {
 
-        JPanel panelSearch = new JPanel();
-        JLabel labelRechercher = new JLabel("rechercher...");
-        labelRechercher.setIcon(GuiUtils.createImageIcon(PATH_FIND_ICO));
-        panelSearch.add(labelRechercher);
-        this.tfSearch = new StateTextField(15);
-        this.tfSearch.setFont(FONT);
-        this.tfSearchBg = this.tfSearch.getBackground();
-        this.tfSearch.getDocument().addDocumentListener(this);
-
-        InputMap im = this.tfSearch.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        ActionMap am = this.tfSearch.getActionMap();
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK), FOCUS_SEARCH_ACTION);
-        am.put(FOCUS_SEARCH_ACTION, new FocusSearchSalarieAction(this));
-
-        panelSearch.add(this.tfSearch);
-        container.add(panelSearch, layout);
+        this.searchPanel = new SearchPanel(this);
+        container.add(this.searchPanel, layout);
     }
 
     // ======================================== INNER CLASS
@@ -217,4 +199,5 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener, Do
 
     }
 
+	
 }

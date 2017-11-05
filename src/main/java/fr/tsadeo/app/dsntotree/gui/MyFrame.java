@@ -1,20 +1,16 @@
 package fr.tsadeo.app.dsntotree.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.dnd.DropTarget;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.swing.ActionMap;
 import javax.swing.BoxLayout;
-import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -22,26 +18,19 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
 import javax.swing.MySwingUtilities;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingWorker;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.TreePath;
 
 import fr.tsadeo.app.dsntotree.business.SalarieDto;
-import fr.tsadeo.app.dsntotree.gui.action.CancelSearchAction;
-import fr.tsadeo.app.dsntotree.gui.action.FocusSearchAction;
-import fr.tsadeo.app.dsntotree.gui.action.NextSearchAction;
 import fr.tsadeo.app.dsntotree.gui.action.SaveDsnAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowErrorAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowJdbcFrameAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowOpenDialogAction;
 import fr.tsadeo.app.dsntotree.gui.component.SearchPanel;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
-import fr.tsadeo.app.dsntotree.gui.component.StateTextField;
 import fr.tsadeo.app.dsntotree.gui.salarie.SalariesFrame;
 import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.Dsn;
@@ -60,7 +49,7 @@ import fr.tsadeo.app.dsntotree.util.ListItemBlocListenerManager;
 import fr.tsadeo.app.dsntotree.util.SettingsUtils;
 
 public class MyFrame extends AbstractFrame
-        implements DocumentListener, ItemBlocListener, ISearchActionListener , IMainActionListener, IDictionnaryListener {
+        implements  ItemBlocListener, ISearchActionListener , IMainActionListener, IDictionnaryListener {
 
     private static final Logger LOG = Logger.getLogger(MyFrame.class.getName());
 
@@ -174,7 +163,7 @@ public class MyFrame extends AbstractFrame
 
     private void createSearchPanel(Container container, String layout) {
     	
-    	this.searchPanel = new SearchPanel(this, this);
+    	this.searchPanel = new SearchPanel(this);
         container.add(this.searchPanel, layout);
     }
 
@@ -433,7 +422,8 @@ public class MyFrame extends AbstractFrame
         }
     }
 
-    private void search() {
+    @Override
+    public void search() {
     	String search = this.searchPanel.getSearchText();
         int searchLenght = search != null ? search.length() : 0;
         if (searchLenght > 3 && searchLenght < this.searchNoResult) {
@@ -610,17 +600,6 @@ public class MyFrame extends AbstractFrame
         this.businessPanel.activeNormeButton(true);
     }
 
-    // -------------------------------------- implementing DocumentListener
-
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        search();
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        search();
-    }
 
     // ---------------------------------- implements ItemBlocListener
     @Override

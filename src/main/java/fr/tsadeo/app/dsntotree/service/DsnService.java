@@ -22,8 +22,9 @@ import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 import fr.tsadeo.app.dsntotree.util.IConstants;
 import fr.tsadeo.app.dsntotree.util.IJsonConstants;
+import fr.tsadeo.app.dsntotree.util.IRegexConstants;
 
-public class DsnService implements IConstants, IJsonConstants {
+public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
 
     private static final Logger LOG = Logger.getLogger(DsnService.class.getName());
     private static final String NA = "UNKNOWN";

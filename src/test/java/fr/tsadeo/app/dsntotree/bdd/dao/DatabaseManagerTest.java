@@ -1,12 +1,10 @@
 package fr.tsadeo.app.dsntotree.bdd.dao;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.Test;
 
 import fr.tsadeo.app.dsntotree.bdd.dao.IBddAccessManager.Type;

@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 
-import fr.tsadeo.app.dsntotree.gui.MyFrame;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 import fr.tsadeo.app.dsntotree.util.IConstants;

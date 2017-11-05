@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import fr.tsadeo.app.dsntotree.bdd.dao.IDataDsnDao;
 import fr.tsadeo.app.dsntotree.bdd.model.DataDsn;
-import fr.tsadeo.app.dsntotree.gui.MyFrame;
 
 public class JdbcDataDsnDaoTest implements IJdbcDaoTest {
 	

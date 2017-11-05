@@ -90,6 +90,10 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
 
     private final IMainActionListener mainActionListener;
     // -------------------------------------- implementing DocumentListener
+	@Override
+	public void changedUpdate(DocumentEvent e) {
+		// nothing
+	}
 
     @Override
     public void insertUpdate(DocumentEvent e) {
@@ -700,5 +704,6 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
         }
 
     }
+
 
 }

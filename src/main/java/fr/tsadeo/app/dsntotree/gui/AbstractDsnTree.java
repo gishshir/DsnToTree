@@ -44,10 +44,15 @@ public abstract class AbstractDsnTree extends JTree implements IGuiConstants {
 
         return false;
     }
+    
+    void cancelSearch() {
+        this.selectedIndex = Integer.MIN_VALUE;
+        this.clearSelection();
+    }
 
     protected abstract Logger getLog();
-    protected abstract TreePath searchValue(TreePath treePath, String lowerCase, boolean next);
-    protected abstract TreePath searchNode(TreePath treePath, String lowerCase, boolean next);
+    protected abstract TreePath searchValue(TreePath treePath, String search, boolean next);
+    protected abstract TreePath searchNode(TreePath treePath, String search, boolean next);
 
 	protected void clearTree() {
         this.top.removeAllChildren();
