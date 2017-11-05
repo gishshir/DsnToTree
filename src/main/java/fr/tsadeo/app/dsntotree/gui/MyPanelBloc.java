@@ -13,7 +13,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -62,16 +61,17 @@ import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
 import fr.tsadeo.app.dsntotree.util.DragAndDropUtil;
+import fr.tsadeo.app.dsntotree.util.IRegexConstants;
 import fr.tsadeo.app.dsntotree.util.ListItemBlocListenerManager;
 
-public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionListener {
+public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionListener, IRegexConstants {
 
     private static final Logger LOG = Logger.getLogger(MyPanelBloc.class.getName());
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
-    private static final Pattern PATTERN_NUM_RUBRIQUE = Pattern.compile("[0-9]{1,3}");
+    
 
     private static final Dimension DIM_BUTTON_SMALL = new Dimension(16, 20);
 

@@ -12,13 +12,12 @@ import java.util.regex.Pattern;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
 
+import fr.tsadeo.app.dsntotree.util.IRegexConstants;
 
-public class GetLinesFromPDFNormeDsn extends PDFTextStripper {
+
+public class GetLinesFromPDFNormeDsn extends PDFTextStripper implements IRegexConstants {
 	
-	private static final String REGEX_POINT = "\\.";
-	private static final String REGEX_SPACE = "\\s";
-	private static final String REGEX_TWO_DIGIT = "[\\d]{2}";
-	private static final String REGEX_TREE_DIGIT = "[\\d]{3}";
+
 	private static final String REGEX_ROOT_AND_BLOC_LABEL = "(S" + REGEX_TWO_DIGIT + REGEX_POINT + "G00" + REGEX_POINT
 			+ ")(" + REGEX_TWO_DIGIT + ")";
 

@@ -43,12 +43,6 @@ public interface IConstants {
     public static final String JSON_PHASE2_PATH = "phase2";
     public static final String JSON_PHASE3_PATH = "phase3";
 
-    public static final Pattern PATTERN_KEY_VALUE = Pattern
-            .compile("(S[\\d]{2}.G[\\d]{2}.[\\d]{2}.[\\d]{3}),[\\s]{0,5}'(.*)'");
 
-    public static final String BLOC_RUBRIQUE = "([\\d]{2}).([\\d]{3})";
-    public static final Pattern PATTERN_BLOC_RUBRIQUE = Pattern.compile(BLOC_RUBRIQUE);
-    public static final Pattern PATTERN_PREF_BLOC_RUBRIQUE = Pattern
-            .compile("(S[\\d]{2}.G[\\d]{2}).".concat(BLOC_RUBRIQUE));
 
 }

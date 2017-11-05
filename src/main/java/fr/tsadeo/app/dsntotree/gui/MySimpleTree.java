@@ -441,11 +441,6 @@ public class MySimpleTree extends AbstractDsnTree
         }
     }
 
-    void cancelSearch() {
-        this.selectedIndex = Integer.MIN_VALUE;
-        this.clearSelection();
-    }
-
     protected void createTreeNode(DefaultMutableTreeNode parent, ItemBloc itemBloc, boolean withChildren) {
 
         DefaultMutableTreeNode node = new BlocNode(itemBloc);

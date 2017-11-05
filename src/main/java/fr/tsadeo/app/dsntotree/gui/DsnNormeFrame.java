@@ -16,8 +16,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import fr.tsadeo.app.dsntotree.dico.KeyAndLibelle;
 import fr.tsadeo.app.dsntotree.gui.component.SearchPanel;
@@ -26,6 +24,7 @@ import fr.tsadeo.app.dsntotree.model.NatureDsn;
 import fr.tsadeo.app.dsntotree.model.PhaseDsn;
 import fr.tsadeo.app.dsntotree.model.PhaseNatureType;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
+import fr.tsadeo.app.dsntotree.util.IRegexConstants;
 import fr.tsadeo.app.dsntotree.util.ListDsnListenerManager;
 
 /**
@@ -35,8 +34,7 @@ import fr.tsadeo.app.dsntotree.util.ListDsnListenerManager;
  * @author sfauche
  *
  */
-public class DsnNormeFrame extends AbstractFrame implements ActionListener, ISearchActionListener,
-DocumentListener{
+public class DsnNormeFrame extends AbstractFrame implements ActionListener, ISearchActionListener, IRegexConstants{
 
     /**
      * 
@@ -85,22 +83,12 @@ DocumentListener{
         }
     }
 
-    // -------------------------------------- implementing DocumentListener
-
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        search();
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        search();
-    }
-    //------------------------------------- implementing ISearchListner
+    //------------------------------------- implementing ISearchActionListner
 	@Override
 	public void actionCancelSearch() {
-		// TODO Auto-generated method stub
-		
+		this.searchPanel.cancelSearch();
+        searchNoResult = Integer.MAX_VALUE;
+        this.dsnNormeTree.cancelSearch();
 	}
 
 	@Override
@@ -113,30 +101,32 @@ DocumentListener{
 	@Override
 	public void searchNext() {
 		String search = this.searchPanel.getSearchText();
-		if (this.dsnNormeTree.search(search, this.searchInNode,  true)) {
-            ListDsnListenerManager.get().onSearch(search, true);
-        }
+		this.dsnNormeTree.search(search, this.searchInNode,  true);
 	}
 
-    // ------------------------------------ private methode
-	 private void search() {
+	@Override 
+	public void search() {
 	        String search = this.searchPanel.getSearchText();
 	        int searchLenght = search != null ? search.length() : 0;
-	        if (searchLenght > 1 && searchLenght < this.searchNoResult) {
+	        boolean blocOrRubrique = searchLenght >= 2 && this.isBlocOrRubriquePattern(search);
+	        
+	        if (blocOrRubrique) {
 	        	
-	            if (this.dsnNormeTree.search(search, true, false)) {
-	            	this.searchInNode = true;
-	                this.searchNoResult = Integer.MAX_VALUE;
-	                this.searchPanel.setSearchColor(SEARCH_SUCCESS_COLOR);
-
-	                ListDsnListenerManager.get().onSearch(search, false);
-	            }
-	            else if (this.dsnNormeTree.search(search, false, false)) {
+	        	 if (this.dsnNormeTree.search(search, true, false)) {
+		            	this.searchInNode = true;
+		                this.searchNoResult = Integer.MAX_VALUE;
+		                this.searchPanel.setSearchColor(SEARCH_SUCCESS_COLOR);
+                        return;
+		            }
+	        }
+	        
+	        if (searchLenght > 3 && searchLenght < this.searchNoResult) {
+	        	
+	            if (this.dsnNormeTree.search(search, false, false)) {
 	            	this.searchInNode = false;
 	                this.searchNoResult = Integer.MAX_VALUE;
 	                this.searchPanel.setSearchColor(SEARCH_SUCCESS_COLOR);
 
-	                ListDsnListenerManager.get().onSearch(search, false);
 	            }
 	            else {
 	            	this.searchPanel.setSearchColor(ERROR_COLOR);
@@ -151,10 +141,13 @@ DocumentListener{
 	        }
 	    }
 
-
+    // ------------------------------------ private methode
+	private boolean isBlocOrRubriquePattern (String value) {
+		return PATTERN_SEARCH_BLOC_OR_RUBRIQUE.matcher(value).matches();
+	}
     private void createSearchPanel(Container container, String layout) {
 
-    	this.searchPanel = new SearchPanel(this, this);
+    	this.searchPanel = new SearchPanel(this);
     	container.add(this.searchPanel, layout);
     }
 
