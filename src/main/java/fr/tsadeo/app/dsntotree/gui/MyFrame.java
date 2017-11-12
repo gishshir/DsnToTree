@@ -60,7 +60,6 @@ public class MyFrame extends AbstractFrame
 
     private MyTree myTree;
 
-    // private FilterPanel filterPanel;
     private BusinessPanel businessPanel;
 
     private MyPanelBloc myPanelBloc;
@@ -68,11 +67,10 @@ public class MyFrame extends AbstractFrame
     private SalariesFrame salariesFrame;
 
     private StateButton btOpen, btSave, btShowErrors, btShowJdbc;
-//    private StateTextField tfSearch;
     private int searchNoResult = Integer.MAX_VALUE;
-//    private Color tfSearchBg;
     
     private SearchPanel searchPanel;
+    private boolean searchInNode = true;
 
     private boolean blocDragStarted = false;
 
@@ -417,7 +415,7 @@ public class MyFrame extends AbstractFrame
     @Override
     public void searchNext() {
     	String search = this.searchPanel.getSearchText();
-        if (this.myTree.search(search, false, true)) {
+        if (this.myTree.search(search, this.searchInNode, true)) {
             ListDsnListenerManager.get().onSearch(search, true);
         }
     }
@@ -426,8 +424,22 @@ public class MyFrame extends AbstractFrame
     public void search() {
     	String search = this.searchPanel.getSearchText();
         int searchLenght = search != null ? search.length() : 0;
+        boolean blocOrRubrique = searchLenght >= 2 && ServiceFactory.getDsnService().isBlocOrRubriquePattern(search);
+
+        if (blocOrRubrique) {
+
+            if (this.myTree.search(search, true, false)) {
+                this.searchInNode = true;
+                this.searchNoResult = Integer.MAX_VALUE;
+                this.searchPanel.setSearchColor(SEARCH_SUCCESS_COLOR);
+                return;
+            }
+        }
+
         if (searchLenght > 3 && searchLenght < this.searchNoResult) {
+
             if (this.myTree.search(search, false, false)) {
+                this.searchInNode = false;
                 this.searchNoResult = Integer.MAX_VALUE;
                 this.searchPanel.setSearchColor(SEARCH_SUCCESS_COLOR);
 
@@ -440,6 +452,7 @@ public class MyFrame extends AbstractFrame
             if (searchLenght <= 3) {
                 this.searchPanel.setDefaultBackground();
                 this.searchNoResult = Integer.MAX_VALUE;
+                this.searchInNode = true;
             }
         }
     }

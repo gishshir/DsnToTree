@@ -66,11 +66,63 @@ public class MySimpleTree extends AbstractDsnTree
 		return LOG;
 	}
 	@Override
-	protected TreePath searchNode(TreePath treePath, String lowerCase, boolean next) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    protected TreePath searchNode(TreePath parent, String search, boolean next) {
 
+        TreePath result = null;
+        TreeNode node = (TreeNode) parent.getLastPathComponent();
+        // si on a atteint la fin du fichier et en next alors
+        // on réinitialise le selectedIndex
+        if (next && this.getRowForPath(parent) == this.getRowCount() - 1) {
+            this.selectedIndex = Integer.MIN_VALUE;
+        }
+
+        if (node.isLeaf()) {
+            // on recherche xx.xxx
+            TreeNode nodeBloc = node.getParent();
+            if (nodeBloc instanceof BlocNode) {
+                String blocLabel = ((BlocNode) nodeBloc).getItemBloc().getBlocLabel();
+                String keyRubrique = ((RubriqueNode) node).getItemRubrique().getRubriqueLabel();
+                String blocAndRubrique = blocLabel.concat(".").concat(keyRubrique);
+                if (blocAndRubrique.indexOf(search) > -1) {
+
+                    int row = this.getRowForPath(parent);
+                    LOG.info("found: " + search + " !!!!!" + " row: " + row);
+                    if (!next || (next && (row == -1 || row > this.selectedIndex))) {
+
+                        this.setSelectionPath(parent);
+                        this.scrollPathToVisible(parent);
+
+                        selectedIndex = this.getRowForPath(parent);
+                        return parent;
+                    }
+                }
+
+            }
+        } else if (node instanceof BlocNode) {
+            ItemBloc itemBloc = ((BlocNode) node).getItemBloc();
+            if (itemBloc.getBlocLabel().toLowerCase().indexOf(search) > -1) {
+                if (!next || (next && this.getRowForPath(parent) > this.selectedIndex)) {
+
+                    this.setSelectionPath(parent);
+                    this.scrollPathToVisible(parent);
+                    selectedIndex = this.getRowForPath(parent);
+                    return parent;
+                }
+            }
+        }
+        if (node.getChildCount() >= 0) {
+
+            for (int i = 0; i < node.getChildCount(); i++) {
+                TreeNode child = node.getChildAt(i);
+                TreePath path = parent.pathByAddingChild(child);
+                result = searchNode(path, search, next);
+                if (result != null) {
+                    return result;
+                }
+            }
+        }
+        return null;
+    }
 
 
     /*
@@ -90,7 +142,9 @@ public class MySimpleTree extends AbstractDsnTree
             ItemRubrique itemRubrique = ((RubriqueNode) node).getItemRubrique();
             if (itemRubrique.toString().toLowerCase().indexOf(search) > -1) {
 
-                if (!next || (next && this.getRowForPath(parent) > this.selectedIndex)) {
+                int row = this.getRowForPath(parent);
+                LOG.info("found: " + search + " !!!!!" + " row: " + row);
+                if (!next || (next && (row == -1 || row > this.selectedIndex))) {
 
                     this.setSelectionPath(parent);
                     this.scrollPathToVisible(parent);

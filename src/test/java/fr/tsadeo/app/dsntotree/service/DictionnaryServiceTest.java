@@ -26,14 +26,22 @@ public class DictionnaryServiceTest extends AbstractTest {
 		 IDictionnary dictionnary = service.getDsnDictionnary();
 		 assertNotNull(dictionnary);
 		 
-		 String result = dictionnary.getLibelle("15");
+        String result = dictionnary.getLibelle("08");
 		 assertNotNull(result);
 		 LOG.config(result);
 		 
-		 result = dictionnary.getLibelle("15", "003");
+        result = dictionnary.getLibelle("08", "001");
 		 assertNotNull(result);
 		 LOG.config(result);
 		 
+        result = dictionnary.getLibelle("89");
+        assertNotNull(result);
+        LOG.config(result);
+
+        result = dictionnary.getLibelle("89", "001");
+        assertNotNull(result);
+        LOG.config(result);
+
 	 }
 
 

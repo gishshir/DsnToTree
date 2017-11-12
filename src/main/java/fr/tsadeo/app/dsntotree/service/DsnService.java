@@ -56,6 +56,10 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
         return listSalaries;
     }
 
+    public boolean isBlocOrRubriquePattern(String value) {
+        return PATTERN_SEARCH_BLOC_OR_RUBRIQUE.matcher(value).matches();
+    }
+
     /**
      * Determine si il est possible de copier 'blocToDrop' dans le bloc parent
      * 'parentTarget'
