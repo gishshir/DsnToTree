@@ -17,6 +17,6 @@
 		<sqls/>
 	</bdd>
 	<norme>
-	    <dsnnormefile>doc/dsn_cahier_technique_p3.6.pdf</dsnnormefile>
+	    <dsnnormefile>doc/dsn_cahier_technique_p3_2018.1.2.pdf</dsnnormefile>
 	</norme>
 </settings>

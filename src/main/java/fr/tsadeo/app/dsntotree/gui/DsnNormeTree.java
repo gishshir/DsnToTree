@@ -60,7 +60,9 @@ public class DsnNormeTree extends AbstractDsnTree implements IConstants {
         		String blocAndRubrique = blocLabel.concat(".").concat(keyRubrique);
                 if (blocAndRubrique.indexOf(search) > -1) {
 
-                    if (!next || (next && this.getRowForPath(parent) > this.selectedIndex)) {
+                    int row = this.getRowForPath(parent);
+                    LOG.info("found: " + search + " !!!!!" + " row: " + row);
+                    if (!next || (next && (row == -1 || row > this.selectedIndex))) {
 
                         this.setSelectionPath(parent);
                         this.scrollPathToVisible(parent);
@@ -75,7 +77,10 @@ public class DsnNormeTree extends AbstractDsnTree implements IConstants {
 		if ( node instanceof BlocTreeNode) {
 			BlocTree blocTree = ((BlocTreeNode) node).getBlocTree();
 			if (blocTree.getBlocLabel().toLowerCase().indexOf(search) > -1) {
-				if (!next || (next && this.getRowForPath(parent) > this.selectedIndex)) {
+
+                int row = this.getRowForPath(parent);
+                LOG.info("found: " + search + " !!!!!" + " row: " + row);
+                if (!next || (next && (row == -1 || row > this.selectedIndex))) {
 
 					this.setSelectionPath(parent);
 					this.scrollPathToVisible(parent);
@@ -113,7 +118,9 @@ public class DsnNormeTree extends AbstractDsnTree implements IConstants {
               String libelleRubrique = ((BlocTreeRubriqueNode) node).getLibelleRubrique();
               if (libelleRubrique.toLowerCase().indexOf(search) > -1) {
 
-                  if (!next || (next && this.getRowForPath(parent) > this.selectedIndex)) {
+                int row = this.getRowForPath(parent);
+                LOG.info("found: " + search + " !!!!!" + " row: " + row);
+                if (!next || (next && (row == -1 || row > this.selectedIndex))) {
 
                       this.setSelectionPath(parent);
                       this.scrollPathToVisible(parent);
@@ -126,7 +133,10 @@ public class DsnNormeTree extends AbstractDsnTree implements IConstants {
 			if (node instanceof BlocTreeNode) {
 				BlocTree blocTree = ((BlocTreeNode) node).getBlocTree();
 				if (blocTree.toString().toLowerCase().indexOf(search) > -1) {
-					if (!next || (next && this.getRowForPath(parent) > this.selectedIndex)) {
+
+                int row = this.getRowForPath(parent);
+                LOG.info("found: " + search + " !!!!!" + " row: " + row);
+                if (!next || (next && (row == -1 || row > this.selectedIndex))) {
 
 						this.setSelectionPath(parent);
 						this.scrollPathToVisible(parent);

@@ -25,7 +25,6 @@ import fr.tsadeo.app.dsntotree.model.PhaseDsn;
 import fr.tsadeo.app.dsntotree.model.PhaseNatureType;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
 import fr.tsadeo.app.dsntotree.util.IRegexConstants;
-import fr.tsadeo.app.dsntotree.util.ListDsnListenerManager;
 
 /**
  * Frame présentant l'arborescence des blocs avec les libelles issus de la norme
@@ -108,7 +107,7 @@ public class DsnNormeFrame extends AbstractFrame implements ActionListener, ISea
 	public void search() {
 	        String search = this.searchPanel.getSearchText();
 	        int searchLenght = search != null ? search.length() : 0;
-	        boolean blocOrRubrique = searchLenght >= 2 && this.isBlocOrRubriquePattern(search);
+        boolean blocOrRubrique = searchLenght >= 2 && ServiceFactory.getDsnService().isBlocOrRubriquePattern(search);
 	        
 	        if (blocOrRubrique) {
 	        	
@@ -142,9 +141,7 @@ public class DsnNormeFrame extends AbstractFrame implements ActionListener, ISea
 	    }
 
     // ------------------------------------ private methode
-	private boolean isBlocOrRubriquePattern (String value) {
-		return PATTERN_SEARCH_BLOC_OR_RUBRIQUE.matcher(value).matches();
-	}
+
     private void createSearchPanel(Container container, String layout) {
 
     	this.searchPanel = new SearchPanel(this);
