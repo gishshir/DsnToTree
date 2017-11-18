@@ -21,6 +21,8 @@
 	<xs:complexType name="Norme">
 		<xs:sequence>
 			<xs:element name="dsnnormefile" type="xs:string" />
+			<xs:element name="actif" type="xs:boolean" maxOccurs="1"
+				minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
 
@@ -28,6 +30,16 @@
 		<xs:sequence>
 			<xs:element name="bddAccesses" type="BddAccesses" />
 			<xs:element name="sqls" type="Sqls" />
+			<xs:element name="services" type="BddServices" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="BddServices">
+		<xs:sequence>
+			<xs:element name="oracleServices" type="xs:string"
+				maxOccurs="1" minOccurs="0" />
+			<xs:element name="postgreServices" type="xs:string"
+				maxOccurs="1" minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
 

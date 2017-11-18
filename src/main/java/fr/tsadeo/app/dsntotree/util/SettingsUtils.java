@@ -80,9 +80,19 @@ public class SettingsUtils {
         return null;
     }
 
+    public File getTnsNameOraFile() {
+    	if (this.applicationSettings != null && this.applicationSettings.getBdd() != null
+    			&& this.applicationSettings.getBdd().getServices() != null 
+    			&& this.applicationSettings.getBdd().getServices().getOracleServices() != null) {
+    		
+    		return new File( this.applicationSettings.getBdd().getServices().getOracleServices());
+    	}
+    	return null;
+    }
     public File getNormeDsnFile() {
         if (this.applicationSettings != null && this.applicationSettings.getNorme() != null) {
-            return new File(this.applicationSettings.getNorme().getDsnnormefile());
+            return this.applicationSettings.getNorme().getActif()?
+            		new File(this.applicationSettings.getNorme().getDsnnormefile()):null;
         }
         return null;
     }

@@ -539,7 +539,7 @@ public class MyFrame extends AbstractFrame
             }
 
         };
-        worker.execute();
+       
 
     }
 

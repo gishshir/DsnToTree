@@ -1,11 +1,10 @@
 package fr.tsadeo.app.dsntotree.util;
 
-import java.util.regex.Pattern;
-
 public interface IConstants {
 
     public static final String SETTINGS_XML = "settings.xml";
 
+    public static final String SPACE = " ";
     public static final String US = "_";
     public static final String VIRGULE = ",";
     public static final String COTE = "'";
