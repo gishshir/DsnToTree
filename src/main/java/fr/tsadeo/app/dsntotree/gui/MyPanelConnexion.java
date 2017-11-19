@@ -22,7 +22,8 @@ import fr.tsadeo.app.dsntotree.gui.component.IStateComponent;
 import fr.tsadeo.app.dsntotree.gui.component.LabelAndTextField;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
 
-public class MyPanelConnexion extends JPanel implements IGuiConstants, DocumentListener, IStateComponent {
+public class MyPanelConnexion extends JPanel implements IGuiConstants, DocumentListener, IStateComponent,
+IBddInstanceListener{
 
     /**
      * 
@@ -46,10 +47,22 @@ public class MyPanelConnexion extends JPanel implements IGuiConstants, DocumentL
 
         this.createTitlePanel(this, BorderLayout.PAGE_START);
         this.createCenterPanel(this, BorderLayout.CENTER);
-
-        this.loadDefaultBddConnexion();
+        
     }
 
+    // ----------------------------------- implementing IBddInstanceListener
+	@Override
+	public void instanceChanged() {
+
+        this.setBddConnexionStatus(ConnexionState.Unknown);
+        this.ltfPwd.setValue(null);
+        this.ltfUser.setValue(null);
+	}
+
+	@Override
+	public void listInstanceReady() {
+		this.loadDefaultBddConnexion();
+	}
     // ----------------------------------- implementing DocumentListener
     @Override
     public void insertUpdate(DocumentEvent e) {
@@ -167,7 +180,7 @@ public class MyPanelConnexion extends JPanel implements IGuiConstants, DocumentL
 
     private void createUrlConnexionComponent(Container container, String layout) {
 
-        this.oracleConnectComponent = new OracleConnectComponent();
+        this.oracleConnectComponent = new OracleConnectComponent(this);
         this.oracleConnectComponent.setDocumentListener(this);
         container.add(this.oracleConnectComponent, layout);
     }
@@ -206,5 +219,6 @@ public class MyPanelConnexion extends JPanel implements IGuiConstants, DocumentL
 
         container.add(panelButtons, layout);
     }
+
 
 }

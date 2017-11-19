@@ -5,15 +5,14 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collections;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
@@ -27,10 +26,13 @@ import fr.tsadeo.app.dsntotree.bdd.dao.impl.OracleBddAccessManager.UrlParameters
 import fr.tsadeo.app.dsntotree.dico.KeyAndLibelle;
 import fr.tsadeo.app.dsntotree.dto.BddConnexionDto;
 import fr.tsadeo.app.dsntotree.dto.TnsOracleInstanceDto;
+import fr.tsadeo.app.dsntotree.gui.IBddInstanceListener;
 import fr.tsadeo.app.dsntotree.gui.IGuiConstants;
 import fr.tsadeo.app.dsntotree.gui.component.IStateComponent;
 import fr.tsadeo.app.dsntotree.gui.component.LabelAndTextField;
+import fr.tsadeo.app.dsntotree.gui.component.StateComboBox;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
+import fr.tsadeo.app.dsntotree.service.TnsNameOraService;
 
 public class OracleConnectComponent extends JPanel 
 implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
@@ -41,17 +43,28 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
      */
     private static final long serialVersionUID = 1L;
 
+    private TnsNameOraService service = ServiceFactory.getTnsNameOraService();
+    private final IBddInstanceListener listener;
 
     private LabelAndTextField pfHost, pfPort, pfInstance;
-    private JComboBox<KeyAndLibelle> cbSearchInstance;
+    private StateComboBox<KeyAndLibelle> cbSearchInstance;
+    private boolean listInstanceReady = false;
+
 
     //---------------------------------------------------- implementing ActionLIstener
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+		if (listInstanceReady) {
 
+			Object item = this.cbSearchInstance.getSelectedItem();
+
+				this.populateWithSelectedInstance((KeyAndLibelle) item);
+				this.listener.instanceChanged();
+		} else {
+			this.listener.listInstanceReady();
+			listInstanceReady = true;
+		}
+	}
 
     // ------------------------------------- Overriding IStateComponent
     @Override
@@ -59,6 +72,7 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
         this.pfHost.waitEndAction();
         this.pfPort.waitEndAction();
         this.pfInstance.waitEndAction();
+        this.cbSearchInstance.waitEndAction();
     }
 
     @Override
@@ -66,6 +80,7 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
         this.pfHost.actionEnded();
         this.pfPort.actionEnded();
         this.pfInstance.actionEnded();
+        this.cbSearchInstance.actionEnded();
     }
 
     // ----------------------------------------- overriding IConnectComponent
@@ -73,9 +88,7 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
     public void setBddConnexionDto(BddConnexionDto connexionDto) {
 
     	UrlParametersDto dto = this.getOracleConnectionManager().getUrlParameters(connexionDto.getUrl());
-        this.pfHost.setValue(dto.getHost());
-        this.pfPort.setValue(dto.getPort());
-        this.pfInstance.setValue(dto.getInstance());
+        this.setValues(dto.getHost(), dto.getPort(), dto.getInstance());
     }
 
     
@@ -114,8 +127,9 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
     }
 
     // ---------------------------------------- constructor
-    public OracleConnectComponent() {
+    public OracleConnectComponent(IBddInstanceListener listener) {
 
+    	this.listener = listener;
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLUE),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
@@ -128,6 +142,35 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
     }
 
     // ---------------------------------------- private methods
+    
+    private void setValues(String host, String port, String instance) {
+    	this.pfHost.setValue(host);
+        this.pfPort.setValue(port);
+        this.pfInstance.setValue(instance);
+    }
+    
+    private void clearValues() {
+    	this.setValues(null, null, null);
+    }
+
+    private void filterListOfInstance(String search) {
+    	System.out.println("search " + search);
+//    	this.cbS
+    	
+    	
+    	cbSearchInstance.showPopup();
+    }
+    private void populateWithSelectedInstance(KeyAndLibelle keyAndLibelle) {
+    	
+    	 
+    	TnsOracleInstanceDto dto = keyAndLibelle == null?null: service.getInstance(keyAndLibelle.getKey());
+    	if (dto != null) {
+    		this.setValues(dto.getHost(), Integer.toString(dto.getPort()), dto.getService());	
+    	} else {
+    		this.clearValues();
+    	}
+    	
+    }
     private void populateSearchComboBox() {
     	
     	SwingWorker<List<TnsOracleInstanceDto>, Void> worker =
@@ -137,7 +180,7 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
 
 					@Override
 					protected List<TnsOracleInstanceDto> doInBackground() throws Exception {
-						listInstances = ServiceFactory.getTnsNameOraService().getListInstances();
+						listInstances = service.getListInstances();
 						return listInstances;
 					}
 					
@@ -182,7 +225,7 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
     }
     
     private void createSearchComboBox() {
-    	this.cbSearchInstance = new JComboBox<>();
+    	this.cbSearchInstance = new StateComboBox<>();
     	this.cbSearchInstance.setModel(new DefaultComboBoxModel<KeyAndLibelle>());
           Dimension size = new Dimension(250, 20);
           this.cbSearchInstance.setPreferredSize(size);
@@ -203,6 +246,7 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
         container.add(this.pfInstance);
 
     }
+
 
 
 }

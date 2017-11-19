@@ -117,15 +117,7 @@ public class TnsNameOraParserUtils implements IRegexConstants, IConstants {
             }
         }
         
-        Comparator<TnsOracleInstanceDto> comparator =
-        		new Comparator<TnsOracleInstanceDto>() {
-
-					@Override
-					public int compare(TnsOracleInstanceDto o1, TnsOracleInstanceDto o2) {
-						return o1.getService().compareTo(o2.getService());
-					}
-				};
-	    Collections.sort(listInstances, comparator);
+   
         return listInstances;
     }
 
