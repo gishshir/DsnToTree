@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -32,6 +33,20 @@ public class TnsNameOraService {
     	return this.mapInstances.get(service);
     }
     
+    public List<TnsOracleInstanceDto> filterInstances(String search) {
+        List<TnsOracleInstanceDto> listInstances = this.getListInstances();
+
+        Iterator<TnsOracleInstanceDto> iterator = listInstances.iterator();
+        while (iterator.hasNext()) {
+            TnsOracleInstanceDto tnsOracleInstanceDto = iterator.next();
+
+            if (!tnsOracleInstanceDto.matches(search)) {
+                iterator.remove();
+            }
+        }
+        return listInstances;
+    }
+
     public List<TnsOracleInstanceDto> getListInstances() {
     	if (this.mapInstances == null) {
     		

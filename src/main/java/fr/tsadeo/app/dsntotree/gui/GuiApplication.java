@@ -14,9 +14,7 @@ import fr.tsadeo.app.dsntotree.util.SettingsUtils;
 public class GuiApplication implements IConstants {
 	
 
-    private static void createAndShowGUI() {
-        // Create and set up the window.
-        MyFrame frame = new MyFrame();
+    private static void createAndShowGUI(MyFrame frame) {
 
         // Display the window.
         frame.pack();
@@ -25,7 +23,8 @@ public class GuiApplication implements IConstants {
         frame.setVisible(true);
     }
     
-    private static void readSettings() throws Exception{
+    private static void readSettings(MyFrame frame) throws Exception {
+        SettingsUtils.get().addListener(frame);
     	SettingsUtils.get().readApplicationSettings(new File(SETTINGS_XML));
     }
 
@@ -42,11 +41,14 @@ public class GuiApplication implements IConstants {
     }
 
     public static void start() {
+
+        // Create and set up the window.
+        final MyFrame frame = new MyFrame();
     	
     		new Thread() {
     			public void run() {
     				try {
-						readSettings();
+                    readSettings(frame);
 						ServiceFactory.getDictionnaryService().getDsnDictionnary();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
@@ -60,7 +62,7 @@ public class GuiApplication implements IConstants {
         // creating and showing this application's GUI.
         MySwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                createAndShowGUI();
+                createAndShowGUI(frame);
             }
         });
 

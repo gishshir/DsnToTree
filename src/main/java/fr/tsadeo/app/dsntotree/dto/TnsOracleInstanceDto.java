@@ -4,14 +4,24 @@ import fr.tsadeo.app.dsntotree.util.StringUtils;
 
 public class TnsOracleInstanceDto {
 
+    private String tnsname;
     private String protocole;
     private String host;
     private int port;
     private String service;
 
     // ---------------------- accessors
+
     public String getProtocole() {
         return protocole;
+    }
+
+    public String getTnsname() {
+        return tnsname;
+    }
+
+    public void setTnsname(String tnsname) {
+        this.tnsname = tnsname;
     }
 
     public void setProtocole(String protocole) {
@@ -42,12 +52,21 @@ public class TnsOracleInstanceDto {
         this.service = service;
     }
 
+    // ------------------------------------------- public methods
+
+    public boolean matches(String search) {
+
+        return this.tnsname.indexOf(search) != -1 || this.service.indexOf(search) != -1;
+    }
+
+
     //--------------------------- overriding Object
 	@Override
 	public String toString() {
-		return StringUtils.concat(this.protocole, " Host: ", this.host, " Port: ", this.port,
+        return StringUtils.concat(this.tnsname, " - ", this.protocole, " Host: ", this.host, " Port: ", this.port,
 				" Instance: ", this.service);
 	}
+
 
     
     

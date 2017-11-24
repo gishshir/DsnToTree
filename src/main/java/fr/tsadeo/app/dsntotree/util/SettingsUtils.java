@@ -3,6 +3,7 @@ package fr.tsadeo.app.dsntotree.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -26,6 +27,18 @@ public class SettingsUtils {
         return instance;
     }
 
+    public interface ISettingsListener {
+        public void settingsLoaded();
+    }
+
+    private List<ISettingsListener> listListeners;
+
+    public void addListener(ISettingsListener listener) {
+        if (this.listListeners == null) {
+            this.listListeners = new ArrayList<>();
+        }
+        this.listListeners.add(listener);
+    }
     private Settings applicationSettings;
 
     private SettingsUtils() {
@@ -38,6 +51,12 @@ public class SettingsUtils {
     public void readApplicationSettings(File settingsFile) throws Exception {
 
         this.applicationSettings = this.readSettings(settingsFile);
+
+        if (this.listListeners != null && applicationSettings != null) {
+            for (ISettingsListener settingsListener : listListeners) {
+                settingsListener.settingsLoaded();
+            }
+        }
     }
 
     public Settings readSettings(File settingsFile) throws Exception {
@@ -46,6 +65,7 @@ public class SettingsUtils {
             return null;
         }
 
+        Settings settings = null;
         InputStream is = null;
         try {
 
@@ -55,7 +75,7 @@ public class SettingsUtils {
             Object o = u.unmarshal(is);
             @SuppressWarnings("unchecked")
             JAXBElement<Settings> jbElement = o == null ? null : (JAXBElement<Settings>) o;
-            return o == null ? null : jbElement.getValue();
+            settings = o == null ? null : jbElement.getValue();
 
         } catch (Exception e) {
             log.severe("Erreur lors de la lecture du fichier " + settingsFile.getName());
@@ -65,7 +85,8 @@ public class SettingsUtils {
                 is.close();
             }
         }
-        return null;
+
+        return settings;
 
     }
 
