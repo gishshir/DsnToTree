@@ -17,7 +17,7 @@
 		<sqls/>
 		<services>
 		    <oracleServices>doc/tnsnames.ora</oracleServices>
-		     <actif>false</actif>
+		     <actif>true</actif>
 		</services>
 	</bdd>
 	<norme>

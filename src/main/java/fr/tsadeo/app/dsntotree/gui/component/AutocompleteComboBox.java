@@ -56,11 +56,13 @@ public class AutocompleteComboBox extends StateComboBox<KeyAndLibelle> implement
         super.fireItemStateChanged(e);
     }
 
-    @Override
-    protected void fireActionEvent() {
-        System.out.println("fireActionEvent");
-        super.fireActionEvent();
-    }
+	@Override
+	protected void fireActionEvent() {
+		if (!this.searchInProgress) {
+			System.out.println("fireActionEvent");
+			super.fireActionEvent();
+		}
+	}
 
 
     // ------------------------ implementing DocumentListener
@@ -71,6 +73,10 @@ public class AutocompleteComboBox extends StateComboBox<KeyAndLibelle> implement
 
     @Override
     public void removeUpdate(DocumentEvent e) {
+    	System.out.println("removeUpdate");
+    	if (!tc.getText().isEmpty()) {
+    	reinitGUISelectedItem();
+    	}
         this.update();
     }
 
@@ -100,42 +106,63 @@ public class AutocompleteComboBox extends StateComboBox<KeyAndLibelle> implement
      * 2 - text vide
      * 3 - text avec selectedItem
      */
-    private void update() {
+	private void update() {
 
-        System.out.println("update");
-        if (this.tc != null) {
-            String search = tc.getText().trim();
-            System.out.println("text: " + search);
-            if (search != null && (searchInProgress || resultCount > 0 ||
-            		search.length() >= MIN_CAR)) {
+		if (this.tc == null) {
+			return;
+		}
+		String search = tc.getText().trim();
+		System.out.println("\ntext: " + search + " - searchInProgress: " + searchInProgress);
+		if (search != null 
+				&& (searchInProgress || resultCount > 0 || search.length() >= MIN_CAR)) {
 
-                if (this.currentSearch == null || !search.equals(this.currentSearch)) {
+			if (this.currentSearch == null || !search.equals(this.currentSearch)) {
 
-                    System.out.println("searchInProgress: " + searchInProgress);
-                    //utilisateur a modifie la recherche
-                    if (!searchInProgress) {
-                    	searchInProgress = true;
-                        this.search();
-                    } else {
-                    	// le resultat de la recherche modifie le model et 
-                    	// vide le champs de recherche
-                        SwingUtilities.invokeLater(new Runnable() {
+				// utilisateur a modifie la recherche
+				if (!searchInProgress) {
+					this.search();
+				} else {
+					
+					// le resultat de la recherche modifie le model et
+					// vide le champs de recherche
+					if (search.isEmpty()) {
+						
+						System.out.println("currentSearch: " + currentSearch);
+						reinitGUISearchText(currentSearch);
+					}
+				}
+			}
+		}
 
-                            @Override
+	}
+	private void reinitGUISelectedItem() {
+		
+		if (this.getSelectedItem() != null) {
+			SwingUtilities.invokeLater(new Runnable() {
 
-                            public void run() {
-                                System.out.println("currentSearch: " + currentSearch);
-                                setSelectedIndex(-1);
-                                tc.setText(currentSearch == null ? "" : currentSearch);
-                                searchInProgress = false;
-                            }
-                        });
-                    }
-                }
-            } 
+				@Override
 
-        }
-    }
+				public void run() {
+					setSelectedIndex(-1);
+				}
+			});
+		}
+	}
+	private void reinitGUISearchText(String text) {
+
+		
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+
+			public void run() {
+				setSelectedIndex(-1);
+				tc.setText(text == null ? "" : text);
+				searchInProgress = false;
+			}
+		});
+
+	}
 
     private DefaultComboBoxModel<KeyAndLibelle> getDefaultComboboxModel() {
         return (DefaultComboBoxModel<KeyAndLibelle>) this.getModel();
@@ -143,6 +170,10 @@ public class AutocompleteComboBox extends StateComboBox<KeyAndLibelle> implement
 
     private void search() {
 
+    	if (this.searchInProgress) {
+    		return;
+    	}
+    	
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
@@ -151,6 +182,11 @@ public class AutocompleteComboBox extends StateComboBox<KeyAndLibelle> implement
 
                 String search = tc == null ? null : tc.getText().trim();
                 System.out.println("search: " + search);
+                if (search == null || search.isEmpty() || getSelectedItem() != null) {
+                	return;
+                }
+                
+                searchInProgress = true;
 
                 List<KeyAndLibelle> listInstances = search.length() < MIN_CAR?Collections.emptyList():
                 		searchable.search(search);

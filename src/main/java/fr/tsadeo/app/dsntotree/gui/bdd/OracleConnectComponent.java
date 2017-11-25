@@ -58,8 +58,9 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
 
 			Object item = this.cbSearchInstance.getSelectedItem();
             if (item instanceof KeyAndLibelle) {
-                // this.populateWithSelectedInstance((KeyAndLibelle) item);
-                // this.listener.instanceChanged();
+            	System.out.println("actionPerformed!!!!!!!!!!!!!!!!!!!!!!");
+            	this.populateWithSelectedInstance((KeyAndLibelle) item);
+                 this.listener.instanceChanged();
             }
 	}
 
@@ -150,8 +151,7 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
     }
 
     private void populateWithSelectedInstance(KeyAndLibelle keyAndLibelle) {
-    	
-    	 
+    	 	 
         TnsOracleInstanceDto dto = keyAndLibelle == null ? null : service.getInstance(keyAndLibelle.getLibelle());
     	if (dto != null) {
     		this.setValues(dto.getHost(), Integer.toString(dto.getPort()), dto.getService());	
