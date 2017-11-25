@@ -33,6 +33,8 @@ import fr.tsadeo.app.dsntotree.gui.component.IStateComponent;
 import fr.tsadeo.app.dsntotree.gui.component.LabelAndTextField;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
 import fr.tsadeo.app.dsntotree.service.TnsNameOraService;
+import fr.tsadeo.app.dsntotree.util.SettingsUtils;
+import fr.tsadeo.app.dsntotree.util.SettingsUtils.ISettingsListener;
 
 public class OracleConnectComponent extends JPanel 
 implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
@@ -48,23 +50,17 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
 
     private LabelAndTextField pfHost, pfPort, pfInstance;
     private AutocompleteComboBox cbSearchInstance;
-    private boolean listInstanceReady = false;
 
 
     //---------------------------------------------------- implementing ActionLIstener
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (listInstanceReady) {
 
 			Object item = this.cbSearchInstance.getSelectedItem();
             if (item instanceof KeyAndLibelle) {
                 // this.populateWithSelectedInstance((KeyAndLibelle) item);
                 // this.listener.instanceChanged();
             }
-		} else {
-			this.listener.listInstanceReady();
-			listInstanceReady = true;
-		}
 	}
 
     // ------------------------------------- Overriding IStateComponent
@@ -138,10 +134,7 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
         this.add(Box.createRigidArea(DIM_VER_RIGID_AREA_5));
         this.createPanelTextField(this);
         
-        this.populateSearchComboBox();
-
-
-       
+         this.activateSearchComboBox();
     }
 
     // ---------------------------------------- private methods
@@ -167,41 +160,11 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
     	}
     	
     }
-    private void populateSearchComboBox() {
+    private void activateSearchComboBox() {
     	
-        SwingWorker<List<TnsOracleInstanceDto>, Void> worker = new SwingWorker<List<TnsOracleInstanceDto>, Void>() {
-
-            List<TnsOracleInstanceDto> listInstances;
-
-            @Override
-            protected List<TnsOracleInstanceDto> doInBackground() throws Exception {
-                listInstances = service.getListInstances();
-                return listInstances;
-            }
-
-            @Override
-            protected void done() {
-
-                // tempo
-                listener.listInstanceReady();
-
-                // if (this.listInstances != null) {
-                //
-                // DefaultComboBoxModel<KeyAndLibelle> model =
-                // (DefaultComboBoxModel<KeyAndLibelle>) cbSearchInstance
-                // .getModel();
-                //
-                // List<KeyAndLibelle> list =
-                // mapToListKeyAndLibelle(listInstances);
-                // for (KeyAndLibelle keyAndLibelle : list) {
-                // model.addElement(keyAndLibelle);
-                // }
-                // }
-                cbSearchInstance.setEditable(true);
-            }
-
-        };
-        worker.execute();
+         boolean activate = service.hasTnsNameInstances();
+         System.out.println("activate searchInstance: " + activate);
+         this.cbSearchInstance.setEnabled(activate);
     	
     }
 
@@ -268,6 +231,7 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
         container.add(this.pfInstance);
 
     }
+
 
 
 

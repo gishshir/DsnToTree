@@ -47,6 +47,9 @@ public class TnsNameOraService {
         return listInstances;
     }
 
+    public boolean hasTnsNameInstances() {
+    	return SettingsUtils.get().getTnsNameOraFile() != null;
+    }
     public List<TnsOracleInstanceDto> getListInstances() {
     	if (this.mapInstances == null) {
     		

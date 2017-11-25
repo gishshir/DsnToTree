@@ -11,6 +11,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 
+import fr.tsadeo.app.dsntotree.model.xml.Bdd;
+import fr.tsadeo.app.dsntotree.model.xml.Norme;
 import fr.tsadeo.app.dsntotree.model.xml.OracleBddAccess;
 import fr.tsadeo.app.dsntotree.model.xml.Settings;
 
@@ -102,18 +104,21 @@ public class SettingsUtils {
     }
 
     public File getTnsNameOraFile() {
-    	if (this.applicationSettings != null && this.applicationSettings.getBdd() != null
-    			&& this.applicationSettings.getBdd().getServices() != null 
-    			&& this.applicationSettings.getBdd().getServices().getOracleServices() != null) {
+    	Bdd bdd = this.getBddSettings();
+    	if (bdd != null
+    			&& bdd.getServices() != null 
+    			&& bdd.getServices().isActif()
+    			&& bdd.getServices().getOracleServices() != null) {
     		
-    		return new File( this.applicationSettings.getBdd().getServices().getOracleServices());
+    		return new File( bdd.getServices().getOracleServices());
     	}
     	return null;
     }
     public File getNormeDsnFile() {
-        if (this.applicationSettings != null && this.applicationSettings.getNorme() != null) {
-            return this.applicationSettings.getNorme().getActif()?
-            		new File(this.applicationSettings.getNorme().getDsnnormefile()):null;
+    	Norme norme = this.getNormeSettings();
+        if (norme != null) {
+            return norme.isActif()?
+            		new File(norme.getDsnnormefile()):null;
         }
         return null;
     }
@@ -139,6 +144,13 @@ public class SettingsUtils {
 
         return this.applicationSettings.getBdd().getBddAccesses().getOracleBdd();
 
+    }
+    
+    private  Bdd getBddSettings() {
+    	return (this.hasApplicationSettings())?this.applicationSettings.getBdd():null;
+    }
+    private Norme getNormeSettings() {
+    	return this.hasApplicationSettings()?this.applicationSettings.getNorme():null;
     }
 
 }

@@ -21,8 +21,7 @@
 	<xs:complexType name="Norme">
 		<xs:sequence>
 			<xs:element name="dsnnormefile" type="xs:string" />
-			<xs:element name="actif" type="xs:boolean" maxOccurs="1"
-				minOccurs="0" />
+			<xs:element name="actif" type="xs:boolean" />
 		</xs:sequence>
 	</xs:complexType>
 
@@ -40,6 +39,7 @@
 				maxOccurs="1" minOccurs="0" />
 			<xs:element name="postgreServices" type="xs:string"
 				maxOccurs="1" minOccurs="0" />
+		<xs:element name="actif" type="xs:boolean" />
 		</xs:sequence>
 	</xs:complexType>
 

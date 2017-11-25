@@ -48,6 +48,7 @@ IBddInstanceListener{
         this.createTitlePanel(this, BorderLayout.PAGE_START);
         this.createCenterPanel(this, BorderLayout.CENTER);
         
+        this.loadDefaultBddConnexion();
     }
 
     // ----------------------------------- implementing IBddInstanceListener
@@ -59,10 +60,6 @@ IBddInstanceListener{
         this.ltfUser.setValue(null);
 	}
 
-	@Override
-	public void listInstanceReady() {
-		this.loadDefaultBddConnexion();
-	}
     // ----------------------------------- implementing DocumentListener
     @Override
     public void insertUpdate(DocumentEvent e) {

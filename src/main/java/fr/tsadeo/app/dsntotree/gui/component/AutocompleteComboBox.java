@@ -34,7 +34,7 @@ public class AutocompleteComboBox extends StateComboBox<KeyAndLibelle> implement
 
     public AutocompleteComboBox(Searchable searchable) {
         this.searchable = searchable;
-        this.setEditable(false);
+        this.setEditable(true);
         this.setMaximumRowCount(10);
         this.setListeners(this, this);
     }
