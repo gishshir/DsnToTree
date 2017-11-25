@@ -21,5 +21,6 @@
 	</bdd>
 	<norme>
 	    <dsnnormefile>doc/dsn_cahier_technique_p3_2018.1.2.pdf</dsnnormefile>
+	    <actif>false</actif>
 	</norme>
 </settings>
