@@ -53,11 +53,14 @@ IBddInstanceListener{
 
     // ----------------------------------- implementing IBddInstanceListener
 	@Override
-	public void instanceChanged() {
+	public void instanceChanged(String instance) {
 
         this.setBddConnexionStatus(ConnexionState.Unknown);
-        this.ltfPwd.setValue(null);
-        this.ltfUser.setValue(null);
+        
+        BddConnexionDto dto = this.oracleConnectComponent.getConnexionManager().getBddConnexionDto(instance);
+        
+        this.ltfUser.setValue(dto == null?null:dto.getUser());
+        this.ltfPwd.setValue(dto == null?null:dto.getPwd());
 	}
 
     // ----------------------------------- implementing DocumentListener

@@ -123,26 +123,16 @@ public class SettingsUtils {
         return null;
     }
 
-    public OracleBddAccess getDefaultOracleBddAccess() {
-
-        List<OracleBddAccess> list = this.getListOracleBddAccess();
-        if (list != null) {
-            for (OracleBddAccess oracleBddAccess : list) {
-                if (oracleBddAccess.getDefaut()) {
-                    return oracleBddAccess;
-                }
-            }
-        }
-        return null;
-    }
+  
 
     public List<OracleBddAccess> getListOracleBddAccess() {
-        if (this.applicationSettings == null || this.applicationSettings.getBdd() == null
-                || this.applicationSettings.getBdd().getBddAccesses() == null) {
+    	Bdd bdd = this.getBddSettings();
+        if (bdd == null
+                || bdd.getBddAccesses() == null) {
             return null;
         }
 
-        return this.applicationSettings.getBdd().getBddAccesses().getOracleBdd();
+        return bdd.getBddAccesses().getOracleBdd();
 
     }
     

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -28,14 +29,18 @@ public class SettingsUtilsTest extends AbstractTest {
 	        SettingsUtils.get().setApplicationSettings(settings);
 	        
 	        
-	        OracleBddAccess result = SettingsUtils.get().getDefaultOracleBddAccess();
+	        List<OracleBddAccess> result = SettingsUtils.get().getListOracleBddAccess();
 	        assertNotNull(result);
+	        assertTrue(!result.isEmpty());
 	        
-	        assertNotNull(result.getHost());
-	        assertNotNull(result.getPort());
-	        assertNotNull(result.getInstance());
-	        assertNotNull(result.getUser());
-	        assertNotNull(result.getPassword());
+	        for (OracleBddAccess oracleBddAccess : result) {
+	        	assertNotNull(oracleBddAccess.getHost());
+		        assertNotNull(oracleBddAccess.getPort());
+		        assertNotNull(oracleBddAccess.getInstance());
+		        assertNotNull(oracleBddAccess.getUser());
+		        assertNotNull(oracleBddAccess.getPassword());	
+			}
+	        
 	        
 	        File file = SettingsUtils.get().getNormeDsnFile();
 	        assertNotNull(file);

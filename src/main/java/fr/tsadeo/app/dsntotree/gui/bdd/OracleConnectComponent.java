@@ -59,8 +59,9 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
 			Object item = this.cbSearchInstance.getSelectedItem();
             if (item instanceof KeyAndLibelle) {
             	System.out.println("actionPerformed!!!!!!!!!!!!!!!!!!!!!!");
-            	this.populateWithSelectedInstance((KeyAndLibelle) item);
-                 this.listener.instanceChanged();
+            	KeyAndLibelle keyAndLibelle = (KeyAndLibelle) item;
+            	this.populateWithSelectedInstance(keyAndLibelle);
+                this.listener.instanceChanged(this.getInstanceName(keyAndLibelle));
             }
 	}
 
@@ -177,6 +178,9 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
             }
         }
         return list;
+    }
+    private String getInstanceName(KeyAndLibelle keyAndLibelle) {
+    	return keyAndLibelle == null?null:keyAndLibelle.getLibelle();
     }
     private OracleBddAccessManager getOracleConnectionManager() {
     	return (OracleBddAccessManager)BddAccessManagerFactory.get(Type.Oracle);

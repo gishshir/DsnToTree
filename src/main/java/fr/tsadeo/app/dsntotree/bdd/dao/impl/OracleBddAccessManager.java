@@ -1,6 +1,7 @@
 package fr.tsadeo.app.dsntotree.bdd.dao.impl;
 
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +34,28 @@ public class OracleBddAccessManager implements IBddAccessManager {
     @Override
     public BddConnexionDto getDefaultBddConnexionDto() {
 
-        return this.mapOracleBddAccessToDto(SettingsUtils.get().getDefaultOracleBddAccess());
+    	  List<OracleBddAccess> list = SettingsUtils.get().getListOracleBddAccess();
+          if (list != null) {
+              for (OracleBddAccess oracleBddAccess : list) {
+                  if (oracleBddAccess.getDefaut()) {
+                      return this.mapOracleBddAccessToDto(oracleBddAccess);
+                  }
+              }
+          }
+          return null;
+    }
+    @Override
+    public BddConnexionDto getBddConnexionDto(String instance) {
+    	
+    	List<OracleBddAccess> list = SettingsUtils.get().getListOracleBddAccess();
+        if (list != null) {
+            for (OracleBddAccess oracleBddAccess : list) {
+                if (oracleBddAccess.getInstance().equals(instance)) {
+                    return this.mapOracleBddAccessToDto(oracleBddAccess);
+                }
+            }
+        }
+        return null;
     }
     
 	@Override

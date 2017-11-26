@@ -7,11 +7,18 @@
 		<bddAccesses>
 			<oracleBdd>
 			    <defaut>true</defaut>
-			    <host>host.ext</host>
+			    <host>jibtbolu04.oni.ctv</host>
 			    <port>1521</port>
-			    <instance>INSTANCE</instance>
+			    <instance>MYSTAB</instance>
 				<user>TOTO_USER</user>
 				<password>TOTO_PWD</password>
+			</oracleBdd>
+			<oracleBdd>
+			    <host>dinftnra03.oni.ctv</host>
+			    <port>1521</port>
+			    <instance>PCXS01</instance>
+				<user>TITI_USER</user>
+				<password>TITI_PWD</password>
 			</oracleBdd>
 		</bddAccesses>
 		<sqls/>
