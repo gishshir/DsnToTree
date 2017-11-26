@@ -56,7 +56,9 @@ public class TnsOracleInstanceDto {
 
     public boolean matches(String search) {
 
-        return this.tnsname.indexOf(search) != -1 || this.service.indexOf(search) != -1;
+    	String upperCase = search.toUpperCase();
+        return this.tnsname.toUpperCase().indexOf(upperCase) != -1
+|| this.service.toUpperCase().indexOf(upperCase) != -1;
     }
 
 
