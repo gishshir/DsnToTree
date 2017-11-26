@@ -158,6 +158,9 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
                 processTextArea.append(RC);
                 processTextArea.append(test ? "OK" : "Echec");
                 processTextArea.append(RC);
+                
+                //FIXME a tester
+                BddAccessManagerFactory.get().createOrUpdateBddConnexion(connexionDto);
                 saisieEnCours();
                 currentActionEnded();
             }

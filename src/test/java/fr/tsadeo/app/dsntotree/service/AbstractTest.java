@@ -22,6 +22,7 @@ public abstract class AbstractTest {
 	protected static final String SQL_DSN_CHRONO_EXTRACTION = "chrono118660.txt";
 	
 	protected static final String XML_SETTINGS = "settings.xml";
+	protected static final String XML_WRITE_SETTINGS = "settings_test.xml";
 	
 	
 	protected File getFile(String resource) throws Exception {

@@ -25,5 +25,18 @@ public class StringUtils {
         }
         return sb.toString();
     }
+    
+    public static int convertToInt(String value, int defaultValue) {
+    	
+    	int result = Integer.MIN_VALUE;
+    	try {
+    	  result = Integer.parseInt(value);	
+    	}
+    	catch (NumberFormatException ex) {
+    		result = defaultValue;
+    	}
+    	
+    	return result;
+    }
 
 }

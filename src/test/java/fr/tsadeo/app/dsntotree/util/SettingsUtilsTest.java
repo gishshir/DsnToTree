@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.google.common.base.Throwables;
+
 import fr.tsadeo.app.dsntotree.model.xml.OracleBddAccess;
 import fr.tsadeo.app.dsntotree.model.xml.Settings;
 import fr.tsadeo.app.dsntotree.service.AbstractTest;
@@ -49,5 +51,17 @@ public class SettingsUtilsTest extends AbstractTest {
 	        assertTrue(file.canRead());
 	        
 	    }
+	 
+	 
+	 @Test
+	 public void testWriteSettings () throws Exception {
+		 
+		   Settings settings = SettingsUtils.get().readSettings(getFile(XML_SETTINGS));
+	        assertNotNull(settings);
+	        SettingsUtils.get().setApplicationSettings(settings);
+	        
+           boolean result = SettingsUtils.get().writeSettings(new File(XML_WRITE_SETTINGS));
+           assertTrue(result);
+	 }
 
 }

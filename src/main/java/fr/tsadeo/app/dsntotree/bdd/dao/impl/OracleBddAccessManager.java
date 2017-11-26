@@ -1,6 +1,7 @@
 package fr.tsadeo.app.dsntotree.bdd.dao.impl;
 
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,6 +10,7 @@ import fr.tsadeo.app.dsntotree.bdd.dao.IBddAccessManager;
 import fr.tsadeo.app.dsntotree.dto.BddConnexionDto;
 import fr.tsadeo.app.dsntotree.model.xml.OracleBddAccess;
 import fr.tsadeo.app.dsntotree.util.SettingsUtils;
+import fr.tsadeo.app.dsntotree.util.StringUtils;
 
 public class OracleBddAccessManager implements IBddAccessManager {
 
@@ -58,6 +60,26 @@ public class OracleBddAccessManager implements IBddAccessManager {
         return null;
     }
     
+    @Override
+    public void createOrUpdateBddConnexion(BddConnexionDto bddConnexionDto) {
+    	
+    	OracleBddAccess oracleBddAccess = this.mapDtoToOracleDbbAccess(bddConnexionDto);
+    	if (oracleBddAccess != null) {
+    		
+    		List<OracleBddAccess> list = SettingsUtils.get().getListOracleBddAccess();
+            if (list != null) {
+            	
+        		BddConnexionDto bddConnexionExistante = this.getBddConnexionDto(oracleBddAccess.getInstance());
+        		if (bddConnexionExistante != null) {
+        		   this.removeBddAccess(oracleBddAccess.getInstance(), list);
+        		}
+            	
+            	list.add(oracleBddAccess);
+            }
+    	}
+    }
+ 
+    
 	@Override
 	public BddConnexionDto getCurrentBddConnexionDto() {
 		return this.bddConnexionDto != null ? this.bddConnexionDto:this.getDefaultBddConnexionDto();
@@ -68,8 +90,7 @@ public class OracleBddAccessManager implements IBddAccessManager {
 	}
 
 
-    // ------------------------------------------------------------- private
-    // methods
+    // ----------------------------------------------- private methods
     private BddConnexionDto mapOracleBddAccessToDto(OracleBddAccess oracleBddAccess) {
 
         if (oracleBddAccess == null) {
@@ -81,7 +102,37 @@ public class OracleBddAccessManager implements IBddAccessManager {
                 oracleBddAccess.getUser(), oracleBddAccess.getPassword());
 
     }
-
+    private OracleBddAccess mapDtoToOracleDbbAccess(BddConnexionDto bddConnexionDto) {
+    	
+    	if (bddConnexionDto == null) {
+    		return null;
+    	}
+    	
+    	UrlParametersDto urlParametersDto = this.getUrlParameters(bddConnexionDto.getUrl());
+    	
+    	OracleBddAccess bddAccess = new OracleBddAccess();
+    	bddAccess.setHost(urlParametersDto.getHost());
+    	bddAccess.setInstance(urlParametersDto.getInstance());
+    	bddAccess.setPort(StringUtils.convertToInt(urlParametersDto.getPort(), 1521));
+    	bddAccess.setUser(bddConnexionDto.getUser());
+    	bddAccess.setPassword(bddConnexionDto.getPwd());
+    	
+    	return bddAccess;
+    }
+    
+    private boolean removeBddAccess (String instance, List<OracleBddAccess> list ) {
+    	
+    	Iterator<OracleBddAccess> iter = list.iterator();
+    	while (iter.hasNext()) {
+			OracleBddAccess oracleBddAccess = iter.next();
+			if (oracleBddAccess.getInstance().equals(instance)) {
+				iter.remove();
+				return true;
+			}
+		}
+    	return false;
+    }
+    
     // ---------------------------------------- protected methods
     public String getUrl(String host, Integer port, String instance) {
         return String.format(ORACLE_DB_URL, host, port, instance);
