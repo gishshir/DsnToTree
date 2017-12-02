@@ -202,6 +202,11 @@ public class MyFrame extends AbstractFrame
         this.btShowJdbc.setEnabled(SettingsUtils.get().hasApplicationSettings());
     }
 
+    @Override
+    public void settingsUpdated() {
+        LOG.warning("settings updated!!!!!!!!!");
+    }
+
     // ---------------------------------------- implementing IMainActionListener
 
     @Override

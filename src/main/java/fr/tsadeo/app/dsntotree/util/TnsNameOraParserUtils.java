@@ -18,21 +18,23 @@ public class TnsNameOraParserUtils implements IRegexConstants, IConstants {
 
     private static final Logger LOG = Logger.getLogger(TnsNameOraParserUtils.class.getName());
 
-    // private static final String REGEX_SPACES_EQUAL_SPACES = REGEX_SPACE +
-    // "{0,4}=" + REGEX_SPACE + "{0,6}";
     private static final String REGEX_EQUAL = "=";
     private static final String REGEX_START_LINE = REGEX_BEGIN + "\\(DESCRIPTION" + REGEX_EQUAL + REGEX_ANYTHING + "*";
 
+
+    private static final String REGEX_PROPERTY = "[\\w_\\(\\)=]*";
     private static final String REGEX_SERVICE = REGEX_BEGIN + "(" + REGEX_ALPHANUMERIQUE + "{4,50})" + REGEX_EQUAL +
 
             "\\(DESCRIPTION" + REGEX_EQUAL // ...
-            + "\\(ADDRESS" + REGEX_EQUAL // ...
+            + "(\\(ADDRESS_LIST=)?" + "\\(ADDRESS" + REGEX_EQUAL // ...
             + "\\(PROTOCOL" + REGEX_EQUAL + "(" + REGEX_ALPHANUMERIQUE + "{1,5})\\)" // ...
             + "\\(HOST" + REGEX_EQUAL + "(" + REGEX_ALPHANUMERIQUE + "*" + REGEX_POINT + REGEX_TREE_CHAR + REGEX_POINT
             + REGEX_TREE_CHAR + ")\\)" // ...
-            + "\\(PORT" + REGEX_EQUAL + "(" + REGEX_FOUR_DIGIT + ")\\)\\)" // ...
+            + "\\(PORT" + REGEX_EQUAL + "(" + REGEX_FOUR_DIGIT + ")[\\)]{2,3}" // ...
             + "\\(CONNECT_DATA" + REGEX_EQUAL // ...
-            + "\\(SERVICE_NAME" + REGEX_EQUAL + "(" + REGEX_ALPHANUMERIQUE + "*)[\\)]{3}";
+            + REGEX_PROPERTY // ...
+            + "\\(SERVICE_NAME" + REGEX_EQUAL + "(" + REGEX_ALPHANUMERIQUE + "*)[\\)]"
+            + REGEX_PROPERTY;
 
     private static final Pattern PATTERN_START_LINE = Pattern.compile(REGEX_START_LINE);
     private static final Pattern PATTERN_SERVICE = Pattern.compile(REGEX_SERVICE);
@@ -112,6 +114,7 @@ public class TnsNameOraParserUtils implements IRegexConstants, IConstants {
     }
 
     private List<TnsOracleInstanceDto> buildListTnsOracleInstance(List<String> listLines) {
+        LOG.info("Pattern: " + PATTERN_SERVICE);
         if (listLines == null) {
             return null;
         }
@@ -132,12 +135,14 @@ public class TnsNameOraParserUtils implements IRegexConstants, IConstants {
         }
 
         TnsOracleInstanceDto instance = new TnsOracleInstanceDto();
-        CapturingGroups capturingGroups = new CapturingGroups(1, 2, 3, 4, 5);
+        CapturingGroups capturingGroups = new CapturingGroups(1, 3, 4, 5, 6);
         RegexUtils.get().extractsGroups(line, PATTERN_SERVICE, capturingGroups);
 
         if (capturingGroups.isSuccess()) {
+            LOG.fine("OK: " + line);
             int i = 1;
             instance.setTnsname(capturingGroups.valueOf(i++));
+            i++;
             instance.setProtocole(capturingGroups.valueOf(i++));
             instance.setHost(capturingGroups.valueOf(i++).toLowerCase());
             instance.setPort(NumberUtils.createInteger(capturingGroups.valueOf(i++)));

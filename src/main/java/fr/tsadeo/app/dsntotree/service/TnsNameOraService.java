@@ -40,7 +40,7 @@ public class TnsNameOraService {
         while (iterator.hasNext()) {
             TnsOracleInstanceDto tnsOracleInstanceDto = iterator.next();
 
-            if (!tnsOracleInstanceDto.matches(search)) {
+            if (search != null && !tnsOracleInstanceDto.matches(search)) {
                 iterator.remove();
             }
         }

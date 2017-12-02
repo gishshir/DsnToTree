@@ -14,7 +14,6 @@ import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingWorker;
 import javax.swing.event.DocumentListener;
 
 import fr.tsadeo.app.dsntotree.bdd.dao.BddAccessManagerFactory;
@@ -33,8 +32,6 @@ import fr.tsadeo.app.dsntotree.gui.component.IStateComponent;
 import fr.tsadeo.app.dsntotree.gui.component.LabelAndTextField;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
 import fr.tsadeo.app.dsntotree.service.TnsNameOraService;
-import fr.tsadeo.app.dsntotree.util.SettingsUtils;
-import fr.tsadeo.app.dsntotree.util.SettingsUtils.ISettingsListener;
 
 public class OracleConnectComponent extends JPanel 
 implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
@@ -84,11 +81,14 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
 
     // ----------------------------------------- overriding IConnectComponent
     @Override
-    public void setBddConnexionDto(BddConnexionDto connexionDto) {
+	public void setBddConnexionDto(BddConnexionDto connexionDto) {
 
-    	UrlParametersDto dto = this.getOracleConnectionManager().getUrlParameters(connexionDto.getUrl());
-        this.setValues(dto.getHost(), dto.getPort(), dto.getInstance());
-    }
+		if (connexionDto != null) {
+			UrlParametersDto dto = this.getOracleConnectionManager().getUrlParameters(connexionDto.getUrl());
+			this.setValues(dto == null ? null : dto.getHost(), dto == null ? null : dto.getPort(),
+					dto == null ? null : dto.getInstance());
+		}
+	}
 
     
     @Override
@@ -136,7 +136,6 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
         this.add(Box.createRigidArea(DIM_VER_RIGID_AREA_5));
         this.createPanelTextField(this);
         
-         this.activateSearchComboBox();
     }
 
     // ---------------------------------------- private methods
@@ -161,11 +160,16 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
     	}
     	
     }
-    private void activateSearchComboBox() {
+
+    public void activateSearchComboBox() {
     	
          boolean activate = service.hasTnsNameInstances();
          System.out.println("activate searchInstance: " + activate);
-         this.cbSearchInstance.setEnabled(activate);
+
+        List<KeyAndLibelle> listInstances = this.getSearchable().search(null);
+        this.cbSearchInstance.populateComboBox(listInstances);
+        this.cbSearchInstance.setEnabled(activate);
+
     	
     }
 
@@ -193,7 +197,7 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
     	panelSearch.setBackground(Color.white);
     	
     	panelSearch.add(Box.createHorizontalGlue());
-    	panelSearch.add(new JLabel("search:"));
+        panelSearch.add(new JLabel("tns names:"));
     	panelSearch.add(Box.createRigidArea(DIM_HOR_RIGID_AREA_10));
 
     	this.createSearchComboBox();

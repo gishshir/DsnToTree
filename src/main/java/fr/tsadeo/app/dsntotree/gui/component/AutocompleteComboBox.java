@@ -4,7 +4,7 @@ import java.awt.Component;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -36,16 +36,16 @@ public class AutocompleteComboBox extends StateComboBox<KeyAndLibelle> implement
         this.searchable = searchable;
         this.setEditable(true);
         this.setMaximumRowCount(10);
-        this.setListeners(this, this);
+        // this.setListeners(this, this);
     }
 
-    private void setListeners(DocumentListener documentListener, FocusListener focusListener) {
+    private void activateListeners() {
 
         Component c = this.getEditor().getEditorComponent();
         if (c instanceof JTextComponent) {
             this.tc = (JTextComponent) c;
-            this.tc.getDocument().addDocumentListener(documentListener);
-            this.tc.addFocusListener(focusListener);
+            this.tc.getDocument().addDocumentListener(this);
+            this.tc.addFocusListener(this);
         }
     }
 
@@ -65,6 +65,13 @@ public class AutocompleteComboBox extends StateComboBox<KeyAndLibelle> implement
 	}
 
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        if (enabled) {
+            this.activateListeners();
+        }
+    }
     // ------------------------ implementing DocumentListener
     @Override
     public void insertUpdate(DocumentEvent e) {
@@ -73,10 +80,10 @@ public class AutocompleteComboBox extends StateComboBox<KeyAndLibelle> implement
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-    	System.out.println("removeUpdate");
-    	if (!tc.getText().isEmpty()) {
-    	reinitGUISelectedItem();
-    	}
+        System.out.println("removeUpdate");
+        if (!tc.getText().isEmpty()) {
+            reinitGUISelectedItem();
+        }
         this.update();
     }
 
@@ -148,7 +155,8 @@ public class AutocompleteComboBox extends StateComboBox<KeyAndLibelle> implement
 			});
 		}
 	}
-	private void reinitGUISearchText(String text) {
+
+    private void reinitGUISearchText(final String text) {
 
 		
 		SwingUtilities.invokeLater(new Runnable() {
@@ -188,24 +196,18 @@ public class AutocompleteComboBox extends StateComboBox<KeyAndLibelle> implement
                 
                 searchInProgress = true;
 
-                List<KeyAndLibelle> listInstances = search.length() < MIN_CAR?Collections.emptyList():
+                List<KeyAndLibelle> listInstances = search.length() < MIN_CAR
+                        ? new ArrayList<KeyAndLibelle>(0) :
                 		searchable.search(search);
 
-                resultCount = listInstances == null?0:listInstances.size();
+
                 if (listInstances != null) {
                 	
                     setEditable(false);
                     currentSearch = search;
                     System.out.println("nbr instances: " + resultCount);
 
-                    DefaultComboBoxModel<KeyAndLibelle> model = getDefaultComboboxModel();
-                    model.removeAllElements();
-
-                    for (KeyAndLibelle keyAndLibelle : listInstances) {
-                        model.addElement(keyAndLibelle);
-                    }
-
-                    System.out.println("model rempli!");
+                    populateComboBox(listInstances);
                     setPopupVisible(true);
                     setEditable(true);
                     requestFocusInWindow();
@@ -214,6 +216,24 @@ public class AutocompleteComboBox extends StateComboBox<KeyAndLibelle> implement
             }
         });
 
+    }
+
+    public void populateComboBox(List<KeyAndLibelle> listInstances) {
+
+        resultCount = listInstances == null ? 0 : listInstances.size();
+        if (listInstances != null) {
+
+            System.out.println("nbr instances: " + resultCount);
+
+            DefaultComboBoxModel<KeyAndLibelle> model = getDefaultComboboxModel();
+            model.removeAllElements();
+
+            for (KeyAndLibelle keyAndLibelle : listInstances) {
+                model.addElement(keyAndLibelle);
+            }
+
+            System.out.println("model rempli!");
+        }
     }
 
 }

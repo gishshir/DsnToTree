@@ -10,6 +10,11 @@ public class StateComboBox<E> extends JComboBox<E> implements IStateComponent {
 	private static final long serialVersionUID = 1L;
 
 	private StateComponentEnum state = StateComponentEnum.actif;
+	
+	public StateComboBox() {}
+	public StateComboBox(E[] items) {
+		super(items);
+	}
 
 	// ------------------------------------ implementing IStateComponent
 	@Override

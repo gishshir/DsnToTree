@@ -2,12 +2,12 @@ package fr.tsadeo.app.dsntotree.gui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.MySwingUtilities;
 
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
+import fr.tsadeo.app.dsntotree.util.ApplicationManager;
 import fr.tsadeo.app.dsntotree.util.IConstants;
 import fr.tsadeo.app.dsntotree.util.SettingsUtils;
 
@@ -23,9 +23,9 @@ public class GuiApplication implements IConstants {
         frame.setVisible(true);
     }
     
-    private static void readSettings(MyFrame frame) throws Exception {
+    private static void readSettings(MyFrame frame) {
         SettingsUtils.get().addListener(frame);
-    	SettingsUtils.get().readApplicationSettings(new File(SETTINGS_XML));
+        ApplicationManager.get().readSettings();
     }
 
     public static void centerFrame(JFrame frame, float pWidth, float pHeight) {

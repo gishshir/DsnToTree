@@ -3,13 +3,18 @@ package fr.tsadeo.app.dsntotree.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.BevelBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -21,6 +26,7 @@ import fr.tsadeo.app.dsntotree.gui.bdd.OracleConnectComponent;
 import fr.tsadeo.app.dsntotree.gui.component.IStateComponent;
 import fr.tsadeo.app.dsntotree.gui.component.LabelAndTextField;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
+import fr.tsadeo.app.dsntotree.gui.component.StateComboBox;
 
 public class MyPanelConnexion extends JPanel implements IGuiConstants, DocumentListener, IStateComponent,
 IBddInstanceListener{
@@ -32,6 +38,7 @@ IBddInstanceListener{
 
     private OracleConnectComponent oracleConnectComponent;
     private LabelAndTextField ltfUser, ltfPwd;
+    private StateComboBox<String> lUsers;
     private StateButton btTester;
     private JLabel labTestOk, labTestNok, labNoTest;
 
@@ -49,19 +56,29 @@ IBddInstanceListener{
         this.createCenterPanel(this, BorderLayout.CENTER);
         
         this.loadDefaultBddConnexion();
+
     }
 
     // ----------------------------------- implementing IBddInstanceListener
-	@Override
-	public void instanceChanged(String instance) {
+    @Override
+    public void instanceChanged(String instance) {
 
         this.setBddConnexionStatus(ConnexionState.Unknown);
-        
-        BddConnexionDto dto = this.oracleConnectComponent.getConnexionManager().getBddConnexionDto(instance);
-        
-        this.ltfUser.setValue(dto == null?null:dto.getUser());
-        this.ltfPwd.setValue(dto == null?null:dto.getPwd());
-	}
+
+        if (this.oracleConnectComponent != null && this.oracleConnectComponent.getConnexionManager() != null) {
+            List<BddConnexionDto> listdto = this.oracleConnectComponent.getConnexionManager()
+                    .getListBddConnexionDto(instance);
+
+            if (listdto != null && !listdto.isEmpty()) {
+                this.ltfUser.setValue(listdto.get(0).getUser());
+                this.ltfPwd.setValue(listdto.get(0).getPwd());
+            } else {
+                this.ltfUser.setValue(null);
+                this.ltfPwd.setValue(null);
+            }
+        }
+    }
+
 
     // ----------------------------------- implementing DocumentListener
     @Override
@@ -120,11 +137,23 @@ IBddInstanceListener{
     // ----------------------------------------------- private methods
     private void loadDefaultBddConnexion() {
 
-        BddConnexionDto bddConnexionDto = DatabaseManager.get().getDefaultBddConnexionDto();
-        this.oracleConnectComponent.setBddConnexionDto(bddConnexionDto);
+		SwingUtilities.invokeLater(new Runnable() {
 
-        this.ltfUser.setValue(bddConnexionDto.getUser());
-        this.ltfPwd.setValue(bddConnexionDto.getPwd());
+			@Override
+			public void run() {
+
+				oracleConnectComponent.activateSearchComboBox();
+
+				BddConnexionDto bddConnexionDto = DatabaseManager.get().getDefaultBddConnexionDto();
+				if (bddConnexionDto != null) {
+					oracleConnectComponent.setBddConnexionDto(bddConnexionDto);
+
+					ltfUser.setValue(bddConnexionDto.getUser());
+					ltfPwd.setValue(bddConnexionDto.getPwd());
+				}
+			}
+
+		});
 
     }
 
@@ -188,18 +217,48 @@ IBddInstanceListener{
     private void createCredentialPanel(Container container, String layout) {
 
         JPanel panelCredential = new JPanel();
-        panelCredential.setLayout(new BoxLayout(panelCredential, BoxLayout.Y_AXIS));
+        panelCredential.setLayout(new BoxLayout(panelCredential, BoxLayout.X_AXIS));
         panelCredential.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLUE),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+        panelCredential.setPreferredSize(new Dimension(100, 100));
+
+        // saisie pour user / pwd
+        JPanel panelCurrentUser = new JPanel();
+        panelCurrentUser.setLayout(new BoxLayout(panelCurrentUser, BoxLayout.Y_AXIS));
+        panelCurrentUser.setPreferredSize(new Dimension(100, 100));
+
 
         this.ltfUser = new LabelAndTextField("User:", 100, 100);
         this.ltfUser.setDocumentListener(this);
-        panelCredential.add(this.ltfUser);
-        panelCredential.add(Box.createRigidArea(DIM_VER_RIGID_AREA_5));
+        panelCurrentUser.add(this.ltfUser);
+        panelCurrentUser.add(Box.createRigidArea(DIM_VER_RIGID_AREA_5));
 
         this.ltfPwd = new LabelAndTextField("Pwd:", 100, 100);
         this.ltfPwd.setDocumentListener(this);
-        panelCredential.add(this.ltfPwd);
+        panelCurrentUser.add(this.ltfPwd);
+        panelCurrentUser.add(Box.createVerticalGlue());
+        
+        panelCredential.add(panelCurrentUser);
+
+        // list user possible
+        JPanel panelUserList = new JPanel();
+        panelUserList.setLayout(new BoxLayout(panelUserList, BoxLayout.Y_AXIS));
+//        panelUserList.setPreferredSize(new Dimension(50, 50));
+
+        this.lUsers = new StateComboBox<>(new String[] {"toto", "titi"});
+//        this.lUsers.set
+        Dimension dimList = new Dimension(150, 20);
+        this.lUsers.setPreferredSize(dimList);
+        this.lUsers.setMaximumSize(dimList);
+        this.lUsers.setVisible(false);
+//        this.lUsers.setBackground(TREE_BACKGROUND_COLOR);
+//        this.lUsers.setForeground(TREE_NORMAL_COLOR);
+        
+        panelUserList.add(this.lUsers);
+        panelUserList.add(Box.createVerticalGlue());
+        
+        panelCredential.add(panelUserList);
+        panelCredential.add(Box.createHorizontalGlue());
 
         container.add(panelCredential, layout);
 
@@ -219,6 +278,7 @@ IBddInstanceListener{
 
         container.add(panelButtons, layout);
     }
+
 
 
 }

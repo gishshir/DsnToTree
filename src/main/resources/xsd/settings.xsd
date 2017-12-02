@@ -39,7 +39,7 @@
 				maxOccurs="1" minOccurs="0" />
 			<xs:element name="postgreServices" type="xs:string"
 				maxOccurs="1" minOccurs="0" />
-		<xs:element name="actif" type="xs:boolean" />
+			<xs:element name="actif" type="xs:boolean" />
 		</xs:sequence>
 	</xs:complexType>
 
@@ -57,8 +57,7 @@
 			<xs:element name="host" type="xs:string" />
 			<xs:element name="port" type="xs:int" />
 			<xs:element name="instance" type="xs:string" />
-			<xs:element name="user" type="xs:string" />
-			<xs:element name="password" type="xs:string" />
+			<xs:element name="credentials" type="Credentials" />
 			<xs:element name="defaut" type="xs:boolean" maxOccurs="1"
 				minOccurs="0" />
 		</xs:sequence>
@@ -68,6 +67,21 @@
 			<xs:element name="host" type="xs:string" />
 			<xs:element name="port" type="xs:int" />
 			<xs:element name="instance" type="xs:string" />
+			<xs:element name="credentials" type="Credentials" />
+			<xs:element name="defaut" type="xs:boolean" maxOccurs="1"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Credentials">
+		<xs:sequence>
+			<xs:element name="credential" type="Credential" maxOccurs="unbounded"
+				minOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Credential">
+		<xs:sequence>
 			<xs:element name="user" type="xs:string" />
 			<xs:element name="password" type="xs:string" />
 		</xs:sequence>

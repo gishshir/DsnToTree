@@ -14,9 +14,9 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.namespace.QName;
 
 import fr.tsadeo.app.dsntotree.model.xml.Bdd;
+import fr.tsadeo.app.dsntotree.model.xml.Dsn;
 import fr.tsadeo.app.dsntotree.model.xml.Norme;
 import fr.tsadeo.app.dsntotree.model.xml.ObjectFactory;
 import fr.tsadeo.app.dsntotree.model.xml.OracleBddAccess;
@@ -37,6 +37,8 @@ public class SettingsUtils {
 
 	public interface ISettingsListener {
 		public void settingsLoaded();
+
+        public void settingsUpdated();
 	}
 
 	private List<ISettingsListener> listListeners;
@@ -57,18 +59,30 @@ public class SettingsUtils {
 		return this.applicationSettings != null;
 	}
 
+    public boolean writeApplicationSettings(File settingsFile) throws Exception {
+
+        if (this.applicationSettings != null) {
+            return this.writeSettings(settingsFile, this.applicationSettings);
+        }
+        return false;
+    }
 	public void readApplicationSettings(File settingsFile) throws Exception {
 
+        boolean reload = this.applicationSettings != null;
 		this.applicationSettings = this.readSettings(settingsFile);
 
 		if (this.listListeners != null && applicationSettings != null) {
 			for (ISettingsListener settingsListener : listListeners) {
-				settingsListener.settingsLoaded();
+                if (reload) {
+                    settingsListener.settingsUpdated();
+                } else {
+                    settingsListener.settingsLoaded();
+                }
 			}
 		}
 	}
 
-	public Settings readSettings(File settingsFile) throws Exception {
+    protected Settings readSettings(File settingsFile) throws Exception {
 
 		if (settingsFile == null || !settingsFile.isFile() || !settingsFile.canRead()) {
 			return null;
@@ -99,14 +113,13 @@ public class SettingsUtils {
 
 	}
 
-	public boolean writeSettings(File settingsFile) throws Exception {
+    protected boolean writeSettings(File settingsFile, Settings settings) throws Exception {
 
 		 if (settingsFile == null ) {
 		 return false;
 		 }
 
 		boolean result = false;
-		Settings settings = applicationSettings;
 		OutputStream out = null;
 		try {
 			out = new FileOutputStream(settingsFile);
@@ -133,13 +146,14 @@ public class SettingsUtils {
 		return result;
 	}
 
-	public void setApplicationSettings(Settings appSettings) {
+    protected void setApplicationSettings(Settings appSettings) {
 		this.applicationSettings = appSettings;
 	}
 
 	public String getDsnEncoding() {
-		if (this.applicationSettings != null && this.applicationSettings.getDsn() != null) {
-			return this.applicationSettings.getDsn().getEncoding();
+        Dsn dsn = this.hasApplicationSettings() ? this.applicationSettings.getDsn() : null;
+        if (dsn != null) {
+            return dsn.getEncoding();
 		}
 		return null;
 	}

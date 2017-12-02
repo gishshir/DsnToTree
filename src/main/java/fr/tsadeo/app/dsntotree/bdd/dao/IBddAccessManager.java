@@ -1,5 +1,6 @@
 package fr.tsadeo.app.dsntotree.bdd.dao;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 import fr.tsadeo.app.dsntotree.dto.BddConnexionDto;
@@ -21,10 +22,10 @@ public interface IBddAccessManager {
     
     public BddConnexionDto getCurrentBddConnexionDto();
     
-    public BddConnexionDto getBddConnexionDto(String instance);
+    public List<BddConnexionDto> getListBddConnexionDto(String instance);
     
     public void setCurrentBddConnexionDto(BddConnexionDto bddConnexionDto);
     
-    public void createOrUpdateBddConnexion(BddConnexionDto bddConnexionDto);
+    public boolean createOrUpdateBddConnexion(BddConnexionDto bddConnexionDto);
 
 }
