@@ -54,6 +54,7 @@ public interface IGuiConstants {
     public final static String FOCUS_SEARCH_ACTION = "focus-search";
     public final static String CANCEL_SEARCH_ACTION = "cancel-search";
     public final static String NEXT_SEARCH_ACTION = "next-search";
+    public final static String FOCUS_SEARCH_INSTANCE = "focus-instance";
 
     public final static Color TREE_BACKGROUND_DROPPABLE_COLOR = Color.YELLOW;
     public final static Color TREE_BACKGROUND_COLOR = Color.BLACK;
