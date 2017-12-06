@@ -9,6 +9,14 @@ public class ServiceFactory {
     private static ReadDatasFromSqlRequestService readDatasFromSqlRequestService;
     private static DictionnaryService dictionnaryService;
     private static BlocTreeService blocTreeService;
+    private static TnsNameOraService tnsNameOraService;
+    
+    public static TnsNameOraService getTnsNameOraService() {
+    	if (tnsNameOraService == null) {
+    		tnsNameOraService = new TnsNameOraService();
+    	}
+    	return tnsNameOraService;
+    }
     
     public static BlocTreeService getBlocTreeService() {
         if (blocTreeService == null) {

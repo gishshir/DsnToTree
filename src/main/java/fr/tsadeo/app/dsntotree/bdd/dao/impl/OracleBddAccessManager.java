@@ -1,13 +1,19 @@
 package fr.tsadeo.app.dsntotree.bdd.dao.impl;
 
 
-import java.util.regex.Matcher;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import fr.tsadeo.app.dsntotree.bdd.dao.IBddAccessManager;
 import fr.tsadeo.app.dsntotree.dto.BddConnexionDto;
+import fr.tsadeo.app.dsntotree.model.xml.Credential;
+import fr.tsadeo.app.dsntotree.model.xml.Credentials;
 import fr.tsadeo.app.dsntotree.model.xml.OracleBddAccess;
+import fr.tsadeo.app.dsntotree.util.RegexUtils;
+import fr.tsadeo.app.dsntotree.util.RegexUtils.CapturingGroups;
 import fr.tsadeo.app.dsntotree.util.SettingsUtils;
+import fr.tsadeo.app.dsntotree.util.StringUtils;
 
 public class OracleBddAccessManager implements IBddAccessManager {
 
@@ -15,7 +21,7 @@ public class OracleBddAccessManager implements IBddAccessManager {
     private static final String ORACLE_DB_URL = "jdbc:oracle:thin:@%1$s:%2$d/%3$s";
     
   private static final Pattern PATTERN_DB_URL = Pattern
-  .compile("^jdbc:oracle:thin:@([\\w.]*):([\\d]{1,4})\\/([\\w]{1,10})");
+            .compile("^jdbc:oracle:thin:@([\\w.]*):([\\d]{1,4})\\/([\\w_]{1,20})");
 
   
     private BddConnexionDto bddConnexionDto;
@@ -33,33 +39,187 @@ public class OracleBddAccessManager implements IBddAccessManager {
     @Override
     public BddConnexionDto getDefaultBddConnexionDto() {
 
-        return this.mapOracleBddAccessToDto(SettingsUtils.get().getDefaultOracleBddAccess());
+    	  List<OracleBddAccess> list = SettingsUtils.get().getListOracleBddAccess();
+          if (list != null) {
+              for (OracleBddAccess oracleBddAccess : list) {
+                  if (oracleBddAccess.getDefaut()) {
+                    return this.mapOracleBddAccessToDtoWithFirstCredential(oracleBddAccess);
+                  }
+              }
+          }
+          return null;
+    }
+    @Override
+    public List<BddConnexionDto> getListBddConnexionDto(String instance) {
+    	
+        OracleBddAccess oracleBddAccessForInstance = this.getOracleBddAccessByInstance(instance);
+
+        if (oracleBddAccessForInstance != null) {
+
+            return this.mapOracleBddAccessToDto(oracleBddAccessForInstance);
+        }
+        return null;
     }
     
-	@Override
-	public BddConnexionDto getCurrentBddConnexionDto() {
-		return this.bddConnexionDto != null ? this.bddConnexionDto:this.getDefaultBddConnexionDto();
-	}
-	@Override
-	public void setCurrentBddConnexionDto(BddConnexionDto bddConnexionDto) {
-		this.bddConnexionDto = bddConnexionDto;
-	}
+    private List<Credential> getListCredential(Credentials credentials) {
 
+        List<Credential> list = new ArrayList<>();
+        if (credentials != null && credentials.getCredential() != null) {
+            list.addAll(credentials.getCredential());
+        }
+        return list;
+    }
 
-    // ------------------------------------------------------------- private
-    // methods
-    private BddConnexionDto mapOracleBddAccessToDto(OracleBddAccess oracleBddAccess) {
+    @Override
+    public boolean createOrUpdateBddConnexion(BddConnexionDto bddConnexionToUpdate) {
+
+        if (bddConnexionToUpdate != null) {
+
+            OracleBddAccess oracleBddAccessToUpdate = this.mapDtoToOracleDbbAccess(bddConnexionToUpdate);
+            if (oracleBddAccessToUpdate == null) {
+                return false;
+            }
+    		
+            OracleBddAccess oracleBddAccessInSettings = this
+                    .getOracleBddAccessByInstance(oracleBddAccessToUpdate.getInstance());
+
+            // cette instance existe déjà dans les Settings
+            if (oracleBddAccessInSettings != null) {
+            	
+                // instance exists!
+                boolean conExists = false;
+                boolean conEquals = false;
+
+                Credential credentialInSettings = this.findCredentialWithUser(
+                        this.getListCredential(oracleBddAccessInSettings.getCredentials()),
+                        bddConnexionToUpdate.getUser());
+                conExists = credentialInSettings != null;
+                conEquals = conExists ? credentialInSettings.getPassword().equals(bddConnexionToUpdate.getPwd())
+                        : false;
+
+                if (conExists && !conEquals) {
+                    // update
+                    credentialInSettings.setPassword(bddConnexionToUpdate.getPwd());
+                    return true;
+                }
+                if (!conExists) {
+                    oracleBddAccessInSettings.getCredentials().getCredential()
+                            .add(this.mapToCredential(bddConnexionToUpdate));
+                    return true;
+        		}
+            } else {
+                // TODO n'existe pas >>> creation
+                SettingsUtils.get().getListOracleBddAccess().add(oracleBddAccessToUpdate);
+                return true;
+            }
+    	}
+        return false;
+    }
+
+    @Override
+    public BddConnexionDto getCurrentBddConnexionDto() {
+        return this.bddConnexionDto != null ? this.bddConnexionDto : this.getDefaultBddConnexionDto();
+    }
+
+    @Override
+    public void setCurrentBddConnexionDto(BddConnexionDto bddConnexionDto) {
+        this.bddConnexionDto = bddConnexionDto;
+    }
+
+    // ----------------------------------------------- private methods
+
+    private Credential mapToCredential(BddConnexionDto bddConnexionDto) {
+        Credential credential = new Credential();
+        credential.setUser(bddConnexionDto == null ? "" : bddConnexionDto.getUser());
+        credential.setPassword(bddConnexionDto == null ? "" : bddConnexionDto.getPwd());
+        return credential;
+    }
+    private Credential findCredentialWithUser(List<Credential> listCredential, String user) {
+        if (listCredential == null || user == null) {
+            return null;
+        }
+        for (Credential credential : listCredential) {
+            if (credential.getUser().equals(user)) {
+                return credential;
+            }
+        }
+        return null;
+    }
+    private OracleBddAccess getOracleBddAccessByInstance(String instance) {
+
+        List<OracleBddAccess> list = instance == null ? null : SettingsUtils.get().getListOracleBddAccess();
+        if (list != null) {
+
+            for (OracleBddAccess oracleBddAccess : list) {
+                if (oracleBddAccess.getInstance().equals(instance)) {
+                    return oracleBddAccess;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private List<BddConnexionDto> mapOracleBddAccessToDto(OracleBddAccess oracleBddAccess) {
 
         if (oracleBddAccess == null) {
             return null;
         }
 
-        return new BddConnexionDto(ORACLE_JDBC_DRIVER,
-                getUrl(oracleBddAccess.getHost(), oracleBddAccess.getPort(), oracleBddAccess.getInstance()),
-                oracleBddAccess.getUser(), oracleBddAccess.getPassword());
+        List<BddConnexionDto> list = new ArrayList<>();
+        for (Credential credential : getListCredential(oracleBddAccess.getCredentials())) {
+            list.add(new BddConnexionDto(ORACLE_JDBC_DRIVER,
+                    getUrl(oracleBddAccess.getHost(), oracleBddAccess.getPort(), oracleBddAccess.getInstance()),
+                    credential.getUser(), credential.getPassword()));
+        }
+        return list;
 
     }
 
+    private BddConnexionDto mapOracleBddAccessToDtoWithFirstCredential(OracleBddAccess oracleBddAccess) {
+
+        if (oracleBddAccess == null) {
+            return null;
+        }
+        List<Credential> listCredential = getListCredential(oracleBddAccess.getCredentials());
+        if (!listCredential.isEmpty()) {
+
+            Credential firstCredential = listCredential.get(0);
+            return new BddConnexionDto(ORACLE_JDBC_DRIVER,
+                    getUrl(oracleBddAccess.getHost(), oracleBddAccess.getPort(), oracleBddAccess.getInstance()),
+                    firstCredential.getUser(), firstCredential.getPassword());
+        }
+
+        return null;
+
+    }
+
+    private OracleBddAccess mapDtoToOracleDbbAccess(BddConnexionDto bddConnexionDto) {
+
+        if (bddConnexionDto == null) {
+            return null;
+        }
+
+        UrlParametersDto urlParametersDto = this.getUrlParameters(bddConnexionDto.getUrl());
+
+        if (urlParametersDto != null) {
+            OracleBddAccess bddAccess = new OracleBddAccess();
+            bddAccess.setHost(urlParametersDto.getHost());
+            bddAccess.setInstance(urlParametersDto.getInstance());
+            bddAccess.setPort(StringUtils.convertToInt(urlParametersDto.getPort(), 1521));
+
+            Credentials credentials = new Credentials();
+            credentials.getCredential().add(this.mapToCredential(bddConnexionDto));
+            bddAccess.setCredentials(credentials);
+
+            return bddAccess;
+
+        }
+
+        return null;
+    }
+    
+    
     // ---------------------------------------- protected methods
     public String getUrl(String host, Integer port, String instance) {
         return String.format(ORACLE_DB_URL, host, port, instance);
@@ -67,16 +227,17 @@ public class OracleBddAccessManager implements IBddAccessManager {
     
     public UrlParametersDto getUrlParameters(String url) {
     	
-    	UrlParametersDto dto = new UrlParametersDto();
-        Matcher m = PATTERN_DB_URL.matcher(url);
-        if (m.matches()) {
-            int count = m.groupCount();
-            if (count == 3) {
-            	dto.setHost(m.group(1));
-                dto.setPort(m.group(2));
-                dto.setInstance(m.group(3));
-            }
+        UrlParametersDto dto = null;
+        CapturingGroups capturingGroups = new CapturingGroups(1, 2, 3);
+        RegexUtils.get().extractsGroups(url, PATTERN_DB_URL, capturingGroups);
+
+        if (capturingGroups.isSuccess()) {
+            dto = new UrlParametersDto();
+            dto.setHost(capturingGroups.valueOf(1));
+            dto.setPort(capturingGroups.valueOf(2));
+            dto.setInstance(capturingGroups.valueOf(3));
         }
+
         return dto;
     }
     

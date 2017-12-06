@@ -15,6 +15,8 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import javax.swing.ActionMap;
@@ -60,10 +62,13 @@ import fr.tsadeo.app.dsntotree.gui.component.StateButton;
 import fr.tsadeo.app.dsntotree.gui.component.StateTextField;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
+import fr.tsadeo.app.dsntotree.util.ApplicationManager;
 
 public class JdbcFrame extends AbstractFrame implements IBddActionListener, DocumentListener {
 
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOG = Logger.getLogger(JdbcFrame.class.getName());
 
     private static final Pattern PATTERN_NUM_CHRONO = Pattern.compile("[0-9]{1,10}");
     private static final DateFormat DATE_FORMAT = SimpleDateFormat.getDateInstance();
@@ -140,27 +145,60 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
         final BddConnexionDto connexionDto = this.panelConnexion.getBddConnexionDto();
         SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
 
-            boolean test = false;
+            boolean success = false;
 
             @Override
             protected Boolean doInBackground() throws Exception {
 
                 waitEndAction();
-                this.test = DatabaseManager.get().testerConnexion(connexionDto);
-                return this.test;
+                this.success = DatabaseManager.get().testerConnexion(connexionDto);
+                return this.success;
             }
 
             @Override
             protected void done() {
 
-                BddAccessManagerFactory.get().setCurrentBddConnexionDto(test ? connexionDto : null);
-                panelConnexion.setBddConnexionStatus(test ? ConnexionState.Ok : ConnexionState.Nok);
+                BddAccessManagerFactory.get().setCurrentBddConnexionDto(success ? connexionDto : null);
+                panelConnexion.setBddConnexionStatus(success ? ConnexionState.Ok : ConnexionState.Nok);
                 processTextArea.append(RC);
-                processTextArea.append(test ? "OK" : "Echec");
+                processTextArea.append(success ? "OK" : "Echec");
                 processTextArea.append(RC);
+                
+                if (success) {
+                    updateSettings(connexionDto);
+                }
                 saisieEnCours();
                 currentActionEnded();
             }
+        };
+        worker.execute();
+    }
+
+    public void updateSettings(final BddConnexionDto connexionDto) {
+
+        SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
+
+            @Override
+            protected Boolean doInBackground() throws Exception {
+
+                return ApplicationManager.get().updateSettings(connexionDto);
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    Boolean result = this.get();
+                    if (result) {
+                        processTextArea.append(RC);
+                        processTextArea.append("Settings mis à jour.");
+                        processTextArea.append(RC);
+                    }
+                } catch (InterruptedException | ExecutionException e) {
+                    LOG.severe(e.getMessage());
+                }
+
+            }
+
         };
         worker.execute();
     }

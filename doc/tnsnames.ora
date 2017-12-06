@@ -1,0 +1,2427 @@
+#  AUTEUR            : TITI
+
+# -------------------------------------------------------------------------
+# ENTREES X1
+# -------------------------------------------------------------------------
+PRI_BENCH_MLPRD =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti11.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = MLPRD)))
+
+PRI_BENCH_SIHM =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti11.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = NTOT01)))
+
+PRI_BAC_A_SABLE =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibtbolu01.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = PDB1)))
+
+# -------------------------------------------------------------------------
+# ENTREES X2
+# -------------------------------------------------------------------------
+XUSILPP1 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL=TCP)(HOST=rmutbdda10.oni.ctv)(PORT=1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME= XUSILPP1)
+    )
+  )
+
+XUSILPP3 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL=TCP)(HOST= rmutbdda10.oni.ctv)(PORT=1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME= XUSILPP3)
+    )
+  )
+
+XUSILPP4 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL=TCP)(HOST= rmutbdda10.oni.ctv)(PORT=1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME= XUSILPP4)
+    )
+  )
+
+CACROPP =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL=TCP)(HOST= rmutbdda10.oni.ctv)(PORT=1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME= CACROPP)
+    )
+  )
+
+# -------------------------------------------------------------------------
+# ENTREES X3
+# -------------------------------------------------------------------------
+SSU_ITIAX442 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ITIAX442)
+    )
+  )
+
+SSU_ITRAX442 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ITRAX442)
+    )
+  )
+
+SSU_DWRAX442 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWRAX442)
+    )
+  )
+
+SSU_PMRAX442 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMRAX442)
+    )
+  )
+
+SSU_DWIAX442 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWIAX442)
+    )
+  )
+
+SSU_PMIAX442 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMIAX442)
+    )
+  )
+
+SSU_DW442REC =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtdwha01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DW442REC)
+    )
+  )
+
+SSU_DW442DEV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtdwha03.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DW442DEV)
+    )
+  )
+
+SSU_PM442REC =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtprma22.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PM442REC)
+    )
+  )
+
+SSU_PM442DEV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtprma24.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PM442DEV)
+    )
+  )
+
+SSU_ITIAX441 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ITIAX441)
+    )
+  )
+
+SSU_ITRAX441 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ITRAX441)
+    )
+  )
+
+SSU_DWRAX441 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWRAX441)
+    )
+  )
+
+SSU_PMRAX441 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMRAX441)
+    )
+  )
+
+SSU_DWIAX441 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWIAX441)
+    )
+  )
+
+SSU_PMIAX441 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMIAX441)
+    )
+  )
+
+SSU_PMODICXS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = dprmtnra02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMODICXS)
+    )
+  )
+
+SSU_PMCVGR =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = dprmtnra02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMCVGR)
+    )
+  )
+     
+SSU_PMCVGR1 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = dprmtnra02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMCVGR1)
+    )
+  )
+     
+SSU_PMCVGR2 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = dprmtnra02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMCVGR2)
+    )
+  )
+     
+SSU_PMCVGR3 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = dprmtnra02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMCVGR3)
+    )
+  )
+
+SSU_PMCVGT =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = dprmtnra02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMCVGT)
+    )
+  )
+     
+SSU_PMCVGT1 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = dprmtnra02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMCVGT1)
+    )
+  )
+     
+SSU_PMCVGT2 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = dprmtnra02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMCVGT2)
+    )
+  )
+     
+SSU_PMCVGT3 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = dprmtnra02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMCVGT3)
+    )
+  )
+
+SSU_PM441DEV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtprma24.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PM441DEV)
+    )
+  )
+
+SSU_PM441REC =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtprma22.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PM441REC)
+    )
+  )
+
+SSU_DW441DEV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtdwha03.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DW441DEV)
+    )
+  )
+
+SSU_DW441REC =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtdwha01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DW441REC)
+    )
+  )
+
+SSU_SSUSANDY =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA29.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = SSUSANDY)
+    )
+  )
+
+PMCVGREC =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = rprmtnra01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMCVGREC)
+    )
+  )
+
+SSU_DW440REC =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtdwha01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DW440REC)
+    )
+  )
+
+
+SSU_PM440REC =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibtprma22.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PM440REC)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_DWRAX440 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWRAX440)
+    )
+  )
+
+SSU_PMRAX440 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMRAX440)
+    )
+  )
+
+SSU_DWIAX440 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWIAX440)
+    )
+  )
+
+SSU_PMIAX440 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMIAX440)
+    )
+  )
+
+SSU_ITIAX440 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ITIAX440)
+    )
+  )
+
+SSU_ITRAX440 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ITRAX440)
+    )
+  )
+
+SSU_SSUREF5 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibtdwha03.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = SSUREF5)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PMODIDEV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtdwha03.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMODIDEV)
+    )
+  )
+
+SSU_DW440DEV=
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtdwha03.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DW440DEV)
+    )
+  )
+
+SSU_PM440DEV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtprma24.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVICE_NAME = PM440DEV)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_ODAPMP =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = odafrlezbdd2.emea.cegedim.grp)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = odapmp)
+    )
+  )
+
+SSU_ODADWHP =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = odafrlezbdd2.emea.cegedim.grp)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = odadwhp)
+    )
+  )
+
+SSU_ODAODIP =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = odafrlezbdd2.emea.cegedim.grp)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = odaodip)
+    )
+  )
+
+SSU_DWRAX432 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWRAX432)
+    )
+  )
+
+SSU_PMRAX432 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMRAX432)
+    )
+  )
+
+SSU_DWIAX432 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWIAX432)
+    )
+  )
+
+SSU_PMIAX432 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMIAX432)
+    )
+  )
+
+SSU_ITIAX432 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ITIAX432)
+    )
+  )
+
+SSU_ITRAX432 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ITRAX432)
+    )
+  )
+
+SSU_PM432DEV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtprma14.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PM432DEV)
+    )
+  )
+
+SSU_DW432DEV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtprma17.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DW432DEV)
+    )
+  )
+
+SSU_PM432REC =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtprma24.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVICE_NAME = PM432REC)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_DW432REC =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtdwha01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVICE_NAME = DW432REC)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_DWIAX431 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWIAX431)
+    )
+  )
+
+SSU_DWRAX431 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWRAX431)
+    )
+  )
+
+SSU_PMIAX431 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMIAX431)
+    )
+  )
+
+SSU_PMRAX431 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMRAX431)
+    )
+  )
+
+SSU_ITIAX431 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ITIAX431)
+    )
+  )
+
+SSU_ITRAX431 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ITRAX431)
+    )
+  )
+
+SSU_PM4REC04 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtprma22.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PM4REC04)
+    )
+  )
+
+SSU_DW4REC04 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtdwha01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DW4REC04)
+    )
+  )
+
+SSU_DW4REC03 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtdwha01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DW4REC03)
+    )
+  )
+
+SSU_PM4REC03 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtprma22.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PM4REC03)
+    )
+  )
+
+SSU_SSUREF4 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTDWHA01.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = SSUREF4)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PMODIREC =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTDWHA01.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PMODIREC)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PERFSSU =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA21.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PERFSSU)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PERFDWH =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA21.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PERFDWH)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PERFODI =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA21.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PERFODI)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PMIAXODI =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMIAXODI)
+    )
+  )
+
+SSU_DWIAX412 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWIAX412)
+    )
+  )
+
+SSU_DWRAX412 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWRAX412)
+    )
+  )
+
+SSU_PMIAX412 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMIAX412)
+    )
+  )
+
+SSU_PMRAX412 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMRAX412)
+    )
+  )
+
+SSU_PMRHODI =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMRHODI)
+    )
+  )
+
+SSU_DWIRH412 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWIRH412)
+    )
+  )
+
+SSU_DWRRH412 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWRRH412)
+    )
+  )
+
+SSU_PMIRH412 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMIRH412)
+    )
+  )
+
+SSU_PMRRH412 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = vvumcica02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMRRH412)
+    )
+  )
+
+SSU_DWRAX424 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWRAX424)
+    )
+  )
+
+SSU_DWRRH424 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWRRH424)
+    )
+  )
+
+SSU_DWIAX430 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWIAX430)
+    )
+  )
+
+SSU_DWRAX430 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWRAX430)
+    )
+  )
+
+SSU_PMIAX430 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMIAX430)
+    )
+  )
+
+SSU_PMRAX430 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMRAX430)
+    )
+  )
+
+SSU_DWIRH430 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWIRH430)
+    )
+  )
+
+SSU_DWRRH430 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWRRH430)
+    )
+  )
+
+SSU_PMIRH430 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMIRH430)
+    )
+  )
+
+SSU_PMRRH430 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMRRH430)
+    )
+  )
+
+SSU_DWIAX423 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWIAX423)
+    )
+  )
+
+SSU_DWRAX423 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWRAX423)
+    )
+  )
+
+SSU_PMIAX423 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMIAX423)
+    )
+  )
+
+SSU_PMRAX423 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMRAX423)
+    )
+  )
+
+SSU_DWIRH423 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWIRH423)
+    )
+  )
+
+SSU_DWRRH423 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWRRH423)
+    )
+  )
+
+SSU_PMIRH423 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMIRH423)
+    )
+  )
+
+SSU_PMRRH423 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMRRH423)
+    )
+  )
+
+SSU_PMDUPM15 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMDUPM15)
+    )
+  )
+
+SSU_PMDUPM16 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMDUPM16)
+    )
+  )
+
+SSU_PMDUPM17 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMDUPM17)
+    )
+  )
+
+SSU_PMDUPM18 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMDUPM18)
+    )
+  )
+
+SSU_PMCXS01 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = rprmtnra01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMCXS01)
+    )
+  )
+
+SSU_PMCXS00 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = rprmtnra01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMCXS00)
+    )
+  )
+
+SSU_PMCXSODI =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = rprmtnra01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMCXSODI)
+    )
+  )
+
+SSU_PM4REC01 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = rprmtnra01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PM4REC01)
+    )
+  )
+
+SSU_PM4REC02 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = rprmtnra01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PM4REC02)
+    )
+  )
+
+SSU_MMUTODI9 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = rmutprma01.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SID = MMUTODI9)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_MMUTDWH8 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = rmutprma01.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SID = MMUTDWH8)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_MMUTDWH9 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = rmutprma01.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SID = MMUTDWH9)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PMSSUCLO =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA29.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PMSSUCLO)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_DWSSUCLO =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA29.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = DWSSUCLO)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_MMUTSSU1 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = rmutprma01.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SID = MMUTSSU1)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_MMUTSSU2 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = rmutprma01.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SID = MMUTSSU2)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_MMUTSSU8 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = rmutprma01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVICE_NAME = MMUTSSU8)
+    )
+  )
+
+SSU_SSUPRJF =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = rmutprma01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVICE_NAME = MMUTSSU8)
+    )
+  )
+
+SSU_MMUTSSU9 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = rmutprma01.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SID = MMUTSSU9)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_MUTPMF =
+  (DESCRIPTION =
+    (ADDRESS = (COMMUNITY = TCP.world)(PROTOCOL = TCP)(HOST = hmlbprj001l1.premium.lan)(Port = 1521))
+    (CONNECT_DATA =
+      (SID = mutpmf)
+    )
+  )
+
+SSU_MUTODII =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = prmbdilp01.premium.local)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SID = mutodii)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_SSUTECH =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = prmteclp01.premium.local)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = prmtech)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PMUTODI1 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = pmutbdda02.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PMUTODI1)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PMUTBAE1 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = pmutbdda02.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PMUTBAE1)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_MUTPMR =
+  (DESCRIPTION =
+    (ADDRESS = (COMMUNITY = TCP.world)(PROTOCOL = TCP)(HOST = hmlbprj001l1.premium.lan)(Port = 1521))
+    (CONNECT_DATA =
+      (SID = mutpmr)
+    )
+  )
+
+SSU_MUTODIP =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = prmbdi022l1.premium.lan)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SID = mutodip)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_MUTDWHF =
+  (DESCRIPTION =
+    (ADDRESS = (COMMUNITY = TCP.world)(PROTOCOL = TCP)(HOST = hmlbprj001l1.premium.lan)(Port = 1521))
+    (CONNECT_DATA =
+      (SID = mutdwhf)
+    )
+  )
+
+SSU_MUTOPIM =
+  (DESCRIPTION =
+    (ADDRESS = (COMMUNITY = TCP.world)(PROTOCOL = TCP)(HOST = hmlbprj001l1.premium.lan)(Port = 1521))
+    (CONNECT_DATA =
+      (SID = mutodim)
+    )
+  )
+
+SSU_MUTDWHR =
+  (DESCRIPTION =
+    (ADDRESS = (COMMUNITY = TCP.world)(PROTOCOL = TCP)(HOST = hmlbprj001l1.premium.lan)(Port = 1521))
+    (CONNECT_DATA =
+      (SID = mutdwhr)
+    )
+  )
+
+SSU_PMSSUINT =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = prmprjlp01.premium.local)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SID = PMSSUINT)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PMDWHINT =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = prmprjlp01.premium.local)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SID = PMDWHINT)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_SSUREF1 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibtprma06.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SID = SSUREF1)
+    )
+  )
+
+SSU_SSUREF2 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibtprma12.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SID = SSUREF2)
+    )
+  )
+
+SSU_PMSSUODI =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibtprma12.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SID = PMSSUODI)
+    )
+  )
+
+SSU_PMINTODI =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMINTODI)
+    )
+  )
+
+SSU_PMINTSSA =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMINTSSA)
+    )
+  )
+
+SSU_PMIRHODI =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMIRHODI)
+    )
+  )
+
+SSU_PMDUPMU2 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(Host = jibgotti09.oni.ctv)(Port = 1521))
+    (CONNECT_DATA =
+      (SERVICE_NAME = PMDUPMU2)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PMDUPMO2 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(Host = jibgotti09.oni.ctv)(Port = 1521))
+    (CONNECT_DATA =
+      (SERVICE_NAME = PMDUPMO2)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PMDUPMO1 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMDUPMO1)
+    )
+  )
+
+SSU_PMDUPMU1 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMDUPMU1)
+    )
+  )
+
+SSU_PMDEVODI =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA17.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PMDEVODI)
+    )
+  )
+
+SSU_SSUREF3 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA17.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = SSUREF3)
+    )
+  )
+
+SSU_PMRECODI =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA06.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PMRECODI)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PMINT411 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(Host = redgotti19.oni.ctv)(Port = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMINT411)
+    )
+  )
+
+SSU_PMIRH411 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(Host = jibgotti09.oni.ctv)(Port = 1521))
+    (CONNECT_DATA =
+      (SERVICE_NAME = PMIRH411)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PMCERODI =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibtprma12.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SID = PMCERODI)
+    )
+  )
+
+SSU_DWINTMEP =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWINTMEP)
+    )
+  )
+
+SSU_PMDUPMO7 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMDUPMO7)
+    )
+  )
+
+SSU_PMINT421 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PMINT421)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_DWINT421 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = DWINT421)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PMIRH421 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PMIRH421)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_DWIRH421 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = DWIRH421)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PMSSUREF =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA29.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PMSSUREF)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_DWSSUREF =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA29.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = DWSSUREF)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PMDUPM11 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(Host = jibgotti09.oni.ctv)(Port = 1521))
+    (CONNECT_DATA =
+      (SERVICE_NAME = PMDUPM11)
+    )
+  )
+
+SSU_PMDUPM12 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(Host = jibgotti09.oni.ctv)(Port = 1521))
+    (CONNECT_DATA =
+      (SERVICE_NAME = PMDUPM12)
+    )
+  )
+
+SSU_DWIRH411 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(Host = jibgotti09.oni.ctv)(Port = 1521))
+    (CONNECT_DATA =
+      (SERVICE_NAME = DWIRH411)
+    )
+  )
+
+SSU_PMDUPMO4 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PMDUPMO4)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PMDUPMO8 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PMDUPMO8)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_DWINT411 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = DWINT411)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PMDUPM19 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMDUPM19)
+    )
+  )
+
+SSU_PMDUPM20 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMDUPM20)
+    )
+  )
+
+SSU_DWIRH422 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWIRH422)
+    )
+  )
+
+SSU_PMIRH422 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMIRH422)
+    )
+  )
+  
+SSU_PMDUPM21 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMDUPM21)
+    )
+  )
+
+SSU_PMDUPM22 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMDUPM22)
+    )
+  )
+
+SSU_DWINT422 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWINT422)
+    )
+  )
+
+SSU_PMINT422 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMINT422)
+    )
+  )
+
+SSU_PM430DEV =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA13.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PM430DEV)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_DW430DEV =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA17.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = DW430DEV)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_DWIRH424 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWIRH424)
+    )
+  )
+
+SSU_PMIRH424 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMIRH424)
+    )
+  )
+
+SSU_PMRRH424 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti09.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMRRH424)
+    )
+  )
+
+SSU_DWIAX424 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DWIAX424)
+    )
+  )
+
+SSU_PMIAX424 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMIAX424)
+    )
+  )
+
+SSU_PMRAX424 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PMRAX424)
+    )
+  )
+
+SSU_PM424DEV =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA13.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PM424DEV)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_PM424REC =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA14.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PM424REC)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_DW424DEV =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA17.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = DW424DEV)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_DW424REC =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA17.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = DW424REC)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_ITRAX430 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ITRAX430)
+    )
+  )
+
+SSU_ITIAX430 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti19.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ITIAX430)
+    )
+  )
+
+SSU_PM431DEV =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA14.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PM431DEV)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_DW431DEV =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibTSSUA17.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = DW431DEV)
+      (SERVER = DEDICATED)
+    )
+  )
+
+SSU_DW431REC =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtdwha01.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DW431REC)
+    )
+  )
+  
+SSU_PM431REC =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = jibtprma22.oni.ctv)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PM431REC)
+      (SERVER = DEDICATED)
+    )
+  )
+
+# -------------------------------------------------------------------------
+# ENTREES X4
+# -------------------------------------------------------------------------
+PRI_YSY_CXS10G04 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = SVCXS02.suisse.com)(PORT = 1521))
+  (CONNECT_DATA =(SERVER = DEDICATED)(SERVICE_NAME = CXS10G04)))
+
+PRI_YSY_CXS10G02 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = SVCXS02.suisse.com)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = CXS10G02)
+    )
+  )
+
+PRI_YSY_CXS10G01 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = SVCXS02.suisse.com)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = CXS10G01)
+    )
+  )
+
+PRI_YSY_CXS10G03 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = SVCXS02.suisse.com)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = CXS10G03)
+    )
+  )
+
+PRI_YSY_RCTPGG01 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = tro-0407.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = RCTPGG01)
+    )
+  )
+
+PRI_YSY_AIG =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = SVCXS02.suisse.com)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = AIG)
+    )
+  )
+
+PRI_YSY_DEV1 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = tro-0407.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DEV1)
+    )
+  )
+    
+PRI_YSY_DEV2 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = tro-0407.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DEV2)
+    )
+  )
+
+PRI_YSY_DEV3 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = tro-0407.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DEV3)
+    )
+  )
+    
+PRI_YSY_DEV6 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = tro-0407.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DEV6)
+    )
+  )
+
+PRI_YSY_DEV7 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = tro-0407.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DEV7)
+    )
+  )
+
+PRI_YSY_DEV8 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = tro-0407.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DEV8)
+    )
+  )
+
+PRI_YSY_DEV81 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtaxla02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DEV81)
+    )
+  )
+    
+PRI_YSY_DEV82 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtaxla02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DEV82)
+    )
+  )
+
+PRI_YSY_DEV83 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtaxla02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DEV83)
+    )
+  )
+
+PRI_YSY_DEV84 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtaxla02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DEV84)
+    )
+  )
+
+PRI_YSY_DEV85 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtaxla02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DEV85)
+    )
+  )
+
+PRI_YSY_B2VVPROD =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtaxla02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = B2VVPROD)
+    )
+  )
+  
+PRI_YSY_B2VVREC =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtaxla02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = B2VVREC)
+    )
+  )
+  
+PRI_YSY_B2VVDEV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtaxla02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = B2VVDEV)
+    )
+  )
+  
+PRI_YSY_B2VCXS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtaxla02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = B2VCXS)
+    )
+  )
+
+PRI_YSY_GGAVPROD =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtaxla02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = GGAVPROD)
+    )
+  )
+  
+PRI_YSY_GGAVREC =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtaxla02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = GGAVREC)
+    )
+  )
+  
+PRI_YSY_GGAVDEV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtaxla02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = GGAVDEV)
+    )
+  )
+  
+PRI_YSY_GGACXS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtaxla02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = GGACXS)
+    )
+  )
+  
+
+PRI_YSY_GGSVPROD =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtaxla02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = GGSVPROD)
+    )
+  )
+  
+PRI_YSY_GGSVREC =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtaxla02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = GGSVREC)
+    )
+  )
+ 
+
+PRI_YSY_CXSYSY01 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtaxla02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = CXSYSY01)
+    )
+  )
+
+PRI_YSY_YSYGV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtaxla02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = YSYGV)
+    )
+  )
+
+PRI_YSY_YSYGVDEV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtaxla02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = YSYGVDEV)
+    )
+  )
+
+
+PRI_YSY_DEVYSY1 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = SVCXS02.suisse.com)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DEVYSY1)
+    )
+  )
+
+PRI_YSY_DEVYSY2 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = SVCXS02.suisse.com)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DEVYSY2)
+    )
+  )
+
+PRI_YSY_MSM03 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = tro-0407.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = MSM03)
+    )
+  )
+
+PRI_YSY_MIGGV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = tro-0407.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = MIGGV)
+    )
+  )
+
+PRI_YSY_MIGGVDEV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = tro-0407.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = MIGGVDEV)
+    )
+  )
+
+PRI_YSY_MFPORA01 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = tro-0407.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = MFPORA01)
+    )
+  )
+
+PRI_YSY_MFPORA02 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = tro-0407.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = MFPORA02)
+    )
+  )
+
+# -------------------------------------------------------------------------
+# ENTREES X5  
+# -------------------------------------------------------------------------
+PRI_YSY_INT732 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = tro-0407.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = INT732)))
+
+# -------------------------------------------------------------------------
+# ENTREES X6
+# -------------------------------------------------------------------------
+PRI_ACRODEV =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = marobdda01.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA = (SERVICE_NAME = ACRODEV)))
+  
+PRI_ROODIDEV =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = marobdda01.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA = (SERVICE_NAME = ROODIDEV)))
+
+PRI_RODWHDEV =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = marobdda01.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA = (SERVICE_NAME = RODWHDEV)))
+
+PRI_RORCT =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = marobdda01.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA = (SERVICE_NAME = RORCT)))
+
+# -------------------------------------------------------------------------
+# ENTREES X6
+# -------------------------------------------------------------------------
+# machine avv sur le dmz
+PRI_AVV10 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = 10.211.212.20)(PORT = 15021))
+    (CONNECT_DATA =(SERVICE_NAME = AVV10)))
+
+PRI_BILOMIF5 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = frtlr216.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = BILOMIF5)))
+  
+PRI_BILOMIF7 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = frtlr216.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = BILOMIF7)))
+
+PRI_YSYXLDV4_WIN =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = tro-0112.yy.xxxx.com)(PORT = 1522))
+  (CONNECT_DATA =(SERVER = DEDICATED)(SERVICE_NAME = YSYXLDV4)))
+  
+PRI_IPTFRT5 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti01.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = IPTFRT5.world)))
+
+PRI_IPTCIC5 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti01.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = IPTCIC5.world)))
+
+PRI_IPTCIC6 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = pollcica01.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = IPTCIC6)))
+  
+PRI_IPTCIC7 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = dollcica01.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = IPTCIC7)))
+    
+PRI_MYSTAB =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibtbolu04.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA = (SERVICE_NAME = MYSTAB)))
+  
+PRI_PGSTAB01 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibtbolu04.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA = (SERVICE_NAME = PGSTAB01)))
+
+PRI_CXS5 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti02.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = CXS5)))
+
+PRI_COTACXS01 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti20.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = COTACXS01)))
+
+PRI_COTACXS02 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti01.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = COTACXS02)))
+
+PRI_COTACXS03 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti02.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = COTACXS03)))
+
+PRI_INSTANCE =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti28.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = INSTANCE)))
+    
+PRI_COTACXS6 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = polltnra01.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = COTACXS6)))
+
+PRI_COTACXS7 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = dolltnra01.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = COTACXS7)))
+
+PRI_COTACXS8 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = dolltnra02.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = COTACXS8)))
+
+PRI_PCXS01  =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = dolltnra03.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = PCXS01)))
+
+PRI_PCXS04  =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibtbolu13.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = PCXS04)))
+
+PRI_NUNI00  =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibtbolu05.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = NUNI00)))
+
+PRI_NUNI01  =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibtappa06.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = NUNI01)))
+
+PRI_TPGCXS1 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = rtpgtnra01.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = TPGCXS1)))
+
+PRI_CXSTPG12 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = dtpgtnra01.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = CXSTPG12)))
+
+PRI_PTRCLI01  =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibtbolu09.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = PTRCLI01)))
+
+PRI_PTPGRC01 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibttpga01.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = PTPGRC01)))
+
+PRI_ROCXS11 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = rarotnra01.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = ROCXS11)))
+
+PRI_COTARDO1 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibtbolu03.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = COTARDO1)))
+
+PRI_PGRDO01 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtbolu03.oni.ctv)(PORT = 1521)))
+    (CONNECT_DATA =(SERVICE_NAME = PGRDO01)))
+
+PRI_COTADEV5 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = redgotti03.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = COTADEV5)))
+
+PRI_COTADEV6 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti04.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = COTADEV6)))
+
+PRI_COTADEV =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti04.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = COTADEV)))
+
+PRI_CUCEV7 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibtbolu11.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = CUCEV7)))
+
+PRI_PCIC00 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibtbolu12.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = PCIC00)))
+
+PRI_DWHDEV6 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = pollcica02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =(SERVICE_NAME = DWHDEV6.world)))
+
+PRI_DWHDEV7 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = jibtdwha02.oni.ctv)(PORT = 1521))
+    (CONNECT_DATA =(SERVICE_NAME = DWHDEV7)))
+
+PRI_DWH_DIGEDWH1 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibtdwha02.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = DIGEDWH1)))
+
+PRI_CSTORE6 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = pollcica02.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = CSTORE6.world)))
+  
+PRI_CSTORE7 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = jibtdwha02.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = CSTORE)))
+
+PRI_SPEDWH01 =
+  (DESCRIPTION =
+   (ADDRESS = (PROTOCOL = TCP)(HOST = jibgotti01.oni.ctv)(PORT = 1521))
+   (CONNECT_DATA =(SERVICE_NAME = SPEDWH01)))
+      
+
+PRI_XUSILDV4 =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = frtlr204.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = XUSILDV4)))
+  
+# -------------------------------------------------------------------------
+# ENTREES X7
+# -------------------------------------------------------------------------
+PRI_PMDEVTEK =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = amine.protectia.lan)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = pmdevtek)
+    )
+  )
+
+# -------------------------------------------------------------------------
+# CATALOGUE X8
+# -------------------------------------------------------------------------
+
+PRI_RMANCAT =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = frtlr103.oni.ctv)(PORT = 1521))
+  (CONNECT_DATA = (SERVER = DEDICATED)(SERVICE_NAME = RMANCAT)))
+
+# -------------------------------------------------------------------------
+# PRODUITS X9
+# -------------------------------------------------------------------------
+
+URI_PIMENSIONS =
+  (DESCRIPTION =
+  (ADDRESS = (PROTOCOL = TCP)(HOST =redgotti21.ext.tdc)(PORT = 1521))
+  (CONNECT_DATA =(SERVICE_NAME = PIMPROD)))
+

@@ -47,9 +47,11 @@ import fr.tsadeo.app.dsntotree.util.DragAndDropUtil.FileDropper;
 import fr.tsadeo.app.dsntotree.util.ListDsnListenerManager;
 import fr.tsadeo.app.dsntotree.util.ListItemBlocListenerManager;
 import fr.tsadeo.app.dsntotree.util.SettingsUtils;
+import fr.tsadeo.app.dsntotree.util.SettingsUtils.ISettingsListener;
 
 public class MyFrame extends AbstractFrame
-        implements  ItemBlocListener, ISearchActionListener , IMainActionListener, IDictionnaryListener {
+        implements ItemBlocListener, ISearchActionListener, IMainActionListener, IDictionnaryListener,
+        ISettingsListener {
 
     private static final Logger LOG = Logger.getLogger(MyFrame.class.getName());
 
@@ -145,7 +147,7 @@ public class MyFrame extends AbstractFrame
 
     private void createButtonShowJdbc(Container container, String layout) {
 
-        boolean active = SettingsUtils.get().hasApplicationSettings();
+        boolean active = false;
 
         btShowJdbc = new StateButton();
         GuiUtils.createButton(btShowJdbc, new ShowJdbcFrameAction(this), SHOW_JDBC_ACTION, KeyEvent.VK_B, PATH_BDD_ICO,
@@ -191,6 +193,18 @@ public class MyFrame extends AbstractFrame
         if (this.searchPanel != null) {
             this.searchPanel.requestFocusOnSearch();
         }
+    }
+
+    // ----------------------------------- implementing ISettingsListener
+    @Override
+    public void settingsLoaded() {
+
+        this.btShowJdbc.setEnabled(SettingsUtils.get().hasApplicationSettings());
+    }
+
+    @Override
+    public void settingsUpdated() {
+        LOG.warning("settings updated!!!!!!!!!");
     }
 
     // ---------------------------------------- implementing IMainActionListener
@@ -539,7 +553,7 @@ public class MyFrame extends AbstractFrame
             }
 
         };
-        worker.execute();
+       
 
     }
 
@@ -740,6 +754,7 @@ public class MyFrame extends AbstractFrame
 
         this.setCursor(Cursor.getDefaultCursor());
     }
+
 
     // ======================================== INNER CLASS
 

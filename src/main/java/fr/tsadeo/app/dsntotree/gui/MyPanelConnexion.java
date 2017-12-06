@@ -3,26 +3,47 @@ package fr.tsadeo.app.dsntotree.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import fr.tsadeo.app.dsntotree.bdd.dao.DatabaseManager;
+import fr.tsadeo.app.dsntotree.dico.KeyAndLibelle;
 import fr.tsadeo.app.dsntotree.dto.BddConnexionDto;
+import fr.tsadeo.app.dsntotree.gui.action.FocusSearchInstanceAction;
 import fr.tsadeo.app.dsntotree.gui.action.TesterBddAction;
 import fr.tsadeo.app.dsntotree.gui.bdd.ConnexionState;
 import fr.tsadeo.app.dsntotree.gui.bdd.OracleConnectComponent;
 import fr.tsadeo.app.dsntotree.gui.component.IStateComponent;
 import fr.tsadeo.app.dsntotree.gui.component.LabelAndTextField;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
+import fr.tsadeo.app.dsntotree.gui.component.StateListBox;
 
-public class MyPanelConnexion extends JPanel implements IGuiConstants, DocumentListener, IStateComponent {
+public class MyPanelConnexion extends JPanel implements IGuiConstants, DocumentListener, IStateComponent,
+IBddInstanceListener{
 
     /**
      * 
@@ -31,6 +52,8 @@ public class MyPanelConnexion extends JPanel implements IGuiConstants, DocumentL
 
     private OracleConnectComponent oracleConnectComponent;
     private LabelAndTextField ltfUser, ltfPwd;
+    private JScrollPane spUsers;
+    private StateListBox lUsers;
     private StateButton btTester;
     private JLabel labTestOk, labTestNok, labNoTest;
 
@@ -46,9 +69,52 @@ public class MyPanelConnexion extends JPanel implements IGuiConstants, DocumentL
 
         this.createTitlePanel(this, BorderLayout.PAGE_START);
         this.createCenterPanel(this, BorderLayout.CENTER);
-
+        
         this.loadDefaultBddConnexion();
+
     }
+
+    // ----------------------------------- implementing IBddInstanceListener
+	@Override
+	public void userChanged(String instance, String user, String pwd) {
+		 this.setBddConnexionStatus(ConnexionState.Unknown);
+		 
+		 this.ltfUser.setValue(user);
+         this.ltfPwd.setValue(pwd);
+	}
+	@Override
+	public void setFocusOnSearch() {
+		 if (this.lUsers != null) {
+	            this.lUsers.requestFocusInWindow();
+	        }	
+		 }
+
+
+    @Override
+    public void instanceChanged(String instance) {
+
+        this.setBddConnexionStatus(ConnexionState.Unknown);
+
+        if (this.oracleConnectComponent != null && this.oracleConnectComponent.getConnexionManager() != null) {
+            List<BddConnexionDto> listdto = this.oracleConnectComponent.getConnexionManager()
+                    .getListBddConnexionDto(instance);
+
+            if (listdto != null && !listdto.isEmpty()) {
+                this.ltfUser.setValue(listdto.get(0).getUser());
+                this.ltfPwd.setValue(listdto.get(0).getPwd());
+                this.lUsers.populateListBox(this.mapToListKeyAndLibelle(listdto));
+                this.lUsers.setSelectedIndex(0);
+                this.lUsers.setVisible(true);
+            } else {
+            	this.lUsers.setVisible(false);
+            	this.lUsers.removeAllElements();
+                this.ltfUser.setValue(null);
+                this.ltfPwd.setValue(null);
+                
+            }
+        }
+    }
+
 
     // ----------------------------------- implementing DocumentListener
     @Override
@@ -94,6 +160,7 @@ public class MyPanelConnexion extends JPanel implements IGuiConstants, DocumentL
         this.ltfPwd.waitEndAction();
         this.ltfUser.waitEndAction();
         this.btTester.waitEndAction();
+        this.lUsers.waitEndAction();
     }
 
     @Override
@@ -102,17 +169,60 @@ public class MyPanelConnexion extends JPanel implements IGuiConstants, DocumentL
         this.ltfPwd.actionEnded();
         this.ltfUser.actionEnded();
         this.btTester.actionEnded();
+        this.lUsers.actionEnded();
     }
 
     // ----------------------------------------------- private methods
+    private List<KeyAndLibelle> mapToListKeyAndLibelle(List<BddConnexionDto> listDto) {
+    	List<KeyAndLibelle>  listUserAndPwd = new ArrayList<>(listDto == null?0:listDto.size());
+    	if (listDto != null) {
+    		for (BddConnexionDto dto : listDto) {
+				listUserAndPwd.add(new KeyAndLibelle(dto.getUser(), dto.getPwd(), false));
+			}
+    	}
+    	return listUserAndPwd;
+    }
     private void loadDefaultBddConnexion() {
 
-        BddConnexionDto bddConnexionDto = DatabaseManager.get().getDefaultBddConnexionDto();
-        this.oracleConnectComponent.setBddConnexionDto(bddConnexionDto);
+		SwingUtilities.invokeLater(new Runnable() {
 
-        this.ltfUser.setValue(bddConnexionDto.getUser());
-        this.ltfPwd.setValue(bddConnexionDto.getPwd());
+			@Override
+			public void run() {
 
+				oracleConnectComponent.activateSearchComboBox();
+
+				BddConnexionDto bddConnexionDto = DatabaseManager.get().getDefaultBddConnexionDto();
+				if (bddConnexionDto != null) {
+					oracleConnectComponent.setBddConnexionDto(bddConnexionDto);
+
+					ltfUser.setValue(bddConnexionDto.getUser());
+					ltfPwd.setValue(bddConnexionDto.getPwd());
+				}
+			}
+
+		});
+
+    }
+    private ListSelectionListener listSelectionListener;
+    private ListSelectionListener buildListSelectionListener() {
+    	
+    	if (this.listSelectionListener == null) {
+    		this.listSelectionListener = new ListSelectionListener() {
+				
+				@Override
+				public void valueChanged(ListSelectionEvent e) {
+					// TODO Auto-generated method stub
+					if (e.getValueIsAdjusting() == false) {
+
+				        if (lUsers.getSelectedIndex() > -1) {
+				        	KeyAndLibelle selectedUser = lUsers.getSelectedValue();
+				        	MyPanelConnexion.this.userChanged(null, selectedUser.getKey(), selectedUser.getLibelle());
+				        }
+					}
+				}
+			};
+    	}
+    	return this.listSelectionListener;
     }
 
     private void controleSaisieEnCours() {
@@ -158,6 +268,7 @@ public class MyPanelConnexion extends JPanel implements IGuiConstants, DocumentL
         this.createUrlConnexionComponent(panelCenter, null);
         panelCenter.add(Box.createRigidArea(DIM_VER_RIGID_AREA_5));
         this.createCredentialPanel(panelCenter, null);
+        panelCenter.setAlignmentX(LEFT_ALIGNMENT);
         panelCenter.add(Box.createRigidArea(DIM_VER_RIGID_AREA_5));
         this.createButtonPanel(panelCenter, null);
         panelCenter.add(Box.createVerticalGlue());
@@ -167,7 +278,7 @@ public class MyPanelConnexion extends JPanel implements IGuiConstants, DocumentL
 
     private void createUrlConnexionComponent(Container container, String layout) {
 
-        this.oracleConnectComponent = new OracleConnectComponent();
+        this.oracleConnectComponent = new OracleConnectComponent(this);
         this.oracleConnectComponent.setDocumentListener(this);
         container.add(this.oracleConnectComponent, layout);
     }
@@ -175,21 +286,61 @@ public class MyPanelConnexion extends JPanel implements IGuiConstants, DocumentL
     private void createCredentialPanel(Container container, String layout) {
 
         JPanel panelCredential = new JPanel();
-        panelCredential.setLayout(new BoxLayout(panelCredential, BoxLayout.Y_AXIS));
+        panelCredential.setLayout(new GridBagLayout());
         panelCredential.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLUE),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
-        this.ltfUser = new LabelAndTextField("User:", 100, 100);
-        this.ltfUser.setDocumentListener(this);
-        panelCredential.add(this.ltfUser);
-        panelCredential.add(Box.createRigidArea(DIM_VER_RIGID_AREA_5));
 
-        this.ltfPwd = new LabelAndTextField("Pwd:", 100, 100);
+        // user and password
+        this.ltfUser = new LabelAndTextField("User:", 50, 100);
+        this.ltfUser.setDocumentListener(this);
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.anchor = GridBagConstraints.FIRST_LINE_START;
+        panelCredential.add(this.ltfUser, c);
+        
+        this.ltfPwd = new LabelAndTextField("Pwd:", 50, 100);
         this.ltfPwd.setDocumentListener(this);
-        panelCredential.add(this.ltfPwd);
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 1;
+        c.anchor = GridBagConstraints.LINE_START;
+        panelCredential.add(this.ltfPwd, c);
+
+        // list user possible
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 0;
+        c.gridwidth = 2;
+        c.gridheight = 3;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.insets = new Insets(0, 20, 0, 20);
+        panelCredential.add(this.createListUsers(), c);
 
         container.add(panelCredential, layout);
 
+    }
+    
+    private JComponent createListUsers() {
+    	
+    	// list des users references pour l'instance en cours
+    	this.lUsers = new StateListBox();
+        this.lUsers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        this.lUsers.setLayoutOrientation(JList.VERTICAL);
+        this.lUsers.setVisibleRowCount(5);
+        this.lUsers.addListSelectionListener(this.buildListSelectionListener());
+        
+        InputMap im = this.lUsers.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap am = this.lUsers.getActionMap();
+
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.ALT_DOWN_MASK), FOCUS_SEARCH_INSTANCE);
+        am.put(FOCUS_SEARCH_INSTANCE, new FocusSearchInstanceAction(this));
+        
+        this.spUsers = new JScrollPane(this.lUsers);
+        spUsers.setPreferredSize(new Dimension(150, 100));
+        
+        return this.spUsers;
     }
 
     private void createButtonPanel(Container container, String layout) {
@@ -206,5 +357,8 @@ public class MyPanelConnexion extends JPanel implements IGuiConstants, DocumentL
 
         container.add(panelButtons, layout);
     }
+
+
+
 
 }
