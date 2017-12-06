@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import fr.tsadeo.app.dsntotree.model.xml.Credential;
 import fr.tsadeo.app.dsntotree.model.xml.Credentials;
 import fr.tsadeo.app.dsntotree.model.xml.OracleBddAccess;
 import fr.tsadeo.app.dsntotree.model.xml.Settings;
@@ -34,19 +33,21 @@ public class SettingsUtilsTest extends AbstractTest {
         assertNotNull(result);
         assertTrue(!result.isEmpty());
 
-        for (OracleBddAccess oracleBddAccess : result) {
-            assertNotNull(oracleBddAccess.getHost());
+        result.stream().forEachOrdered(oracleBddAccess -> {
+        	
+        	assertNotNull(oracleBddAccess.getHost());
             assertNotNull(oracleBddAccess.getPort());
             assertNotNull(oracleBddAccess.getInstance());
 
             Credentials credentials = oracleBddAccess.getCredentials();
             assertNotNull(credentials);
-            for (Credential credential : credentials.getCredential()) {
-                assertNotNull(credential.getUser());
+            credentials.getCredential().stream().forEachOrdered(credential -> {
+            	assertNotNull(credential.getUser());
                 assertNotNull(credential.getPassword());
-            }
+            });
 
-        }
+            
+        });
 
         File file = SettingsUtils.get().getNormeDsnFile();
         assertNotNull(file);

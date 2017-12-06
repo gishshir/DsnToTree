@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import fr.tsadeo.app.dsntotree.model.Dsn;
-import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 import fr.tsadeo.app.dsntotree.util.IConstants;
 
 public class WriteDsnTest extends AbstractTest implements IConstants {
@@ -20,11 +19,11 @@ public class WriteDsnTest extends AbstractTest implements IConstants {
 		assertNotNull(dsn);
 		
 		// modification
-		for (ItemRubrique itemRubrique: dsn.getRubriques()) {
-			
-			itemRubrique.setValue(itemRubrique.getValue() + US + "modified!");
-			itemRubrique.setModified(true);
-		}
+		dsn.getRubriques().stream()
+			.forEach(itemRubrique -> {
+				itemRubrique.setValue(itemRubrique.getValue() + US + "modified!");
+				itemRubrique.setModified(true);
+			});
 		
 		writeService.write(dsn);
 		

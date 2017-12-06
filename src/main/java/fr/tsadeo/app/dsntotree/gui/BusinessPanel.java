@@ -1,7 +1,6 @@
 package fr.tsadeo.app.dsntotree.gui;
 
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -22,7 +21,6 @@ public class BusinessPanel extends JPanel implements IGuiConstants {
      */
     private static final long serialVersionUID = 1L;
 
-    private final static Dimension BUTTON_DIMENSION = new Dimension(100, 100);
 
     private final IMainActionListener mainActionListener;
     private StateButton btShowSalaries, btShowDsnNorme;
@@ -53,12 +51,12 @@ public class BusinessPanel extends JPanel implements IGuiConstants {
     }
 
     void activeNormeButton(boolean active) {
-        this.btShowDsnNorme.setEnabled(true);
+        this.btShowDsnNorme.setEnabled(active);
     }
 
     void activeButtons(boolean active) {
-        this.btShowSalaries.setEnabled(true);
-        this.btShowDsnNorme.setEnabled(true);
+        this.btShowSalaries.setEnabled(active);
+//        this.btShowDsnNorme.setEnabled(active);
     }
 
     // --------------------------------------- private methods

@@ -1,14 +1,11 @@
 package fr.tsadeo.app.dsntotree.service;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import fr.tsadeo.app.dsntotree.dto.TnsOracleInstanceDto;
 import fr.tsadeo.app.dsntotree.util.SettingsUtils;
@@ -16,35 +13,23 @@ import fr.tsadeo.app.dsntotree.util.TnsNameOraParserUtils;
 
 public class TnsNameOraService {
 	
-	private static final Logger LOG = Logger.getLogger(TnsNameOraService.class.getName());
 	
     private static final Comparator<TnsOracleInstanceDto> COMPARATOR =
-    		new Comparator<TnsOracleInstanceDto>() {
-
-				@Override
-				public int compare(TnsOracleInstanceDto o1, TnsOracleInstanceDto o2) {
-					return o1.getService().compareTo(o2.getService());
-				}
-			};
+    		 (o1,o2) -> o1.getService().compareTo(o2.getService());
 
     private Map<String, TnsOracleInstanceDto> mapInstances;
+    private List<TnsOracleInstanceDto> sortedListInstances;
     
     public TnsOracleInstanceDto getInstance(String service) {
     	return this.mapInstances.get(service);
     }
     
-    public List<TnsOracleInstanceDto> filterInstances(String search) {
-        List<TnsOracleInstanceDto> listInstances = this.getListInstances();
+    public List<TnsOracleInstanceDto> filterInstances(final String search) {
+        
+        return this.getListInstances().stream()
+        		.filter(tnsOracleInstanceDto -> search != null && tnsOracleInstanceDto.matches(search))
+        		.collect(Collectors.toList());
 
-        Iterator<TnsOracleInstanceDto> iterator = listInstances.iterator();
-        while (iterator.hasNext()) {
-            TnsOracleInstanceDto tnsOracleInstanceDto = iterator.next();
-
-            if (search != null && !tnsOracleInstanceDto.matches(search)) {
-                iterator.remove();
-            }
-        }
-        return listInstances;
     }
 
     public boolean hasTnsNameInstances() {
@@ -53,20 +38,27 @@ public class TnsNameOraService {
     public List<TnsOracleInstanceDto> getListInstances() {
     	if (this.mapInstances == null) {
     		
-    		this.mapInstances = new HashMap<>();
-    		
     		File file = SettingsUtils.get().getTnsNameOraFile();
     		List<TnsOracleInstanceDto> listInstances = TnsNameOraParserUtils.get().loadTnsOracleFile(file);
     		if (listInstances == null) {
     			listInstances = Collections.emptyList();
     		}
-    		for (TnsOracleInstanceDto tnsOracleInstanceDto : listInstances) {
-				this.mapInstances.put(tnsOracleInstanceDto.getService(), tnsOracleInstanceDto);
-			}
+    		this.mapInstances = listInstances.stream()
+    			.collect(Collectors.toMap(TnsOracleInstanceDto::getService,
+    					tnsOracleInstanceDto -> tnsOracleInstanceDto,
+    					// pour resoudre Duplicate Key
+    					(oldValue, newValue) -> newValue));
+    		
     	}
-    	List<TnsOracleInstanceDto> listInstances = new ArrayList<>(this.mapInstances.values());
-    	Collections.sort(listInstances, COMPARATOR);
-    	return listInstances;
+    	if (this.sortedListInstances == null) {
+    		this.sortedListInstances =
+    				this.mapInstances.values().stream()
+        			.sorted(COMPARATOR)
+        			.collect(Collectors.toList());
+    	}
+    	
+    	return this.sortedListInstances;
+    	
     }
 
 }

@@ -72,13 +72,15 @@ public class SettingsUtils {
 		this.applicationSettings = this.readSettings(settingsFile);
 
 		if (this.listListeners != null && applicationSettings != null) {
-			for (ISettingsListener settingsListener : listListeners) {
-                if (reload) {
-                    settingsListener.settingsUpdated();
-                } else {
-                    settingsListener.settingsLoaded();
-                }
-			}
+			
+			listListeners.stream()
+			   .forEach(settingsListener -> {
+				   if (reload) {
+	                    settingsListener.settingsUpdated();
+	                } else {
+	                    settingsListener.settingsLoaded();
+	                }  
+			   });
 		}
 	}
 
@@ -128,7 +130,6 @@ public class SettingsUtils {
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
 
 			// create JAXBElement of type Student
-			@SuppressWarnings("unused")
 			JAXBElement<Settings> jaxbElement = new ObjectFactory().createSettings(settings);
 
 			if (jaxbElement != null) {

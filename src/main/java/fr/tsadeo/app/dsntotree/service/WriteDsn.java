@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
@@ -40,12 +41,14 @@ public class WriteDsn implements IConstants {
     private File writeDsnFile(List<ItemRubrique> listRubriques, File file) {
 
         List<String> lines = new ArrayList<String>();
-        int index = 1;
-        for (ItemRubrique itemRubrique : listRubriques) {
-            String line = this.dsnService.getRubriqueLine(itemRubrique);
-            LOG.info(index++ + " :" +line);
-            lines.add(line);
-        }
+        AtomicInteger index = new AtomicInteger(1);
+        
+        listRubriques.stream()
+        	.forEach(itemRubrique -> {
+        		String line = this.dsnService.getRubriqueLine(itemRubrique);
+                LOG.info(index.incrementAndGet() + " :" +line);
+                lines.add(line);	
+        	});
 
         OutputStream os = null;
 

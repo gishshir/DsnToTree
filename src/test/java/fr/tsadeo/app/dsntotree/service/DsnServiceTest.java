@@ -26,9 +26,7 @@ public class DsnServiceTest extends AbstractTest {
         List<SalarieDto> result = service.buildListSalarieDtos(dsn);
         assertNotNull(result);
         assertEquals(3, result.size());
-        for (SalarieDto salarieDto : result) {
-            LOG.config(salarieDto.toString());
-        }
+        result.stream().forEachOrdered(salarieDto -> LOG.config(salarieDto.toString()));
     }
 
     @Test
@@ -42,17 +40,7 @@ public class DsnServiceTest extends AbstractTest {
 
         // list de tous les blocs
         LOG.config("AVANT MODIFICATION");
-        ItemBloc firstBloc30 = null;
-        for (ItemBloc itemBloc : dsn.getBlocs()) {
-            LOG.config(itemBloc.getBlocLabel());
-            if (firstBloc30 == null && itemBloc.getBlocLabel().equals("30")) {
-                firstBloc30 = itemBloc;
-            }
-        }
-
-        // on modifie le bloc 30 en supprimant le bloc 40 (et enfants 70, 71)
-        assertNotNull(firstBloc30);
-        assertTrue(firstBloc30.hasChildren());
+        ItemBloc firstBloc30 = this.getFirstBloc30(dsn.getBlocs());
 
         Iterator<ItemBloc> iter = firstBloc30.getChildrens().iterator();
         while (iter.hasNext()) {
@@ -67,12 +55,12 @@ public class DsnServiceTest extends AbstractTest {
 
         LOG.config("");
         LOG.config("APRES MODIFICATION");
-        for (ItemBloc itemBloc : dsn.getBlocs()) {
-            LOG.config(itemBloc.getBlocLabel());
-        }
+        dsn.getBlocs().stream()
+        	.forEachOrdered(itemBloc -> LOG.config(itemBloc.getBlocLabel()));
         assertEquals(nbBlocs - 3, dsn.getBlocs().size());
 
     }
+    
 
     @Test
     public void testFindItemBlocEquivalent() throws Exception {
@@ -80,13 +68,7 @@ public class DsnServiceTest extends AbstractTest {
         Dsn dsn = readDsnService.buildTreeFromFile(this.getFile(DSN_MENSUELLE_PHASE3));
         assertNotNull(dsn);
 
-        ItemBloc firstBloc30 = null;
-        for (ItemBloc itemBloc : dsn.getBlocs()) {
-            LOG.config(itemBloc.getBlocLabel());
-            if (firstBloc30 == null && itemBloc.getBlocLabel().equals("30")) {
-                firstBloc30 = itemBloc;
-            }
-        }
+        ItemBloc firstBloc30 = this.getFirstBloc30(dsn.getBlocs());
 
         ItemBloc result = service.findItemBlocEquivalent(dsn, firstBloc30);
         assertNotNull(result);
@@ -99,5 +81,16 @@ public class DsnServiceTest extends AbstractTest {
         assertNotNull(result);
         assertEquals(result, firstBloc30);
     }
+    private ItemBloc getFirstBloc30(List<ItemBloc> list) {
+   	 ItemBloc firstBloc30 = 
+        		list.stream()
+        		     .filter(itemBloc -> { 
+        		    	 LOG.config(itemBloc.getBlocLabel());
+        		    	 return itemBloc.getBlocLabel().equals("30");})
+        		     .findFirst()
+        		     .get();
+        LOG.config("firstBloc30 " + firstBloc30);
+        return firstBloc30;
+   }
 
 }

@@ -1,10 +1,8 @@
 package fr.tsadeo.app.dsntotree.gui.component;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.util.regex.Pattern;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;

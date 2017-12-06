@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class RegexUtils  implements IRegexConstants{
 	
@@ -42,28 +45,27 @@ public class RegexUtils  implements IRegexConstants{
 		Matcher matcher = getMatcher(value, pattern);
 		
 		if (matcher != null && matcher.matches()) {
-			Set<Integer> groups = capturingGroups.getGroups();
-            for (Integer group : groups) {
-            	if (matcher.groupCount() >= group) {
-					capturingGroups.setValue(group,  matcher.group(group));
-				}
-			}
+			
+			int count =  matcher.groupCount();
+			
+			capturingGroups.getGroups().stream()
+			   .filter(group -> count >= group.intValue())
+			   .forEach(group -> capturingGroups.setValue(group,  matcher.group(group)) );
+			
 			
 		}
 	}
-	public  String[] extractsGroups(String value, Pattern pattern, int... groupIndex) {
+	public  String[] extractsGroups(String value, Pattern pattern, int... groupIndexes) {
 		Matcher matcher = getMatcher(value, pattern);
 		String[] groups = null;
 		
 		if (matcher != null && matcher.matches()) {
-			groups = new String[groupIndex == null?0:groupIndex.length];
-            for (int i = 0; i < groups.length; i++) {
-				int index = groupIndex[i];
-				if (matcher.groupCount() >= index) {
-					groups[i] = matcher.group(index);
-				}	
-			}
-			
+			int count =  matcher.groupCount();
+			groups =
+			IntStream.of(groupIndexes)
+			    .filter(index -> count >= index)
+			    .mapToObj(index ->  matcher.group(index))
+			    .toArray(size -> new String[size]);
 		}
 		return groups;
 	}
@@ -79,13 +81,16 @@ public class RegexUtils  implements IRegexConstants{
 	//=========================================== INNER CLASS
 	public static class CapturingGroups {
 		
-		private final Map<Integer, String> mapGroupIndexToValue = new HashMap<>();
+		private final Map<Integer, String> mapGroupIndexToValue; 
 		
 		public CapturingGroups(Integer... groupIndexes) {
 			if (groupIndexes != null) {
-				for (Integer groupIndex : groupIndexes) {
-					this.mapGroupIndexToValue.put(groupIndex, null);
-				}
+				
+				mapGroupIndexToValue = Stream.of(groupIndexes)
+				   .collect(Collectors.toMap(index -> index, index -> ""));
+				
+			} else {
+				mapGroupIndexToValue = new HashMap<>(0);
 			}
 		}
 		public String valueOf(Integer groupIndex) {
@@ -98,12 +103,10 @@ public class RegexUtils  implements IRegexConstants{
 			this.mapGroupIndexToValue.put(groupIndex, value);
 		}
 		public boolean isSuccess() {
-			for (Integer groupIndex : this.mapGroupIndexToValue.keySet()) {
-				if (this.mapGroupIndexToValue.get(groupIndex) == null) {
-					return false;
-				}
-			}
-			return true;
+			
+			return this.mapGroupIndexToValue.keySet().stream()
+			   .allMatch(groupIndex -> !this.mapGroupIndexToValue.get(groupIndex).isEmpty() );
+			
 		}
 	}
 }

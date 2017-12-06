@@ -25,9 +25,7 @@ public class JdbcDataDsnDaoTest implements IJdbcDaoTest {
         result = dao.getListDataDsnForMessage(CHRONO_OK);
         assertTrue(!result.isEmpty());
 
-        for (DataDsn dataDSN : result) {
-        	LOG.config(dataDSN.toString());
-        }
+        result.stream().forEach(dataDSN -> LOG.config(dataDSN.toString()));
     }
 
 }

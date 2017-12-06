@@ -21,7 +21,7 @@ public abstract class AbstractJdbcDao<T extends EntiteBase> {
         try {
 
             jdbcContainer = this.prepareQuery(sql);
-            if (jdbcContainer.getRs().next()) {
+            if (jdbcContainer != null && jdbcContainer.getRs().next()) {
                 return this.mapToEntity(Integer.MIN_VALUE, jdbcContainer.getRs());
             }
             return null;
@@ -42,12 +42,14 @@ public abstract class AbstractJdbcDao<T extends EntiteBase> {
         JdbcContainer jdbcContainer = null;
         try {
 
-            jdbcContainer = this.prepareQuery(sql);
-            List<T> list = new ArrayList<T>();
-            int numline = 0;
-            while (jdbcContainer.getRs().next()) {
-                list.add(this.mapToEntity(numline++, jdbcContainer.getRs()));
-            }
+			jdbcContainer = this.prepareQuery(sql);
+			List<T> list = new ArrayList<T>();
+			int numline = 0;
+			if (jdbcContainer != null) {
+				while (jdbcContainer.getRs().next()) {
+					list.add(this.mapToEntity(numline++, jdbcContainer.getRs()));
+				}
+			}
             return list;
 
         } finally {
@@ -61,9 +63,9 @@ public abstract class AbstractJdbcDao<T extends EntiteBase> {
         ResultSet rs = null;
 
         con = DatabaseManager.get().connect();
-        stmt = con.createStatement();
-        rs = stmt.executeQuery(sql);
-        return new JdbcContainer(con, stmt, rs);
+        stmt = con == null? null:con.createStatement();
+        rs = stmt == null?null: stmt.executeQuery(sql);
+        return rs == null?null:new JdbcContainer(con, stmt, rs);
 
     }
 

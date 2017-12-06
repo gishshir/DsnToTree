@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
@@ -440,13 +441,13 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
 
         // Remplacer avec les nouveaux blocs enfants
         LOG.config("Remplacer avec les nouveaux blocs enfants");
-        this.addBlocItemToList(dsn, itemBloc, new Compteur(indexBloc));
+        this.addBlocItemToList(dsn, itemBloc, new AtomicInteger(indexBloc));
     }
 
-    private void addBlocItemToList(Dsn dsn, ItemBloc itemBloc, Compteur compteur) {
+    private void addBlocItemToList(Dsn dsn, ItemBloc itemBloc, AtomicInteger compteur) {
 
-        LOG.config("bloc " + itemBloc.getBlocLabel() + " - index: " + compteur.getValue());
-        dsn.addBloc(compteur.getValueAndIncrements(), itemBloc);
+        LOG.config("bloc " + itemBloc.getBlocLabel() + " - index: " + compteur.get());
+        dsn.addBloc(compteur.getAndIncrement(), itemBloc);
         if (itemBloc.hasChildren()) {
             for (ItemBloc childBloc : itemBloc.getChildrens()) {
                 this.addBlocItemToList(dsn, childBloc, compteur);
@@ -461,7 +462,7 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
      */
     public void updateDsnAllListBlocs(Dsn dsn) {
         dsn.clearListBlocs();
-        this.addBlocItemToList(dsn, dsn.getRoot(), new Compteur(0));
+        this.addBlocItemToList(dsn, dsn.getRoot(), new AtomicInteger(0));
     }
 
     String getRubriqueLine(ItemRubrique itemRubrique) {
@@ -638,29 +639,6 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
             this.prefix = prefix;
             this.blocLabel = blocLabel;
             this.rubriqueLabel = rubriqueLabel;
-        }
-    }
-
-    // ========================================= INNER CLASS
-    private static final class Compteur {
-
-        private int value = 0;
-
-        Compteur(int start) {
-            this.value = start;
-        }
-
-        private void increments() {
-            this.value++;
-        }
-
-        private int getValueAndIncrements() {
-            this.value++;
-            return this.value - 1;
-        }
-
-        private int getValue() {
-            return value;
         }
     }
 }

@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import fr.tsadeo.app.dsntotree.bdd.dao.impl.IJdbcDaoTest;
 import fr.tsadeo.app.dsntotree.model.Dsn;
-import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 
 public class ReadDsnFromFileTest extends AbstractTest implements IJdbcDaoTest {
 
@@ -20,9 +19,8 @@ public class ReadDsnFromFileTest extends AbstractTest implements IJdbcDaoTest {
         Dsn dsn = readDsnFromFileService.buildTreeFromFile(this.getFile(DSN_MENSUELLE_PHASE3));
         assertNotNull(dsn);
         dsnService.updateDsnWithTree(dsn);
-        for (ItemRubrique itemRubrique : dsn.getRubriques()) {
-            LOG.config(itemRubrique.toString());
-        }
+        
+        dsn.getRubriques().stream().forEachOrdered(itemRubrique -> LOG.config(itemRubrique.toString()));
     }
 
 
