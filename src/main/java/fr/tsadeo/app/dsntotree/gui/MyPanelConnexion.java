@@ -36,6 +36,7 @@ import fr.tsadeo.app.dsntotree.dto.BddConnexionDto;
 import fr.tsadeo.app.dsntotree.gui.action.FocusSearchInstanceAction;
 import fr.tsadeo.app.dsntotree.gui.action.TesterBddAction;
 import fr.tsadeo.app.dsntotree.gui.bdd.ConnexionState;
+import fr.tsadeo.app.dsntotree.gui.bdd.IBddConnectionListener;
 import fr.tsadeo.app.dsntotree.gui.bdd.OracleConnectComponent;
 import fr.tsadeo.app.dsntotree.gui.component.IStateComponent;
 import fr.tsadeo.app.dsntotree.gui.component.LabelAndTextField;
@@ -58,12 +59,14 @@ IBddInstanceListener{
     private JLabel labTestOk, labTestNok, labNoTest;
 
     private final IBddActionListener listener;
+    private final IBddConnectionListener bddConnectionListener;
     private ConnexionState connexionState = ConnexionState.Unknown;
 
     // ----------------------------------------------- constructor
-    MyPanelConnexion(IBddActionListener listener) {
+    MyPanelConnexion(IBddActionListener listener, IBddConnectionListener bddConnectionListener) {
 
         this.listener = listener;
+        this.bddConnectionListener = bddConnectionListener;
         this.setLayout(new BorderLayout());
         this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
@@ -77,7 +80,7 @@ IBddInstanceListener{
     // ----------------------------------- implementing IBddInstanceListener
 	@Override
 	public void userChanged(String instance, String user, String pwd) {
-		 this.setBddConnexionStatus(ConnexionState.Unknown);
+		 this.bddConnectionListener.connectionState(ConnexionState.Unknown);
 		 
 		 this.ltfUser.setValue(user);
          this.ltfPwd.setValue(pwd);
@@ -93,7 +96,7 @@ IBddInstanceListener{
     @Override
     public void instanceChanged(String instance) {
 
-        this.setBddConnexionStatus(ConnexionState.Unknown);
+    	this.bddConnectionListener.connectionState(ConnexionState.Unknown);
 
         if (this.oracleConnectComponent != null && this.oracleConnectComponent.getConnexionManager() != null) {
             List<BddConnexionDto> listdto = this.oracleConnectComponent.getConnexionManager()
@@ -228,6 +231,7 @@ IBddInstanceListener{
     private void controleSaisieEnCours() {
 
         boolean enable = false;
+        this.bddConnectionListener.connectionState(ConnexionState.Unknown);
         if (!this.oracleConnectComponent.isUrlEmpty() && !this.ltfUser.isEmpty() && !this.ltfPwd.isEmpty()) {
             enable = true;
         }
