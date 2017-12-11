@@ -2,6 +2,8 @@ package fr.tsadeo.app.dsntotree.gui.salarie;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -30,26 +32,24 @@ public class SalariesTableModel extends AbstractTableModel {
 
         String searchUpperCase = search.toUpperCase();
 
-        boolean result = false;
-        for (SalarieDto salarieDto : listSalaries) {
+        AtomicBoolean result = new AtomicBoolean(false);
+        listSalaries.stream().forEachOrdered(salarieDto -> {
             if (salarieDto.getValueForSearch().indexOf(searchUpperCase) > -1) {
                 salarieDto.setVisible(true);
-                result = true;
+                result.set(true);
             } else {
                 salarieDto.setVisible(false);
             }
-        }
+        });
 
-        if (result) {
+        if (result.get()) {
             this.fireTableDataChanged();
         }
-        return result;
+        return result.get();
     }
 
     void reinitSearch() {
-        for (SalarieDto salarieDto : listSalaries) {
-            salarieDto.setVisible(true);
-        }
+        listSalaries.stream().forEach(salarieDto -> salarieDto.setVisible(true));
         this.fireTableDataChanged();
     }
 
@@ -62,11 +62,9 @@ public class SalariesTableModel extends AbstractTableModel {
     // ------------------ implementing TableModel
     @Override
     public int getRowCount() {
-        int count = 0;
-        for (SalarieDto salarieDto : listSalaries) {
-            count = count + (salarieDto.isVisible() ? 1 : 0);
-        }
-        return count;
+
+        Long count = listSalaries.stream().filter(salarieDto -> salarieDto.isVisible()).count();
+        return count.intValue();
     }
 
     @Override
@@ -96,19 +94,16 @@ public class SalariesTableModel extends AbstractTableModel {
         this.listSalaries.clear();
     }
 
+    /**
+     * Retourne le salarie visible pour la ligne rowIndex
+     */
     SalarieDto getSalarie(int rowIndex) {
-        if (rowIndex < this.getRowCount()) {
-            int index = -1;
-            for (SalarieDto salarieDto : listSalaries) {
-                if (salarieDto.isVisible()) {
-                    index++;
-                    if (rowIndex == index) {
-                        return salarieDto;
-                    }
-                }
-            }
-        }
-        return null;
+
+        AtomicInteger compteur = new AtomicInteger(-1);
+        return listSalaries.stream().filter(salarieDto -> salarieDto.isVisible())
+                    .filter(salarieDto -> compteur.incrementAndGet() == rowIndex).findFirst().orElse(null);
+
+
     }
 
     private String getValue(SalarieDto salarie, int columnIndex) {

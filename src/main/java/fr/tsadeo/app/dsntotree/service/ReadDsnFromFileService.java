@@ -272,8 +272,7 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
             InputStream in = null;
             try {
                 in = new FileInputStream(dsnFile);
-                String encoding = SettingsUtils.get().getDsnEncoding();
-                dsn = this.readDsnListLines(dsnFile, IOUtils.readLines(in, encoding == null ? ISO_8859_1 : encoding));
+                dsn = this.readDsnListLines(dsnFile, IOUtils.readLines(in, SettingsUtils.get().getDsnEncoding()));
 
                 this.extractDsnPhase(dsn);
                 this.extractNatureTypeDsn(dsn);

@@ -19,7 +19,7 @@ public class GuiApplication implements IConstants {
         // Display the window.
         frame.pack();
 
-        centerFrame(frame, 0.60f, 0.85f);
+        centerFrame(frame, 0.55f, 0.85f);
         frame.setVisible(true);
     }
     

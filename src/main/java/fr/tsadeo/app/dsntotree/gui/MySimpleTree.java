@@ -10,7 +10,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -112,14 +114,12 @@ public class MySimpleTree extends AbstractDsnTree
         }
         if (node.getChildCount() >= 0) {
 
-            for (int i = 0; i < node.getChildCount(); i++) {
+            return IntStream.range(0, node.getChildCount()).mapToObj(i -> {
                 TreeNode child = node.getChildAt(i);
                 TreePath path = parent.pathByAddingChild(child);
-                result = searchNode(path, search, next);
-                if (result != null) {
-                    return result;
-                }
-            }
+                return searchNode(path, search, next);
+            }).filter(r -> r != null).findFirst().orElse(null);
+
         }
         return null;
     }
@@ -156,14 +156,11 @@ public class MySimpleTree extends AbstractDsnTree
 
         if (node.getChildCount() >= 0) {
 
-            for (int i = 0; i < node.getChildCount(); i++) {
+            return IntStream.range(0, node.getChildCount()).mapToObj(i -> {
                 TreeNode child = node.getChildAt(i);
                 TreePath path = parent.pathByAddingChild(child);
-                result = searchValue(path, search, next);
-                if (result != null) {
-                    return result;
-                }
-            }
+                return searchValue(path, search, next);
+            }).filter(r -> Objects.nonNull(r)).findFirst().orElse(null);
         }
         return null;
     }
@@ -249,15 +246,16 @@ public class MySimpleTree extends AbstractDsnTree
 
         StringBuffer sb = new StringBuffer();
 
-        if (path != null) {
-            for (int i = 1; i < path.getPathCount(); i++) {
+        if (Objects.nonNull(path)) {
+
+            IntStream.range(0, path.getPathCount()).forEachOrdered(i -> {
                 Object obj = path.getPath()[i];
                 if (i == path.getPathCount() - 1) {
                     sb.append("Bloc: ").append(obj.toString());
                 } else {
                     sb.append(obj.toString()).append(TIRET_WITH_SPACE);
                 }
-            }
+            });
         }
 
         return sb.toString();
@@ -344,16 +342,21 @@ public class MySimpleTree extends AbstractDsnTree
         }
 
         BlocNode result = null;
-        for (int i = 0; i < getTop().getChildCount(); i++) {
-            TreeNode node = getTop().getChildAt(i);
-            if (node instanceof BlocNode) {
-                result = this.findBlocNodeFromItemBloc(itemBloc, (BlocNode) node);
-                if (result != null) {
-                    return result;
-                }
-            }
-        }
-        return null;
+
+        return IntStream.range(0, getTop().getChildCount()).mapToObj(i -> getTop().getChildAt(i))
+                .filter(n -> n instanceof BlocNode).map(n -> this.findBlocNodeFromItemBloc(itemBloc, (BlocNode) n))
+                .filter(r -> Objects.nonNull(r)).findFirst().orElse(null);
+
+//        for (int i = 0; i < getTop().getChildCount(); i++) {
+//            TreeNode node = getTop().getChildAt(i);
+//            if (node instanceof BlocNode) {
+//                result = this.findBlocNodeFromItemBloc(itemBloc, (BlocNode) node);
+//                if (result != null) {
+//                    return result;
+//                }
+//            }
+        // }
+        // return null;
     }
 
     /*

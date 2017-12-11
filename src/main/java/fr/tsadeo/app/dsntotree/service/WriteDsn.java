@@ -13,6 +13,7 @@ import org.apache.commons.io.IOUtils;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 import fr.tsadeo.app.dsntotree.util.IConstants;
+import fr.tsadeo.app.dsntotree.util.SettingsUtils;
 
 public class WriteDsn implements IConstants {
 
@@ -55,7 +56,7 @@ public class WriteDsn implements IConstants {
         try {
 
             os = new FileOutputStream(file);
-            IOUtils.writeLines(lines, null, os, UTF8);
+            IOUtils.writeLines(lines, null, os, SettingsUtils.get().getDsnEncoding());
 
         } catch (Exception e) {
             throw new RuntimeException("Impossible de sauvegarder le fichier: " + e.getMessage());

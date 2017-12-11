@@ -62,6 +62,7 @@ IBddInstanceListener{
     private final IBddConnectionListener bddConnectionListener;
     private ConnexionState connexionState = ConnexionState.Unknown;
 
+
     // ----------------------------------------------- constructor
     MyPanelConnexion(IBddActionListener listener, IBddConnectionListener bddConnectionListener) {
 

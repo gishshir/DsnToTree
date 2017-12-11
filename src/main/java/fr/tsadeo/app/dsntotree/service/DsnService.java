@@ -31,14 +31,17 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
     private static final String NA = "UNKNOWN";
 
     public String getBlocLibelle(String blocLabel) {
-        return blocLabel == null ? null
+        String libelle = blocLabel == null ? null
                 : ServiceFactory.getDictionnaryService().getDsnDictionnary().getLibelle(blocLabel);
+        return libelle == null ? "non connu..." : libelle;
     }
 
     public String getRubriqueLibelle(ItemRubrique itemRubrique) {
-        return itemRubrique == null ? null
+        String libelle = itemRubrique == null ? null
                 : ServiceFactory.getDictionnaryService().getDsnDictionnary().getLibelle(itemRubrique.getBlocLabel(),
                         itemRubrique.getRubriqueLabel());
+
+        return libelle == null ? "non connu..." : libelle;
     }
 
     public List<SalarieDto> buildListSalarieDtos(Dsn dsn) {
@@ -300,7 +303,8 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
         if (blocTree != null && blocTree.hasChildrens()) {
             for (BlocTree childTree : blocTree.getChildrens()) {
                 if (!mapBlocLabelToListDto.keySet().contains(childTree.getBlocLabel())) {
-                    listOtherBlocLabel.add(new KeyAndLibelle(childTree.getBlocLabel(), childTree.getDsnLibelle()));
+                    String blocLibelle = this.getBlocLibelle(childTree.getBlocLabel());
+                    listOtherBlocLabel.add(new KeyAndLibelle(childTree.getBlocLabel(), blocLibelle));
                 }
             }
         }

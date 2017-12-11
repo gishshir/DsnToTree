@@ -1,6 +1,5 @@
 package fr.tsadeo.app.dsntotree.util;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -84,11 +83,6 @@ public class DragAndDropUtil {
 
     }
 
-//    public void createDefaultDragGestureRecognizer(MySimpleTree tree, ItemBlocListener itemBlocListener) {
-//      DragSource dragSource = DragSource.getDefaultDragSource();
-//      dragSource.createDefaultDragGestureRecognizer(tree, DnDConstants.ACTION_COPY,
-//              new TreeDragSource(tree, itemBlocListener));    	
-//    }
     public void createDefaultDragGestureRecognizer(final PanelChild panelChild) {
     	
     	DragSource dragSource = DragSource.getDefaultDragSource();
@@ -121,7 +115,7 @@ public class DragAndDropUtil {
     				if (e.getSource() instanceof PanelChild) {
     					PanelChild src = (PanelChild)e.getSource();
     					if (src.getParent().isVisible()) {
-    					   src.setBackground(null);
+                            src.restoreOriginalBackground();
     					}
     				}
     			}
@@ -142,7 +136,6 @@ public class DragAndDropUtil {
     private static class PanelChildDragSourceListener extends AbstractItemBlocDragSourceListener {
 
         private  PanelChild panelChild;
-        private  Color color;
 
         private PanelChildDragSourceListener() {
         }
@@ -151,7 +144,6 @@ public class DragAndDropUtil {
         protected ItemBloc getItemBloc(DragGestureEvent evt) {
         	
         	this.panelChild = this.getPanelChild(evt);
-            this.color = this.panelChild == null?null:this.panelChild.getBackground();
             return  this.panelChild == null?null: this.panelChild.getItemBloc();
         }
         @Override
@@ -175,8 +167,8 @@ public class DragAndDropUtil {
         //------------------- overriding DragSourceListener
         @Override
         public void dragDropEnd(DragSourceDropEvent evt) {
-        	if (this.panelChild != null && this.color != null) {
-        		this.panelChild.setBackground(this.color);
+            if (this.panelChild != null) {
+                this.panelChild.restoreOriginalBackground();
         	}
         	super.dragDropEnd(evt);
         }

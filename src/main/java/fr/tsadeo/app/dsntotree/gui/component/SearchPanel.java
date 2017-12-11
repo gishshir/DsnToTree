@@ -42,9 +42,6 @@ public class SearchPanel extends JPanel implements IGuiConstants,  IStateCompone
 	public void actionEnded() {
 		this.tfSearch.actionEnded();
 	}
-	
-
-	
     // -------------------------------------- implementing DocumentListener
 
     @Override

@@ -1,15 +1,17 @@
 package fr.tsadeo.app.dsntotree.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.dnd.DropTarget;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -21,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.MySwingUtilities;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingWorker;
+import javax.swing.border.BevelBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.TreePath;
 
@@ -34,7 +37,6 @@ import fr.tsadeo.app.dsntotree.gui.component.StateButton;
 import fr.tsadeo.app.dsntotree.gui.salarie.SalariesFrame;
 import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.Dsn;
-import fr.tsadeo.app.dsntotree.model.ErrorMessage;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 import fr.tsadeo.app.dsntotree.model.NatureDsn;
@@ -84,7 +86,33 @@ public class MyFrame extends AbstractFrame
         createPanelTop(pane, BorderLayout.PAGE_START);
         createBusinessPanel(pane, BorderLayout.LINE_START);
         createSplitPanel(pane, this.createPanelTree(), this.createPanelBloc(), BorderLayout.CENTER, 500);
-        createTextArea(pane, BorderLayout.PAGE_END);
+        createBottomPanel(pane, BorderLayout.PAGE_END);
+    }
+
+    private void createBottomPanel(Container container, String layout) {
+
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new BorderLayout());
+
+        createTextArea(bottomPanel, BorderLayout.NORTH);
+        bottomPanel.add(Box.createRigidArea(DIM_VER_RIGID_AREA_5));
+
+        JPanel versionPanel = new JPanel();
+        versionPanel.setLayout(new BoxLayout(versionPanel, BoxLayout.X_AXIS));
+        versionPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5),
+                BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
+        versionPanel.add(Box.createHorizontalGlue());
+
+        JLabel labVersion = new JLabel("mise à jour le 11 décembre 2017");
+        labVersion.setForeground(Color.gray);
+        versionPanel.add(labVersion);
+
+        versionPanel.add(Box.createRigidArea(DIM_HOR_RIGID_AREA_10));
+
+        bottomPanel.add(versionPanel, BorderLayout.PAGE_END);
+
+        container.add(bottomPanel, layout);
+
     }
 
     private JComponent createPanelBloc() {
@@ -476,10 +504,10 @@ public class MyFrame extends AbstractFrame
         JPanel panelError = new JPanel();
         panelError.setLayout(new BoxLayout(panelError, BoxLayout.Y_AXIS));
         if (dsn.getDsnState().getListErrorMessage() != null) {
-            Collections.sort(dsn.getDsnState().getListErrorMessage());
-            for (ErrorMessage errorMessage : dsn.getDsnState().getListErrorMessage()) {
-                panelError.add(new JLabel(errorMessage.toString()));
-            }
+
+            dsn.getDsnState().getListErrorMessage().stream().sorted()
+                    .forEach(errorMessage -> panelError.add(new JLabel(errorMessage.toString())));
+
             JOptionPane.showMessageDialog(this, panelError, "Liste des erreurs", JOptionPane.ERROR_MESSAGE);
         }
     }

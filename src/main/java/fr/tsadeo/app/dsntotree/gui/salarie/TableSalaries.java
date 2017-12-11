@@ -2,6 +2,7 @@ package fr.tsadeo.app.dsntotree.gui.salarie;
 
 import java.awt.Dimension;
 import java.util.List;
+import java.util.stream.Stream;
 
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -93,12 +94,11 @@ public class TableSalaries extends JTable {
 
         private MyColumnModel(Column[] tabColumns) {
 
-            for (Column column : tabColumns) {
+            Stream.of(tabColumns).forEachOrdered(column -> {
                 TableColumn tableColumn = new TableColumn(column.index, column.width);
                 tableColumn.setHeaderValue(column.title);
                 this.addColumn(tableColumn);
-            }
-            ;
+            });
         }
     }
 

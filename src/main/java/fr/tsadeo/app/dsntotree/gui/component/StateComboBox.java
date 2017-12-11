@@ -1,8 +1,9 @@
 package fr.tsadeo.app.dsntotree.gui.component;
 
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 
-public class StateComboBox<E> extends JComboBox<E> implements IStateComponent {
+public class StateComboBox<E> extends JComboBox<E> implements IStateComponent, IFunctionnalChild {
 
 	/**
 	 * 
@@ -10,6 +11,7 @@ public class StateComboBox<E> extends JComboBox<E> implements IStateComponent {
 	private static final long serialVersionUID = 1L;
 
 	private StateComponentEnum state = StateComponentEnum.actif;
+    private JComponent functionnalContainer;
 	
 	public StateComboBox() {}
 	public StateComboBox(E[] items) {
@@ -35,4 +37,12 @@ public class StateComboBox<E> extends JComboBox<E> implements IStateComponent {
 		super.setEnabled(this.state == StateComponentEnum.actif);
 	}
 
+    public void setFunctionnalContainer(JComponent component) {
+        this.functionnalContainer = component;
+    }
+
+    @Override
+    public JComponent getFunctionnalContainer() {
+        return functionnalContainer;
+    }
 }

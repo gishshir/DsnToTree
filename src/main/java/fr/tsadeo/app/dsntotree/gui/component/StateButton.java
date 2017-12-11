@@ -1,13 +1,15 @@
 package fr.tsadeo.app.dsntotree.gui.component;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 
-public class StateButton extends JButton implements IStateComponent {
+public class StateButton extends JButton implements IStateComponent, IFunctionnalChild {
 	
 
 	private static final long serialVersionUID = 1L;
 	
 	private StateComponentEnum state = StateComponentEnum.actif;
+    private JComponent functionnalContainer;
 	
 	public StateButton() {
 		super();
@@ -34,5 +36,13 @@ public class StateButton extends JButton implements IStateComponent {
 		super.setEnabled(this.state == StateComponentEnum.actif);
 	}
 
+    public void setFunctionnalContainer(JComponent component) {
+        this.functionnalContainer = component;
+    }
+
+    @Override
+    public JComponent getFunctionnalContainer() {
+        return functionnalContainer;
+    }
 	
 }

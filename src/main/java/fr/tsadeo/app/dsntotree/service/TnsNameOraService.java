@@ -27,7 +27,8 @@ public class TnsNameOraService {
     public List<TnsOracleInstanceDto> filterInstances(final String search) {
         
         return this.getListInstances().stream()
-        		.filter(tnsOracleInstanceDto -> search != null && tnsOracleInstanceDto.matches(search))
+                .filter(tnsOracleInstanceDto -> search == null
+                        || (search != null && tnsOracleInstanceDto.matches(search)))
         		.collect(Collectors.toList());
 
     }

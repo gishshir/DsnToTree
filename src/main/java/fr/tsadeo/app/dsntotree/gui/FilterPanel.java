@@ -7,10 +7,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -22,7 +22,6 @@ import fr.tsadeo.app.dsntotree.gui.component.StateCheckBox;
 import fr.tsadeo.app.dsntotree.gui.component.StateToggleButton;
 import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.Dsn;
-import fr.tsadeo.app.dsntotree.model.ItemBloc;
 
 public class FilterPanel extends JPanel implements IGuiConstants {
 
@@ -115,15 +114,12 @@ public class FilterPanel extends JPanel implements IGuiConstants {
         Set<String> blocNames = new HashSet<String>();
         if (dsn.getBlocs() != null) {
 
-            for (ItemBloc itemBloc : dsn.getBlocs()) {
-                if (!blocNames.contains(itemBloc.getBlocLabel())) {
-                    blocNames.add(itemBloc.getBlocLabel());
-                }
-            }
-            List<String> listBlocNames = new ArrayList<String>(blocNames);
-            Collections.sort(listBlocNames);
+            dsn.getBlocs().stream().filter(itemBloc -> !blocNames.contains(itemBloc.getBlocLabel()))
+                    .forEach(itemBloc -> blocNames.add(itemBloc.getBlocLabel()));
 
-            for (String blocLabel : listBlocNames) {
+            List<String> listBlocNames = blocNames.stream().sorted().collect(Collectors.toList());
+
+            listBlocNames.stream().forEachOrdered(blocLabel -> {
 
                 BlocTree blocTree = dsn.getTreeRoot() == null ? null : dsn.getTreeRoot().findChild(blocLabel, true);
                 if (blocTree != null) {
@@ -134,7 +130,8 @@ public class FilterPanel extends JPanel implements IGuiConstants {
                     this.panelCheckboxes.add(cb);
                     cb.setAlignmentX(CENTER_ALIGNMENT);
                 }
-            }
+
+            });
 
         }
 

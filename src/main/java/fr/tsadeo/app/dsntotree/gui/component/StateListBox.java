@@ -3,11 +3,12 @@ package fr.tsadeo.app.dsntotree.gui.component;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JComponent;
 import javax.swing.JList;
 
 import fr.tsadeo.app.dsntotree.dico.KeyAndLibelle;
 
-public class StateListBox extends JList<KeyAndLibelle> implements IStateComponent {
+public class StateListBox extends JList<KeyAndLibelle> implements IStateComponent, IFunctionnalChild {
 
 	/**
 	 * 
@@ -16,6 +17,7 @@ public class StateListBox extends JList<KeyAndLibelle> implements IStateComponen
 	
 	private StateComponentEnum state = StateComponentEnum.actif;
     private long resultCount = 0L;
+    private JComponent functionnalContainer;
     
     
 	@Override
@@ -41,7 +43,16 @@ public class StateListBox extends JList<KeyAndLibelle> implements IStateComponen
 	public void actionEnded() {
 		super.setEnabled(this.state == StateComponentEnum.actif);
 	}
-	
+
+    public void setFunctionnalContainer(JComponent component) {
+        this.functionnalContainer = component;
+    }
+
+    @Override
+    public JComponent getFunctionnalContainer() {
+        return functionnalContainer;
+    }
+
 	//----------------------------------------- public methods
 	public void removeAllElements() {
 		this.getDefaultListModel().removeAllElements();

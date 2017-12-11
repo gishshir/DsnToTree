@@ -660,10 +660,10 @@ IBddConnectionListener, DocumentListener {
             this.processTextArea.append("la liste des données est vide!");
             return;
         }
-        for (DataDsn dataDSN : this.listDatas) {
+        this.listDatas.stream().forEachOrdered(dataDSN -> {
             this.tAListRubriques.append(RC);
             this.tAListRubriques.append(dataDSN.toString());
-        }
+        });
     }
 
     // ============================================== INNER CLASS

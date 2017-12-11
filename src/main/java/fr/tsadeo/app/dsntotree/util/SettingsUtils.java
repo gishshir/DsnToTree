@@ -22,7 +22,7 @@ import fr.tsadeo.app.dsntotree.model.xml.ObjectFactory;
 import fr.tsadeo.app.dsntotree.model.xml.OracleBddAccess;
 import fr.tsadeo.app.dsntotree.model.xml.Settings;
 
-public class SettingsUtils {
+public class SettingsUtils implements IConstants {
 
 	private static final Logger log = Logger.getLogger(SettingsUtils.class.getName());
 
@@ -156,7 +156,7 @@ public class SettingsUtils {
         if (dsn != null) {
             return dsn.getEncoding();
 		}
-		return null;
+        return ISO_8859_1;
 	}
 
 	public File getTnsNameOraFile() {

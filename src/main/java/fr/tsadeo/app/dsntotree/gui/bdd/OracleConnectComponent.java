@@ -32,6 +32,7 @@ import fr.tsadeo.app.dsntotree.gui.component.AutocompleteComboBox;
 import fr.tsadeo.app.dsntotree.gui.component.AutocompleteComboBox.Searchable;
 import fr.tsadeo.app.dsntotree.gui.component.IStateComponent;
 import fr.tsadeo.app.dsntotree.gui.component.LabelAndTextField;
+import fr.tsadeo.app.dsntotree.gui.component.StateComponentEnum;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
 import fr.tsadeo.app.dsntotree.service.TnsNameOraService;
 import fr.tsadeo.app.dsntotree.util.IConstants;
@@ -51,7 +52,7 @@ public class OracleConnectComponent extends JPanel
 
     private LabelAndTextField pfHost, pfPort, pfInstance;
     private AutocompleteComboBox cbSearchInstance;
-
+    private StateComponentEnum state = StateComponentEnum.actif;
 
     //---------------------------------------------------- implementing ActionLIstener
 	@Override
@@ -83,6 +84,7 @@ public class OracleConnectComponent extends JPanel
         this.pfInstance.actionEnded();
         this.cbSearchInstance.actionEnded();
     }
+
 
     // ----------------------------------------- overriding IConnectComponent
     @Override
@@ -196,9 +198,6 @@ public class OracleConnectComponent extends JPanel
 
     private KeyAndLibelle mapFromDto(TnsOracleInstanceDto dto) {
         return new KeyAndLibelle(dto.getTnsname(), StringUtils.concat(dto.getService(), SPACE, dto.getHost()));
-    }
-    private String getInstanceName(KeyAndLibelle keyAndLibelle) {
-    	return keyAndLibelle == null?null:keyAndLibelle.getLibelle();
     }
     private OracleBddAccessManager getOracleConnectionManager() {
     	return (OracleBddAccessManager)BddAccessManagerFactory.get(Type.Oracle);
