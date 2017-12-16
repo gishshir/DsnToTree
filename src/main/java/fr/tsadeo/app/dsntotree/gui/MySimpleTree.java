@@ -8,10 +8,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.swing.JLabel;
@@ -478,9 +478,9 @@ public class MySimpleTree extends AbstractDsnTree
                 if (rootBloc.hasRubriques()) {
                     this.addTreeNodeRubriques(this.getTop(), rootBloc, false);
                 }
-                for (ItemBloc itemBloc : rootBloc.getChildrens()) {
-                    this.createTreeNode(getTop(), itemBloc, true);
-                }
+
+                rootBloc.getChildrens().stream()
+                        .forEachOrdered(itemBloc -> this.createTreeNode(getTop(), itemBloc, true));
 
             }
         }
@@ -506,9 +506,9 @@ public class MySimpleTree extends AbstractDsnTree
 
         if (withChildren) {
             if (itemBloc.hasChildren()) {
-                for (ItemBloc childBloc : itemBloc.getChildrens()) {
-                    this.createTreeNode(node, childBloc, true);
-                }
+
+                itemBloc.getChildrens().stream()
+                        .forEachOrdered(childBloc -> this.createTreeNode(node, childBloc, true));
             }
         }
         parent.add(node);
@@ -519,11 +519,12 @@ public class MySimpleTree extends AbstractDsnTree
         DefaultTreeModel model = ((DefaultTreeModel) this.getModel());
 
         if (itemBloc.hasRubriques()) {
-            int i = 0;
-            for (ItemRubrique itemRubrique : itemBloc.getListRubriques()) {
-                RubriqueNode rubNode = new RubriqueNode(itemRubrique);
+
+            IntStream.range(0, itemBloc.getListRubriques().size()).forEachOrdered(i -> {
+
+                RubriqueNode rubNode = new RubriqueNode(itemBloc.getListRubriques().get(i));
                 model.insertNodeInto(rubNode, node, i++);
-            }
+            });
         }
 
         if (reloadModel) {
@@ -535,11 +536,11 @@ public class MySimpleTree extends AbstractDsnTree
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) parent.getLastPathComponent();
         if (node.getChildCount() >= 0) {
 
-            for (int i = 0; i < node.getChildCount(); i++) {
+            IntStream.range(0, node.getChildCount()).forEachOrdered(i -> {
                 TreeNode child = node.getChildAt(i);
                 TreePath path = parent.pathByAddingChild(child);
                 expandBlocLabel(path, blocLabel, expand);
-            }
+            });
         }
         Object obj = node.getUserObject();
         if (obj instanceof ItemBloc) {
@@ -588,14 +589,12 @@ public class MySimpleTree extends AbstractDsnTree
 
             if (this.hasChildren()) {
 
-                List<BlocNode> list = new ArrayList<>();
-                for (int i = 0; i < this.getChildCount(); i++) {
-                    TreeNode treeChild = this.getChildAt(i);
-                    if (treeChild != null && treeChild instanceof BlocNode) {
-                        list.add((BlocNode) treeChild);
-                    }
 
-                }
+                List<BlocNode> list = IntStream.range(0, this.getChildCount()).mapToObj(i -> this.getChildAt(i))
+                        .filter(treeChild -> treeChild != null && treeChild instanceof BlocNode)
+                        .map(treeChild -> (BlocNode) treeChild).collect(Collectors.toList());
+
+
                 return list;
             }
             return null;

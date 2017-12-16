@@ -7,9 +7,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import fr.tsadeo.app.dsntotree.bdd.model.DataDsn;
 import fr.tsadeo.app.dsntotree.business.SalarieDto;
@@ -247,6 +250,47 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
 
         }
     }
+    
+    public boolean hasRubriqueAAJouter(ItemBloc itemBloc, Collection<ItemRubrique> listRubriqueExistantes) {
+
+        // liste des rubriques d'un bloc
+        List<KeyAndLibelle> listAllRubriques = ServiceFactory.getDictionnaryService().getDsnDictionnary()
+                .getOrderedListOfSubItem(itemBloc.getBlocLabel());
+
+        if (Objects.nonNull(listRubriqueExistantes)) {
+            // enlever celles qui existent déja
+            List<String> listRubriqueLabelExistantes = listRubriqueExistantes.stream()
+                    .map(itemRubrique -> itemRubrique.getRubriqueLabel()).collect(Collectors.toList());
+
+            return (listAllRubriques.stream()
+                    .filter(keyAndLibelle -> !listRubriqueLabelExistantes.contains(keyAndLibelle.getKey())).findAny()
+                    .orElse(null)) != null;
+
+        }
+        return Objects.nonNull(listAllRubriques) && !listAllRubriques.isEmpty();
+
+    }
+    public List<KeyAndLibelle> determineListRubriqueAAjouter (ItemBloc itemBloc,
+    Collection<ItemRubrique> listRubriqueExistantes) {
+
+    	//liste des rubriques d'un bloc
+    	List<KeyAndLibelle> listAllRubriques = ServiceFactory.getDictionnaryService().getDsnDictionnary().getOrderedListOfSubItem(itemBloc.getBlocLabel());
+    	
+    	if (Objects.nonNull(listRubriqueExistantes)) {
+    		// enlever celles qui existent déja
+    		List<String> listRubriqueLabelExistantes =
+    			listRubriqueExistantes.stream()
+                            .map(itemRubrique -> itemRubrique.getRubriqueLabel())
+    			.collect(Collectors.toList());
+    		
+            return listAllRubriques.stream()
+                    .filter(keyAndLibelle -> !listRubriqueLabelExistantes.contains(keyAndLibelle.getKey()))
+                    .collect(Collectors.toList());
+    	
+    	}
+    	
+    	return listAllRubriques;
+    }
 
     /**
      * determiner si les blocs enfants peuvent etre ajoutés ou supprimes
@@ -255,7 +299,7 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
             Collection<ItemBloc> listBlocChild) {
 
         BlocChildrenDto blocChildrenDto = new BlocChildrenDto();
-        if (listBlocChild == null) {
+        if (Objects.isNull(listBlocChild)) {
             return null;
         }
 
@@ -285,14 +329,18 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
                 int min = childTree.getCardinalite().getMin();
                 int max = childTree.getCardinalite().getMax();
 
-                for (int i = 0; i < listDtoForBlocLabel.size(); i++) {
-                    BlocChildDto blocDto = listDtoForBlocLabel.get(i);
-
-                    listBlocChildDto.add(blocDto);
-                    blocDto.setShow(blocDto.getBlocChild().hasRubriques() || blocDto.getBlocChild().hasChildren());
-                    blocDto.setDel(nbBlocs > min);
-                    blocDto.setDuplicate(nbBlocs < max);
-                }
+                listBlocChildDto.addAll(
+                IntStream.range(0, listDtoForBlocLabel.size())
+                	.mapToObj(i -> {
+                		
+                		BlocChildDto blocDto = listDtoForBlocLabel.get(i);
+                		 blocDto.setShow(blocDto.getBlocChild().hasRubriques() || blocDto.getBlocChild().hasChildren());
+                         blocDto.setDel(nbBlocs > min);
+                         blocDto.setDuplicate(nbBlocs < max);
+                         return blocDto;
+                	})
+                	.collect(Collectors.toList()));
+                
             }
         }
 
@@ -300,13 +348,17 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
         List<KeyAndLibelle> listOtherBlocLabel = blocChildrenDto.getListOtherBlocLabel();
         BlocTree blocTree = treeRoot == null ? null : treeRoot.findChild(itemBloc.getBlocLabel(), true);
 
-        if (blocTree != null && blocTree.hasChildrens()) {
-            for (BlocTree childTree : blocTree.getChildrens()) {
-                if (!mapBlocLabelToListDto.keySet().contains(childTree.getBlocLabel())) {
-                    String blocLibelle = this.getBlocLibelle(childTree.getBlocLabel());
-                    listOtherBlocLabel.add(new KeyAndLibelle(childTree.getBlocLabel(), blocLibelle));
-                }
-            }
+        if (Objects.nonNull(blocTree) && blocTree.hasChildrens()) {
+        	
+        	listOtherBlocLabel.addAll(
+        	blocTree.getChildrens().stream()
+        		.filter(childTree -> !mapBlocLabelToListDto.keySet().contains(childTree.getBlocLabel()))
+        		.map(childTree -> {
+        			String blocLibelle = this.getBlocLibelle(childTree.getBlocLabel());
+        			return new KeyAndLibelle(childTree.getBlocLabel(), blocLibelle);
+        		})
+        		.collect(Collectors.toList()));
+        	
         }
 
         return blocChildrenDto;

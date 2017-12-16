@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.swing.AbstractButton;
@@ -34,7 +35,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
 import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.MyJOptionPane;
@@ -42,7 +42,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.AbstractDocument;
 
 import fr.tsadeo.app.dsntotree.dico.KeyAndLibelle;
 import fr.tsadeo.app.dsntotree.dto.BlocChildrenDto;
@@ -54,7 +53,6 @@ import fr.tsadeo.app.dsntotree.gui.action.DelChildAction;
 import fr.tsadeo.app.dsntotree.gui.action.DelRubriquedAction;
 import fr.tsadeo.app.dsntotree.gui.action.DuplicateChildAction;
 import fr.tsadeo.app.dsntotree.gui.action.NextRubriquedAction;
-import fr.tsadeo.app.dsntotree.gui.action.PatternFilter;
 import fr.tsadeo.app.dsntotree.gui.action.ShowChildAction;
 import fr.tsadeo.app.dsntotree.gui.action.ValiderAction;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
@@ -485,7 +483,21 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     private void enableButtons(boolean enabled) {
         this.btAnnuler.setEnabled(enabled);
         this.btValider.setEnabled(enabled);
-        this.btAddRubrique.setEnabled(enabled);
+
+        if (enabled) {
+            this.updateEtatBoutonAddRubriques();
+        } else {
+            this.btAddRubrique.setEnabled(false);
+        }
+
+    }
+
+    private List<ItemRubrique> getListItemRubriquesFromPanel() {
+
+        List<PanelRubrique> listPanelRubriques = this.buildListPanelRubriques();
+        return listPanelRubriques.stream().filter(panelRubrique -> !panelRubrique.isDeleted())
+                .map(panelRubrique -> panelRubrique.itemRubrique)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -646,7 +658,13 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
             this.panelChildrens.setVisible(!itemBloc.isError());
         }
 
+        // Etat du bouton ajouter
+        this.btAddRubrique
+                .setEnabled(ServiceFactory.getDsnService().hasRubriqueAAJouter(itemBloc, itemBloc.getListRubriques()));
+
     }
+
+
 
     private List<PanelChild> buildListPanelChildren() {
 
@@ -1025,28 +1043,31 @@ public class MyPanelBloc extends JPanel implements IGuiConstants, IBlocActionLis
     //
     private String askNumRubrique() {
 
-        final JTextField tf = new JTextField(5) {
-
-            private static final long serialVersionUID = 1L;
-
-            public void addNotify() {
-                super.addNotify();
-                requestFocus();
-            }
-        };
-        ((AbstractDocument) tf.getDocument()).setDocumentFilter(new PatternFilter(PATTERN_NUM_RUBRIQUE));
+        final JComboBox<KeyAndLibelle> cb = new JComboBox<>();
+        List<KeyAndLibelle> listRubriqueAAjouter = ServiceFactory.getDsnService()
+                .determineListRubriqueAAjouter(this.getCurrentItemBloc(), this.getListItemRubriquesFromPanel());
+        DefaultComboBoxModel<KeyAndLibelle> model = (DefaultComboBoxModel<KeyAndLibelle>) cb.getModel();
+        listRubriqueAAjouter.stream().forEachOrdered(keyAndLibelle -> model.addElement(keyAndLibelle));
 
         JPanel panel = new JPanel();
         panel.add(new JLabel("Num: "));
-        panel.add(tf);
+        panel.add(cb);
 
         int option = MyJOptionPane.showOptionDialog(null, panel, "Numéro de rubrique", MyJOptionPane.OK_CANCEL_OPTION,
-                MyJOptionPane.QUESTION_MESSAGE, null, null, tf);
+                MyJOptionPane.QUESTION_MESSAGE, null, null, cb);
         if (option == MyJOptionPane.OK_OPTION) {
-            return String.format("%03d", Integer.parseInt(tf.getText()));
+            KeyAndLibelle rubToAdd = (KeyAndLibelle) cb.getSelectedItem();
+            return rubToAdd.getKey();
         }
         return null;
 
+    }
+
+    private void updateEtatBoutonAddRubriques() {
+
+        boolean rubAAjouter = ServiceFactory.getDsnService().hasRubriqueAAJouter(this.getCurrentItemBloc(),
+                this.getListItemRubriquesFromPanel());
+        this.btAddRubrique.setEnabled(rubAAjouter);
     }
 
     private OptionDuplicateChild askOptionForDuplicateChild(ItemBloc childBloc) {
