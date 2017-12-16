@@ -95,9 +95,9 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
         if (dsn.getDsnState().isError()) {
             LOG.config("\nDSN en erreur");
             itemRoot.setErrorMessage(new ErrorMessage("DSN en erreur"));
-            for (ErrorMessage error : dsn.getDsnState().getListErrorMessage()) {
-                LOG.severe(error.toString());
-            }
+            
+            dsn.getDsnState().getListErrorMessage().stream()
+            	.forEach(error -> LOG.severe(error.toString()));
         }
 
     }
@@ -127,9 +127,9 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
             dsn.getDsnState().addErrorMessage(new ErrorMessage("Aucun bloc identifié!"));
             return root;
         } else if (!dsn.getDsnState().isStructured()) {
-            for (ItemBloc itemBloc : dsn.getBlocs()) {
-                root.addChild(itemBloc);
-            }
+        	
+        	dsn.getBlocs().stream()
+        		.forEachOrdered(itemBloc -> root.addChild(itemBloc));
             return root;
         }
 
@@ -272,8 +272,7 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
             InputStream in = null;
             try {
                 in = new FileInputStream(dsnFile);
-                String encoding = SettingsUtils.get().getDsnEncoding();
-                dsn = this.readDsnListLines(dsnFile, IOUtils.readLines(in, encoding == null ? ISO_8859_1 : encoding));
+                dsn = this.readDsnListLines(dsnFile, IOUtils.readLines(in, SettingsUtils.get().getDsnEncoding()));
 
                 this.extractDsnPhase(dsn);
                 this.extractNatureTypeDsn(dsn);

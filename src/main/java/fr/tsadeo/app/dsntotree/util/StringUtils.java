@@ -1,5 +1,7 @@
 package fr.tsadeo.app.dsntotree.util;
 
+import java.util.stream.Stream;
+
 public class StringUtils {
 
     public static String concat(Object... items) {
@@ -8,9 +10,9 @@ public class StringUtils {
             return "";
         }
         StringBuffer sb = new StringBuffer();
-        for (Object item : items) {
-            sb.append(item == null ? "" : item.toString());
-        }
+        
+        Stream.of(items)
+        	.forEachOrdered(item -> sb.append(item == null ? "" : item.toString()));
         return sb.toString();
 
     }
@@ -20,9 +22,9 @@ public class StringUtils {
             return "";
         }
         StringBuffer sb = new StringBuffer();
-        for (String item : items) {
-            sb.append(item == null ? "" : item).append(" ");
-        }
+        
+        Stream.of(items)
+        	.forEachOrdered(item -> sb.append(item == null ? "" : item).append(" "));
         return sb.toString();
     }
     

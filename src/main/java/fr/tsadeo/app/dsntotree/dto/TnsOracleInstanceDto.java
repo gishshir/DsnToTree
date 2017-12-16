@@ -58,7 +58,8 @@ public class TnsOracleInstanceDto {
 
     	String upperCase = search.toUpperCase();
         return this.tnsname.toUpperCase().indexOf(upperCase) != -1
-|| this.service.toUpperCase().indexOf(upperCase) != -1;
+                || this.service.toUpperCase().indexOf(upperCase) != -1
+                || this.host.toUpperCase().indexOf(upperCase) != -1;
     }
 
 

@@ -3,10 +3,10 @@ package fr.tsadeo.app.dsntotree.gui.action;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
-import javax.swing.JComponent;
 
 import fr.tsadeo.app.dsntotree.gui.IBlocActionListener;
 import fr.tsadeo.app.dsntotree.gui.MyPanelBloc.PanelRubrique;
+import fr.tsadeo.app.dsntotree.gui.component.IFunctionnalChild;
 
 abstract class AbstractPanelRubriqueAction extends AbstractAction {
 
@@ -19,14 +19,18 @@ abstract class AbstractPanelRubriqueAction extends AbstractAction {
 	}
 
 
-	protected PanelRubrique getPanelRubrique(ActionEvent ev) {
-		if (ev.getSource() != null && ev.getSource() instanceof JComponent) {
-			JComponent source = (JComponent) ev.getSource();
-			if (source.getParent() != null && source.getParent() instanceof PanelRubrique) {
-				return (PanelRubrique) source.getParent();
-			}
+    protected PanelRubrique getPanelRubrique(ActionEvent ev) {
+        if (ev.getSource() != null) {
 
-		}
-		return null;
-	}
+            if (ev.getSource() instanceof IFunctionnalChild) {
+                IFunctionnalChild source = (IFunctionnalChild) ev.getSource();
+                if (source.getFunctionnalContainer() != null
+                        && source.getFunctionnalContainer() instanceof PanelRubrique) {
+                    return (PanelRubrique) source.getFunctionnalContainer();
+                }
+            }
+
+        }
+        return null;
+    }
 }

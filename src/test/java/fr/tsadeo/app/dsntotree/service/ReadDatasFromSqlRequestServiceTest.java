@@ -20,10 +20,8 @@ public class ReadDatasFromSqlRequestServiceTest extends AbstractTest{
 		File sqlFile = super.getFile(SQL_DSN_CHRONO_EXTRACTION);
 		List<DataDsn> result = service.buildListDatasFromSqlRequest(sqlFile);
 		assertNotNull(result);
-		assertFalse(result.isEmpty())
-;		
-		for (DataDsn dataDsn : result) {
-			LOG.config(dataDsn.toString());
-		}
+		assertFalse(result.isEmpty());
+		
+		result.stream().forEach(dataDsn -> LOG.config(dataDsn.toString()));
 	}
 }

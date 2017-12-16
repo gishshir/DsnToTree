@@ -1,5 +1,6 @@
 package fr.tsadeo.app.dsntotree.gui.component;
 
+import javax.swing.JComponent;
 import javax.swing.JTextField;
 
 public class StateTextField extends JTextField implements IStateComponent {
@@ -7,6 +8,7 @@ public class StateTextField extends JTextField implements IStateComponent {
 	private static final long serialVersionUID = 1L;
 
 	private StateComponentEnum state = StateComponentEnum.actif;
+    private JComponent functionnalContainer;
 
 	//------------------------------------ constructors
 	public StateTextField() {
@@ -26,7 +28,15 @@ public class StateTextField extends JTextField implements IStateComponent {
 		super.setEnabled(enabled);
 	}
 
-	// -------------------------------- implementing IStateComponent
+    public void setFunctionnalContainer(JComponent component) {
+        this.functionnalContainer = component;
+    }
+
+    public JComponent getFunctionnalContainer() {
+        return functionnalContainer;
+    }
+
+    // -------------------------------- implementing IStateComponent
 	@Override
 	public void waitEndAction() {
 		super.setEnabled(false);

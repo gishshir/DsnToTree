@@ -21,9 +21,9 @@ public class TnsNameOraParserUtilsTest extends AbstractTest{
 		List<TnsOracleInstanceDto> result = TnsNameOraParserUtils.get().loadTnsOracleFile(file);
 		
 		assertNotNull(result);
-		for (TnsOracleInstanceDto tnsOracleInstanceDto : result) {
-			LOG.config(tnsOracleInstanceDto.toString());
-		}
+		result.stream().forEach(tnsOracleInstanceDto -> 
+			LOG.config(tnsOracleInstanceDto.toString())
+		);
 	}
 
 }

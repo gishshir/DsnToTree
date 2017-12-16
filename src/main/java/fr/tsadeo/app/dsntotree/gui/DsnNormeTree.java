@@ -2,9 +2,9 @@ package fr.tsadeo.app.dsntotree.gui;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 import javax.swing.JLabel;
 import javax.swing.JTree;
@@ -43,7 +43,7 @@ public class DsnNormeTree extends AbstractDsnTree implements IConstants {
 	@Override
 	protected TreePath searchNode(TreePath parent, String search, boolean next) {
 
-		TreePath result = null;
+        // TreePath result = null;
 		TreeNode node = (TreeNode) parent.getLastPathComponent();
 		// si on a atteint la fin du fichier et en next alors
 		// on réinitialise le selectedIndex
@@ -91,14 +91,12 @@ public class DsnNormeTree extends AbstractDsnTree implements IConstants {
 		}
 		 if (node.getChildCount() >= 0) {
 
-             for (int i = 0; i < node.getChildCount(); i++) {
-                 TreeNode child = node.getChildAt(i);
-                 TreePath path = parent.pathByAddingChild(child);
-                 result = searchNode(path, search, next);
-                 if (result != null) {
-                     return result;
-                 }
-             }
+            return IntStream.range(0, node.getChildCount()).mapToObj(i -> {
+                TreeNode child = node.getChildAt(i);
+                TreePath path = parent.pathByAddingChild(child);
+                return searchNode(path, search, next);
+            }).filter(r -> r != null).findFirst().orElse(null);
+
          }
          return null;
 	}
@@ -148,14 +146,11 @@ public class DsnNormeTree extends AbstractDsnTree implements IConstants {
 
           if (node.getChildCount() >= 0) {
 
-              for (int i = 0; i < node.getChildCount(); i++) {
-                  TreeNode child = node.getChildAt(i);
-                  TreePath path = parent.pathByAddingChild(child);
-                  result = searchValue(path, search, next);
-                  if (result != null) {
-                      return result;
-                  }
-              }
+            return IntStream.range(0, node.getChildCount()).mapToObj(i -> {
+                TreeNode child = node.getChildAt(i);
+                TreePath path = parent.pathByAddingChild(child);
+                return searchValue(path, search, next);
+            }).filter(r -> r != null).findFirst().orElse(null);
           }
           return null;
 	}
@@ -199,11 +194,11 @@ public class DsnNormeTree extends AbstractDsnTree implements IConstants {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) parent.getLastPathComponent();
         if (node.getChildCount() >= 0) {
 
-            for (int i = 0; i < node.getChildCount(); i++) {
+            IntStream.range(0, node.getChildCount()).forEachOrdered(i -> {
                 TreeNode child = node.getChildAt(i);
                 TreePath path = parent.pathByAddingChild(child);
                 expandBlocLabel(path, blocLabel, expand);
-            }
+            });
         }
         Object obj = node.getUserObject();
         if (obj instanceof BlocTree) {
@@ -262,18 +257,17 @@ public class DsnNormeTree extends AbstractDsnTree implements IConstants {
         List<KeyAndLibelle> listRubriques = ServiceFactory.getDictionnaryService().getDsnDictionnary()
                 .getOrderedListOfSubItem(blocTree.getBlocLabel());
         if (listRubriques != null) {
-            for (KeyAndLibelle keyAndLibelle : listRubriques) {
-                BlocTreeRubriqueNode rubrique = new BlocTreeRubriqueNode(
-                        keyAndLibelle);
+
+            listRubriques.stream().forEachOrdered(keyAndLibelle -> {
+                BlocTreeRubriqueNode rubrique = new BlocTreeRubriqueNode(keyAndLibelle);
                 node.add(rubrique);
-            }
+            });
         }
 
         if (withChildren) {
             if (blocTree.hasChildrens()) {
-                for (BlocTree childTree : blocTree.getChildrens()) {
-                    this.createTreeNode(node, childTree, true);
-                }
+                blocTree.getChildrens().stream()
+                        .forEachOrdered(childTree -> this.createTreeNode(node, childTree, true));
             }
         }
         parent.add(node);
@@ -292,22 +286,22 @@ public class DsnNormeTree extends AbstractDsnTree implements IConstants {
             return this.getChildCount() > 0;
         }
 
-        private List<BlocTreeNode> getBlocChildren() {
-
-            if (this.hasChildren()) {
-
-                List<BlocTreeNode> list = new ArrayList<>();
-                for (int i = 0; i < this.getChildCount(); i++) {
-                    TreeNode treeChild = this.getChildAt(i);
-                    if (treeChild != null && treeChild instanceof BlocTreeNode) {
-                        list.add((BlocTreeNode) treeChild);
-                    }
-
-                }
-                return list;
-            }
-            return null;
-        }
+        // private List<BlocTreeNode> getBlocChildren() {
+        //
+        // if (this.hasChildren()) {
+        //
+        // List<BlocTreeNode> list = new ArrayList<>();
+        // for (int i = 0; i < this.getChildCount(); i++) {
+        // TreeNode treeChild = this.getChildAt(i);
+        // if (treeChild != null && treeChild instanceof BlocTreeNode) {
+        // list.add((BlocTreeNode) treeChild);
+        // }
+        //
+        // }
+        // return list;
+        // }
+        // return null;
+        // }
 
         protected BlocTreeNode(BlocTree blocTree) {
             super(blocTree);

@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.IntStream;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -58,15 +60,15 @@ public class BddAccessManagerTest extends AbstractTest {
         assertNotNull(result);
         assertTrue(!result.isEmpty());
 
-        BddConnexionDto dtoUpdated = null;
+        BddConnexionDto dtoUpdated = 
 
         // update existing user
-        for (BddConnexionDto bddConnexionDto : result) {
-            if (bddConnexionDto.getUser().equals(USER1)) {
-                dtoUpdated = this.clone(bddConnexionDto, null, "NEW_PWD");
-                break;
-            }
-        }
+        result.stream()
+            .filter (bddConnexionDto -> bddConnexionDto.getUser().equals(USER1))
+            .findFirst()
+            .flatMap(c -> Optional.ofNullable(this.clone(c, null, "NEW_PWD")))
+            .orElse(null);
+        
         assertNotNull(dtoUpdated);
         boolean success = BddAccessManagerFactory.get(Type.Oracle).createOrUpdateBddConnexion(dtoUpdated);
         assertTrue(success);
@@ -110,10 +112,8 @@ public class BddAccessManagerTest extends AbstractTest {
     private void assertBddConnexionDto(List<BddConnexionDto> list) {
 
         assertNotNull(list);
-        int index = 1;
-        for (BddConnexionDto bddConnexionDto : list) {
-            this.assertBddConnexionDto(bddConnexionDto, index++);
-        }
+        IntStream.range(0, list.size())
+           .forEach(i ->  this.assertBddConnexionDto(list.get(i), i+ 1) );
     }
 
     private void assertBddConnexionDto(BddConnexionDto dto, int index) {

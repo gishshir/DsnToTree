@@ -1,12 +1,11 @@
 package fr.tsadeo.app.dsntotree.gui.component;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.util.regex.Pattern;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentListener;
@@ -15,12 +14,13 @@ import javax.swing.text.AbstractDocument;
 import fr.tsadeo.app.dsntotree.gui.IGuiConstants;
 import fr.tsadeo.app.dsntotree.gui.action.PatternFilter;
 
-public class LabelAndTextField extends JPanel implements IStateComponent, IGuiConstants {
+public class LabelAndTextField extends JPanel implements IStateComponent, IGuiConstants, IFunctionnalChild {
 
 	private static final long serialVersionUID = 1L;
 
 	private final JLabel labKey;
 	private final StateTextField tfValue;
+    private JComponent functionnalContainer;
 
 	// -------------------------------- implementing IStateComponent
 	@Override
@@ -33,6 +33,14 @@ public class LabelAndTextField extends JPanel implements IStateComponent, IGuiCo
 		this.tfValue.actionEnded();
 	}
 
+    public void setFunctionnalContainer(JComponent component) {
+        this.functionnalContainer = component;
+    }
+
+    @Override
+    public JComponent getFunctionnalContainer() {
+        return functionnalContainer;
+    }
 	// -------------------------------------- constructor
 	public LabelAndTextField(String text, int labelLenght, int boxLenght) {
 		this(text, labelLenght, boxLenght, true);

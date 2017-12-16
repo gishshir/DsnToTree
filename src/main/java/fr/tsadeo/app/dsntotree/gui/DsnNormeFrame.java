@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.stream.Stream;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -205,15 +206,15 @@ public class DsnNormeFrame extends AbstractFrame implements ActionListener, ISea
 
     private void populatePhaseNatureType() {
 
-        DefaultComboBoxModel<KeyAndLibelle> model = (DefaultComboBoxModel<KeyAndLibelle>) this.cbListPhases.getModel();
-        for (PhaseDsn phaseDsn : PhaseDsn.values()) {
-            model.addElement(phaseDsn.getKeyAndLibelle());
-        }
+        final DefaultComboBoxModel<KeyAndLibelle> model1 = (DefaultComboBoxModel<KeyAndLibelle>) this.cbListPhases
+                .getModel();
 
-        model = (DefaultComboBoxModel<KeyAndLibelle>) this.cbListNatures.getModel();
-        for (NatureDsn natureDsn : NatureDsn.values()) {
-            model.addElement(natureDsn.getKeyAndLibelle());
-        }
+        Stream.of(PhaseDsn.values()).forEachOrdered(phaseDsn -> model1.addElement(phaseDsn.getKeyAndLibelle()));
+
+        final DefaultComboBoxModel<KeyAndLibelle> model2 = (DefaultComboBoxModel<KeyAndLibelle>) this.cbListNatures
+                .getModel();
+
+        Stream.of(NatureDsn.values()).forEachOrdered(natureDsn -> model2.addElement(natureDsn.getKeyAndLibelle()));
 
     }
 

@@ -5,4 +5,5 @@ public interface IStateComponent {
 	public void waitEndAction();
 	public void actionEnded();
 
+
 }

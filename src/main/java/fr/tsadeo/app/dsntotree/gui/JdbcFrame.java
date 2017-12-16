@@ -57,6 +57,7 @@ import fr.tsadeo.app.dsntotree.gui.action.LoadSqlFileAction;
 import fr.tsadeo.app.dsntotree.gui.action.LoadSqlRequestAction;
 import fr.tsadeo.app.dsntotree.gui.action.PatternFilter;
 import fr.tsadeo.app.dsntotree.gui.bdd.ConnexionState;
+import fr.tsadeo.app.dsntotree.gui.bdd.IBddConnectionListener;
 import fr.tsadeo.app.dsntotree.gui.component.LabelAndTextField;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
 import fr.tsadeo.app.dsntotree.gui.component.StateTextField;
@@ -64,7 +65,8 @@ import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
 import fr.tsadeo.app.dsntotree.util.ApplicationManager;
 
-public class JdbcFrame extends AbstractFrame implements IBddActionListener, DocumentListener {
+public class JdbcFrame extends AbstractFrame implements IBddActionListener,
+IBddConnectionListener, DocumentListener {
 
     private static final long serialVersionUID = 1L;
 
@@ -102,18 +104,26 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
 
     @Override
     public void insertUpdate(DocumentEvent e) {
-        saisieEnCours();
+        manageSaisieEnCours();
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        saisieEnCours();
+        manageSaisieEnCours();
     }
+
+    // -------------------------------- implementing IBddConnectionListener
+	@Override
+	public void connectionState(ConnexionState connectionState) {
+		 panelConnexion.setBddConnexionStatus(connectionState);
+		 this.tfSearchChrono.setEnabled(connectionState == ConnexionState.Ok);
+		 manageSaisieEnCours();
+	}
 
     // -------------------------------- implementing IBddActionListener
     @Override
     public void setFocusOnSearch() {
-        if (this.tfSearchChrono != null) {
+        if (this.tfSearchChrono != null && this.tfSearchChrono.isEnabled()) {
             this.tfSearchChrono.requestFocusInWindow();
         }
     }
@@ -159,15 +169,14 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
             protected void done() {
 
                 BddAccessManagerFactory.get().setCurrentBddConnexionDto(success ? connexionDto : null);
-                panelConnexion.setBddConnexionStatus(success ? ConnexionState.Ok : ConnexionState.Nok);
+                connectionState(success?ConnexionState.Ok:ConnexionState.Nok);
                 processTextArea.append(RC);
                 processTextArea.append(success ? "OK" : "Echec");
                 processTextArea.append(RC);
                 
                 if (success) {
                     updateSettings(connexionDto);
-                }
-                saisieEnCours();
+                }       
                 currentActionEnded();
             }
         };
@@ -441,6 +450,7 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
 
         // Set up the content pane.
         addComponentsToPane(this.getContentPane());
+        this.manageSaisieEnCours();
     }
 
     // -------------------------------------------- private methods
@@ -480,6 +490,7 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
         this.tfSearchChrono = new StateTextField(20);
         this.tfSearchChrono.setMaximumSize(new Dimension(200, 20));
         this.tfSearchChrono.getDocument().addDocumentListener(this);
+        this.tfSearchChrono.setEnabled(false);
         ((AbstractDocument) this.tfSearchChrono.getDocument()).setDocumentFilter(new PatternFilter(PATTERN_NUM_CHRONO));
 
         InputMap im = this.tfSearchChrono.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -506,7 +517,7 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
 
     private JComponent createPanelConnexion() {
 
-        this.panelConnexion = new MyPanelConnexion(this);
+        this.panelConnexion = new MyPanelConnexion(this, this);
         return this.panelConnexion;
     }
 
@@ -585,7 +596,7 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
                 container, layout);
     }
 
-    private void saisieEnCours() {
+    private void manageSaisieEnCours() {
 
         if (this.panelConnexion.getConnexionState() == ConnexionState.Ok) {
             String search = this.tfSearchChrono.getText();
@@ -649,10 +660,10 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
             this.processTextArea.append("la liste des données est vide!");
             return;
         }
-        for (DataDsn dataDSN : this.listDatas) {
+        this.listDatas.stream().forEachOrdered(dataDSN -> {
             this.tAListRubriques.append(RC);
             this.tAListRubriques.append(dataDSN.toString());
-        }
+        });
     }
 
     // ============================================== INNER CLASS
@@ -742,6 +753,7 @@ public class JdbcFrame extends AbstractFrame implements IBddActionListener, Docu
         }
 
     }
+
 
 
 }

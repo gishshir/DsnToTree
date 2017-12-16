@@ -5,8 +5,10 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -30,11 +32,14 @@ import fr.tsadeo.app.dsntotree.gui.component.AutocompleteComboBox;
 import fr.tsadeo.app.dsntotree.gui.component.AutocompleteComboBox.Searchable;
 import fr.tsadeo.app.dsntotree.gui.component.IStateComponent;
 import fr.tsadeo.app.dsntotree.gui.component.LabelAndTextField;
+import fr.tsadeo.app.dsntotree.gui.component.StateComponentEnum;
 import fr.tsadeo.app.dsntotree.service.ServiceFactory;
 import fr.tsadeo.app.dsntotree.service.TnsNameOraService;
+import fr.tsadeo.app.dsntotree.util.IConstants;
+import fr.tsadeo.app.dsntotree.util.StringUtils;
 
 public class OracleConnectComponent extends JPanel 
-implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
+        implements IConnectComponent, IGuiConstants, IConstants, IStateComponent, ActionListener
 {
 
     /**
@@ -47,7 +52,7 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
 
     private LabelAndTextField pfHost, pfPort, pfInstance;
     private AutocompleteComboBox cbSearchInstance;
-
+    private StateComponentEnum state = StateComponentEnum.actif;
 
     //---------------------------------------------------- implementing ActionLIstener
 	@Override
@@ -55,10 +60,11 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
 
 			Object item = this.cbSearchInstance.getSelectedItem();
             if (item instanceof KeyAndLibelle) {
-            	System.out.println("actionPerformed!!!!!!!!!!!!!!!!!!!!!!");
             	KeyAndLibelle keyAndLibelle = (KeyAndLibelle) item;
-            	this.populateWithSelectedInstance(keyAndLibelle);
-                this.listener.instanceChanged(this.getInstanceName(keyAndLibelle));
+            TnsOracleInstanceDto dto = keyAndLibelle == null || this.mapKeyAndLibelleToDto == null ? null
+                    : this.mapKeyAndLibelleToDto.get(keyAndLibelle);
+            this.populateWithSelectedInstance(dto);
+            this.listener.instanceChanged(dto.getService());
             }
 	}
 
@@ -78,6 +84,7 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
         this.pfInstance.actionEnded();
         this.cbSearchInstance.actionEnded();
     }
+
 
     // ----------------------------------------- overriding IConnectComponent
     @Override
@@ -150,9 +157,9 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
     	this.setValues(null, null, null);
     }
 
-    private void populateWithSelectedInstance(KeyAndLibelle keyAndLibelle) {
+    private void populateWithSelectedInstance(TnsOracleInstanceDto dto) {
     	 	 
-        TnsOracleInstanceDto dto = keyAndLibelle == null ? null : service.getInstance(keyAndLibelle.getLibelle());
+
     	if (dto != null) {
     		this.setValues(dto.getHost(), Integer.toString(dto.getPort()), dto.getService());	
     	} else {
@@ -173,18 +180,24 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
     	
     }
 
+    private Map<KeyAndLibelle, TnsOracleInstanceDto> mapKeyAndLibelleToDto = null;
     private List<KeyAndLibelle> mapToListKeyAndLibelle(List<TnsOracleInstanceDto> listDto) {
 
-        List<KeyAndLibelle> list = new ArrayList<>(listDto == null ? 0 : listDto.size());
+        List<KeyAndLibelle> list = null;
         if (listDto != null) {
-            for (TnsOracleInstanceDto tnsOracleInstanceDto : listDto) {
-                list.add(new KeyAndLibelle(tnsOracleInstanceDto.getTnsname(), tnsOracleInstanceDto.getService()));
-            }
+
+            this.mapKeyAndLibelleToDto = listDto.stream().collect(Collectors.toMap(dto -> mapFromDto(dto), key -> key));
+            list = this.mapKeyAndLibelleToDto.keySet().stream()
+                    .sorted((o1, o2) -> o1.getKey().compareTo(o2.getKey()))
+                    .collect(Collectors.toList());
+
         }
-        return list;
+        return list == null ? Collections.emptyList()
+                : list;
     }
-    private String getInstanceName(KeyAndLibelle keyAndLibelle) {
-    	return keyAndLibelle == null?null:keyAndLibelle.getLibelle();
+
+    private KeyAndLibelle mapFromDto(TnsOracleInstanceDto dto) {
+        return new KeyAndLibelle(dto.getTnsname(), StringUtils.concat(dto.getService(), SPACE, dto.getHost()));
     }
     private OracleBddAccessManager getOracleConnectionManager() {
     	return (OracleBddAccessManager)BddAccessManagerFactory.get(Type.Oracle);
@@ -220,7 +233,7 @@ implements IConnectComponent, IGuiConstants, IStateComponent, ActionListener
     private void createSearchComboBox() {
         this.cbSearchInstance = new AutocompleteComboBox(this.getSearchable());
     	this.cbSearchInstance.setModel(new DefaultComboBoxModel<KeyAndLibelle>());
-          Dimension size = new Dimension(250, 20);
+        Dimension size = new Dimension(350, 20);
           this.cbSearchInstance.setPreferredSize(size);
           this.cbSearchInstance.setMaximumSize(size);
           this.cbSearchInstance.addActionListener(this);

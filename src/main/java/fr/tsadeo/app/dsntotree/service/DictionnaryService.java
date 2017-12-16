@@ -56,9 +56,9 @@ public class DictionnaryService {
         if (normeDsnFile != null && normeDsnFile.exists() && normeDsnFile.isFile() && normeDsnFile.canRead()) {
             this.loadDsnDictionnary(normeDsnFile);
             if (this.listeners != null) {
-                for (IDictionnaryListener listener : listeners) {
-                    listener.dsnDictionnaryReady();
-                }
+            	
+            	listeners.stream()
+            		.forEach(listener -> listener.dsnDictionnaryReady());
             }
         }
     }
@@ -80,17 +80,21 @@ public class DictionnaryService {
                     stripper.getMapBlocLabelToListRubriques());
 
             // voir le dictionnaire
-            for (String blocLabel : stripper.getMapBlocLabelToPdfBloc().keySet()) {
-                LOG.fine("\n".concat(stripper.getMapBlocLabelToPdfBloc().get(blocLabel).toString()));
+            stripper.getMapBlocLabelToPdfBloc().keySet().stream()
+            	.forEach(blocLabel -> {
+            	
+            		LOG.fine("\n".concat(stripper.getMapBlocLabelToPdfBloc().get(blocLabel).toString()));
 
-                Map<String, KeyAndLibelle> mapRubriques = stripper.getMapBlocLabelToListRubriques().get(blocLabel);
-                if (mapRubriques != null) {
-                    for (String labelRubrique : mapRubriques.keySet()) {
-                        KeyAndLibelle pdfRubrique = mapRubriques.get(labelRubrique);
-                        LOG.fine("\t".concat(pdfRubrique.toString()));
+                    Map<String, KeyAndLibelle> mapRubriques = stripper.getMapBlocLabelToListRubriques().get(blocLabel);
+                    if (mapRubriques != null) {
+                    	mapRubriques.keySet().stream()
+                    		.forEach(labelRubrique -> {
+                    			KeyAndLibelle pdfRubrique = mapRubriques.get(labelRubrique);
+                                LOG.fine("\t".concat(pdfRubrique.toString()));	
+                    		});
                     }
-                }
-            }
+
+            	});
         } catch (Exception exeption) {
             LOG.severe("Echec dans la lecture du dictionnaire: " + exeption.getMessage());
         } finally {

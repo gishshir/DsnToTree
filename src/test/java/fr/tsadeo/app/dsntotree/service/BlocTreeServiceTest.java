@@ -3,6 +3,8 @@ package fr.tsadeo.app.dsntotree.service;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.stream.Stream;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,20 +28,21 @@ public class BlocTreeServiceTest extends AbstractTest {
     @Test
     public void testBuildRootTree() {
 
-        for (PhaseDsn phase : PhaseDsn.values()) {
-
-            for (NatureDsn nature : NatureDsn.values()) {
-
-                BlocTree root = service.buildRootTree(new PhaseNatureType(phase, nature, null));
+    	Stream.of(PhaseDsn.values()).forEachOrdered(phase -> 
+    		
+    		Stream.of(NatureDsn.values()).forEachOrdered(nature -> {
+        		
+        		BlocTree root = service.buildRootTree(new PhaseNatureType(phase, nature, null));
                 assertNotNull(root);
                 assertTrue(root.hasChildrens());
 
                 System.out.println("");
                 this.displayBlocTree(root);
                 System.out.println("");
-            }
-        }
 
+        	})
+
+    	);
     }
 
     private void displayBlocTree(BlocTree blocTree) {
@@ -48,9 +51,8 @@ public class BlocTreeServiceTest extends AbstractTest {
             System.out.println(blocTree.toString());
 
             if (blocTree.hasChildrens()) {
-                for (BlocTree child : blocTree.getChildrens()) {
-                    this.displayBlocTree(child);
-                }
+            	
+            	blocTree.getChildrens().stream().forEachOrdered(child -> this.displayBlocTree(child));
             }
 
         }

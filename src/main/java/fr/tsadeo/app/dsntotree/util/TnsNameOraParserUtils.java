@@ -82,6 +82,7 @@ public class TnsNameOraParserUtils implements IRegexConstants, IConstants {
             StringBuilder sb = null;
             boolean lineInProcess = false;
             String previous = null;
+            
             for (String line : listLines) {
 
                 line = line.trim().replace(" ", "").toUpperCase();
@@ -119,12 +120,14 @@ public class TnsNameOraParserUtils implements IRegexConstants, IConstants {
             return null;
         }
         List<TnsOracleInstanceDto> listInstances = new ArrayList<>();
-        for (String line : listLines) {
-            TnsOracleInstanceDto instance = this.buildTsnOracleInstanceDto(line);
-            if (instance != null) {
-                listInstances.add(instance);
-            }
-        }
+        
+        listLines.stream()
+          .forEachOrdered(line -> {
+        	  TnsOracleInstanceDto instance = this.buildTsnOracleInstanceDto(line);
+              if (instance != null) {
+                  listInstances.add(instance);
+              } 
+          });
 
         return listInstances;
     }

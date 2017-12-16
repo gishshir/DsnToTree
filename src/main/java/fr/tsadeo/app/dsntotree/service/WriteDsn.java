@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
@@ -12,6 +13,7 @@ import org.apache.commons.io.IOUtils;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 import fr.tsadeo.app.dsntotree.util.IConstants;
+import fr.tsadeo.app.dsntotree.util.SettingsUtils;
 
 public class WriteDsn implements IConstants {
 
@@ -40,19 +42,21 @@ public class WriteDsn implements IConstants {
     private File writeDsnFile(List<ItemRubrique> listRubriques, File file) {
 
         List<String> lines = new ArrayList<String>();
-        int index = 1;
-        for (ItemRubrique itemRubrique : listRubriques) {
-            String line = this.dsnService.getRubriqueLine(itemRubrique);
-            LOG.info(index++ + " :" +line);
-            lines.add(line);
-        }
+        AtomicInteger index = new AtomicInteger(1);
+        
+        listRubriques.stream()
+        	.forEach(itemRubrique -> {
+        		String line = this.dsnService.getRubriqueLine(itemRubrique);
+                LOG.info(index.incrementAndGet() + " :" +line);
+                lines.add(line);	
+        	});
 
         OutputStream os = null;
 
         try {
 
             os = new FileOutputStream(file);
-            IOUtils.writeLines(lines, null, os, UTF8);
+            IOUtils.writeLines(lines, null, os, SettingsUtils.get().getDsnEncoding());
 
         } catch (Exception e) {
             throw new RuntimeException("Impossible de sauvegarder le fichier: " + e.getMessage());
