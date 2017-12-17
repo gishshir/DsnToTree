@@ -3,7 +3,7 @@ package fr.tsadeo.app.dsntotree.gui.component;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 
-public class StateTextField extends JTextField implements IStateComponent {
+public class StateTextField extends JTextField implements IStateComponent, IFunctionnalChild {
 
 	private static final long serialVersionUID = 1L;
 
@@ -32,6 +32,8 @@ public class StateTextField extends JTextField implements IStateComponent {
         this.functionnalContainer = component;
     }
 
+    //-------------------------------- implementing IFunctionnalChild
+    @Override
     public JComponent getFunctionnalContainer() {
         return functionnalContainer;
     }
