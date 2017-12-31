@@ -1,6 +1,7 @@
 package fr.tsadeo.app.dsntotree.business;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.util.StringUtils;
@@ -15,6 +16,8 @@ public class SalarieDto implements Serializable {
     private final ItemBloc itemBloc;
 
     private final int index;
+    private String siren;
+    private String nic;
     private String nir;
     private String nom;
     private String prenom;
@@ -27,7 +30,23 @@ public class SalarieDto implements Serializable {
         return nir;
     }
 
-    public boolean isVisible() {
+    public String getSiren() {
+		return Objects.isNull(siren)?"":siren;
+	}
+
+	public void setSiren(String siren) {
+		this.siren = siren;
+	}
+
+	public String getNic() {
+		return Objects.isNull(nic)?"":nic;
+	}
+
+	public void setNic(String nic) {
+		this.nic = nic;
+	}
+
+	public boolean isVisible() {
         return visible;
     }
 
@@ -65,7 +84,8 @@ public class SalarieDto implements Serializable {
 
     // ------------------------------------ public methods
     public String getValueForSearch() {
-        return StringUtils.concat(this.nir, "-", this.nom, "-", this.prenom).toUpperCase();
+        return StringUtils.concat(this.getSiren(), "-", this.getNic(), "-",
+        		this.nir, "-", this.nom, "-", this.prenom).toUpperCase();
     }
 
     // ------------------------------------ constructor

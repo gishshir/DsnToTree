@@ -29,7 +29,6 @@ import javax.swing.tree.TreePath;
 
 import fr.tsadeo.app.dsntotree.business.SalarieDto;
 import fr.tsadeo.app.dsntotree.gui.action.SaveDsnAction;
-import fr.tsadeo.app.dsntotree.gui.action.ShowErrorAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowJdbcFrameAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowOpenDialogAction;
 import fr.tsadeo.app.dsntotree.gui.component.SearchPanel;
@@ -70,7 +69,7 @@ public class MyFrame extends AbstractFrame
     private JdbcFrame jdbcFrame;
     private SalariesFrame salariesFrame;
 
-    private StateButton btOpen, btSave, btShowErrors, btShowJdbc;
+    private StateButton btOpen, btSave,  btShowJdbc;
     private int searchNoResult = Integer.MAX_VALUE;
     
     private SearchPanel searchPanel;
@@ -153,7 +152,6 @@ public class MyFrame extends AbstractFrame
         JPanel panelButton = new JPanel();
         this.createButtonOpen(panelButton, BorderLayout.CENTER);
         this.createButtonSave(panelButton, BorderLayout.CENTER);
-        this.createButtonShowErrors(panelButton, BorderLayout.CENTER);
         this.createButtonShowJdbc(panelButton, BorderLayout.CENTER);
 
         container.add(panelButton, layout);
@@ -182,12 +180,12 @@ public class MyFrame extends AbstractFrame
                 "Accéder BDD", "Récupérer un message depuis la base", active, container, layout);
     }
 
-    private void createButtonShowErrors(Container container, String layout) {
-
-        btShowErrors = new StateButton();
-        GuiUtils.createButton(btShowErrors, new ShowErrorAction(this), SHOW_ERROR_DIALOG_ACTION, KeyEvent.VK_R,
-                PATH_ERROR_ICO, "erreurs", "Voir la liste des erreurs", false, container, layout);
-    }
+//    private void createButtonShowErrors(Container container, String layout) {
+//
+//        btShowErrors = new StateButton();
+//        GuiUtils.createButton(btShowErrors, new ShowErrorAction(this), SHOW_ERROR_DIALOG_ACTION, KeyEvent.VK_R,
+//                PATH_ERROR_ICO, "erreurs", "Voir la liste des erreurs", false, container, layout);
+//    }
 
     private void createSearchPanel(Container container, String layout) {
     	
@@ -343,7 +341,7 @@ public class MyFrame extends AbstractFrame
         if (this.salariesFrame == null) {
             this.salariesFrame = new SalariesFrame(this);
         }
-        GuiApplication.centerFrame(this.salariesFrame, 0.35f, 0.35f);
+        GuiApplication.centerFrame(this.salariesFrame, 0.45f, 0.35f);
 
         List<SalarieDto> listSalaries = ServiceFactory.getDsnService().buildListSalarieDtos(this.dsn);
         this.salariesFrame.setDatas(listSalaries);
@@ -394,7 +392,7 @@ public class MyFrame extends AbstractFrame
         this.actionCancelSearch();
         this.myPanelBloc.clear();
         this.myTree.clearTree();
-        this.btShowErrors.setEnabled(false);
+        this.businessPanel.activeErrorButton(false);
 
         this.dsn = dsn;
         this.actionCancelSearch();
@@ -421,7 +419,7 @@ public class MyFrame extends AbstractFrame
                     processTextArea.append(getPhaseNatureType().concat(SAUT_LIGNE));
 
                     btSave.setEnabled(dsn.getDsnState().isModified());
-                    btShowErrors.setEnabled(dsn.getDsnState().isError());
+                    businessPanel.activeErrorButton(dsn.getDsnState().isError());
                     currentActionEnded();
 
                     setFocusOnSearch();
@@ -758,12 +756,11 @@ public class MyFrame extends AbstractFrame
 
         this.btOpen.waitEndAction();
         this.btSave.waitEndAction();
-        this.btShowErrors.waitEndAction();
+        
         this.btShowJdbc.waitEndAction();
         this.searchPanel.waitEndAction();
 
         this.myPanelBloc.waitEndAction();
-        // this.filterPanel.waitEndAction();
         this.businessPanel.waitEndAction();
 
     }
@@ -772,12 +769,10 @@ public class MyFrame extends AbstractFrame
 
         this.btOpen.actionEnded();
         this.btSave.actionEnded();
-        this.btShowErrors.actionEnded();
         this.btShowJdbc.actionEnded();
         this.searchPanel.actionEnded();
 
         this.myPanelBloc.currentActionEnded();
-        // this.filterPanel.currentActionEnded();
         this.businessPanel.currentActionEnded();
 
         this.setCursor(Cursor.getDefaultCursor());

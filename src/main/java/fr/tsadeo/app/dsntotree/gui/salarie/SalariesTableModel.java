@@ -115,10 +115,14 @@ public class SalariesTableModel extends AbstractTableModel {
         case 0:
             return (salarie.getIndex() + 1) + "";
         case 1:
-            return salarie.getNir();
+            return salarie.getSiren();
         case 2:
-            return salarie.getNom();
+            return salarie.getNic();
         case 3:
+            return salarie.getNir();
+        case 4:
+            return salarie.getNom();
+        case 5:
             return salarie.getPrenom();
 
         default:

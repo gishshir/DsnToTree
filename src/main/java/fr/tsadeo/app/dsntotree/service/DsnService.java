@@ -49,7 +49,7 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
 
     /**
      * Comptabilise le nombre de déclaration dans le fichier DSN Nombre de
-     * 15.001
+     * 05.001
      */
     public int countDeclarations(Dsn dsn) {
 
@@ -63,11 +63,11 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
 
         List<ItemBloc> listItemBlocs = this.findListItemBlocByBlocLabel(dsn, BLOC_30);
         if (listItemBlocs != null) {
-
-            int index = 0;
-            for (ItemBloc itemBloc : listItemBlocs) {
-                listSalaries.add(this.createSalarieDto(index++, itemBloc));
-            }
+        	
+        	listSalaries = IntStream.range(0, listItemBlocs.size())
+        		.mapToObj(index -> this.createSalarieDto(index, listItemBlocs.get(index)))
+        		.collect(Collectors.toList());
+        		
         }
 
         return listSalaries;
@@ -124,11 +124,11 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
         return false;
     }
 
-    private SalarieDto createSalarieDto(int index, ItemBloc itemBloc) {
-        SalarieDto salarieDto = new SalarieDto(index, itemBloc);
+    private SalarieDto createSalarieDto(int index, ItemBloc blocSalarie) {
+        SalarieDto salarieDto = new SalarieDto(index, blocSalarie);
 
-        if (itemBloc.hasRubriques()) {
-            for (ItemRubrique itemRubrique : itemBloc.getListRubriques()) {
+        if (blocSalarie.hasRubriques()) {
+            for (ItemRubrique itemRubrique : blocSalarie.getListRubriques()) {
                 if (itemRubrique.getRubriqueLabel().equals(RUB_001)) {
                     salarieDto.setNir(itemRubrique.getValue());
                 } else if (itemRubrique.getRubriqueLabel().equals(RUB_002)) {
@@ -138,6 +138,20 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
                 } else if (itemRubrique.getRubriqueLabel().equals(RUB_004)) {
                     salarieDto.setPrenom(itemRubrique.getValue());
                 }
+            }
+        }
+        ItemBloc blocEtablissement = blocSalarie.getParent();
+        if (!Objects.isNull(blocEtablissement)) {
+        	
+            ItemRubrique nicEtabRubrique = 
+            		this.findOneRubrique(blocEtablissement.getListRubriques(), blocEtablissement.getBlocLabel(), RUB_001);
+            salarieDto.setNic(nicEtabRubrique == null?null:nicEtabRubrique.getValue());
+            
+            ItemBloc blocEntreprise = blocEtablissement.getParent();
+            if (!Objects.isNull(blocEntreprise)) {
+            	ItemRubrique sirenRubrique = this.findOneRubrique(blocEntreprise.getListRubriques(),
+            			blocEntreprise.getBlocLabel(), RUB_001);
+            	salarieDto.setSiren(sirenRubrique == null?null:sirenRubrique.getValue());
             }
         }
 
@@ -194,11 +208,10 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
         List<ItemBloc> listItemBlocs = new ArrayList<>();
 
         if (dsn != null && blocLabel != null) {
-            for (ItemBloc itemBloc : dsn.getBlocs()) {
-                if (itemBloc.getBlocLabel().equals(blocLabel)) {
-                    listItemBlocs.add(itemBloc);
-                }
-            }
+        	
+        	listItemBlocs = dsn.getBlocs().stream()
+        	  .filter(itemBloc -> itemBloc.getBlocLabel().equals(blocLabel))
+        	  .collect(Collectors.toList());
         }
 
         return listItemBlocs;
@@ -215,14 +228,19 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
     public ItemBloc findItemBlocEquivalent(Dsn dsn, ItemBloc itemBlocToFind) {
 
         if (dsn != null && itemBlocToFind != null) {
-            for (ItemBloc itemBloc : dsn.getBlocs()) {
-                if (itemBloc == itemBlocToFind) {
-                    return itemBloc;
-                }
-                if (itemBloc.hashCode() == itemBlocToFind.hashCode()) {
-                    return itemBloc;
-                }
-            }
+        	
+        	return dsn.getBlocs().stream()
+        		.filter(itemBloc -> {
+        			 if (itemBloc == itemBlocToFind) {
+                         return true;
+                     }
+                     if (itemBloc.hashCode() == itemBlocToFind.hashCode()) {
+                         return true;
+                     }	
+                     return false;
+        		})
+        		.findFirst().orElseGet(null);
+        	
         }
         return null;
     }

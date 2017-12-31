@@ -11,6 +11,7 @@ import javax.swing.Box;
 import javax.swing.JPanel;
 
 import fr.tsadeo.app.dsntotree.gui.action.ShowDsnNormeAction;
+import fr.tsadeo.app.dsntotree.gui.action.ShowErrorAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowSalariesFrameAction;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
 
@@ -23,7 +24,7 @@ public class BusinessPanel extends JPanel implements IGuiConstants {
 
 
     private final IMainActionListener mainActionListener;
-    private StateButton btShowSalaries, btShowDsnNorme;
+    private StateButton btShowSalaries, btShowDsnNorme, btShowErrors;
 
     private final GridBagLayout layout;
 
@@ -42,12 +43,18 @@ public class BusinessPanel extends JPanel implements IGuiConstants {
 
         this.btShowSalaries.waitEndAction();
         this.btShowDsnNorme.waitEndAction();
+        this.btShowErrors.waitEndAction();
     }
 
     void currentActionEnded() {
 
         this.btShowSalaries.actionEnded();
         this.btShowDsnNorme.actionEnded();
+        this.btShowErrors.actionEnded();
+    }
+    
+    void activeErrorButton(boolean active) {
+    	this.btShowErrors.setEnabled(active);
     }
 
     void activeNormeButton(boolean active) {
@@ -72,7 +79,16 @@ public class BusinessPanel extends JPanel implements IGuiConstants {
         this.createButtonShowSalaries(this, constraints);
         this.add(Box.createRigidArea(DIM_VER_RIGID_AREA_15));
         this.createButtonShowNorme(this, constraints);
+        this.add(Box.createRigidArea(DIM_VER_RIGID_AREA_15));
+        this.createButtonShowErrors(this, constraints);
         this.add(Box.createVerticalGlue());
+    }
+    
+    private void createButtonShowErrors(Container container, GridBagConstraints constraints) {
+
+        btShowErrors = new StateButton();
+        GuiUtils.createButton(btShowErrors, new ShowErrorAction(this.mainActionListener), SHOW_ERROR_DIALOG_ACTION, KeyEvent.VK_R,
+                PATH_ERROR_ICO, "erreurs", "Voir la liste des erreurs", false, container, constraints, layout);
     }
 
     private void createButtonShowNorme(Container container, GridBagConstraints constraints) {

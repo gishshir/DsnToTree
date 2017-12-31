@@ -20,8 +20,13 @@ public class TableSalaries extends JTable {
      */
     private static final long serialVersionUID = 1L;
 
-    private static Column[] tabColumns = new Column[] { new Column(0, 5, "index"), new Column(1, 20, "Nir"),
-            new Column(2, 50, "Nom"), new Column(3, 75, "Prénoms") };
+    private static Column[] tabColumns = new Column[] { 
+    		new Column(0, 5, "index"), 
+    		new Column(1, 50, "Siren"),
+    		new Column(2, 20, "Nic"),
+    		new Column(3, 20, "Nir"),
+            new Column(4, 50, "Nom"), 
+            new Column(5, 75, "Prénoms") };
 
     private final SalariesTableModel model;
     private final ISalarieListener salarieListener;
