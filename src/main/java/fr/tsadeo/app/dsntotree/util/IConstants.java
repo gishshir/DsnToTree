@@ -28,6 +28,7 @@ public interface IConstants {
     public static final String RUB_002 = "002";
     public static final String RUB_003 = "003";
     public static final String RUB_004 = "004";
+    public static final String RUB_005 = "005";
     public static final String RUB_006 = "006";
 
     public static final String NATURE_MENSUELLE = "01";

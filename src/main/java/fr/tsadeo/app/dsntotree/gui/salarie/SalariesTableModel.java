@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.table.AbstractTableModel;
 
 import fr.tsadeo.app.dsntotree.business.SalarieDto;
-import fr.tsadeo.app.dsntotree.gui.salarie.TableSalaries.Column;
+import fr.tsadeo.app.dsntotree.gui.component.AbstractTable.Column;
 
 public class SalariesTableModel extends AbstractTableModel {
 

@@ -1,4 +1,4 @@
-package fr.tsadeo.app.dsntotree.gui.salarie;
+package fr.tsadeo.app.dsntotree.gui.etabliss;
 
 import java.awt.Dimension;
 import java.util.List;
@@ -7,32 +7,31 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import fr.tsadeo.app.dsntotree.business.SalarieDto;
+import fr.tsadeo.app.dsntotree.business.EtablissementDto;
 import fr.tsadeo.app.dsntotree.gui.component.AbstractTable;
 
-public class TableSalaries extends AbstractTable {
+public class TableEtablissement extends AbstractTable {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
     private static Column[] tabColumns = new Column[] { 
     		new Column(0, 5, "index"), 
     		new Column(1, 50, "Siren"),
-    		new Column(2, 20, "Nic"),
-    		new Column(3, 20, "Nir"),
-            new Column(4, 50, "Nom"), 
-            new Column(5, 75, "Prénoms") };
+    		new Column(2, 20, "Nic siege"),
+    		new Column(3, 20, "Nic etab"),
+            new Column(4, 50, "Localite")}; 
 
-    private final SalariesTableModel model;
-    private final ISalarieListener salarieListener;
+    private final EtablissementTableModel model;
+    private final IEtablissementListener etablissementListener;
 
-    TableSalaries(ISalarieListener salarieListener) {
+    TableEtablissement(IEtablissementListener etablissementListener) {
 
-        super(new SalariesTableModel(tabColumns), new MyColumnModel(tabColumns));
-        this.model = (SalariesTableModel) super.getModel();
-        this.salarieListener = salarieListener;
+        super(new EtablissementTableModel(tabColumns), new MyColumnModel(tabColumns));
+        this.model = (EtablissementTableModel) super.getModel();
+        this.etablissementListener = etablissementListener;
 
         this.buildListSelectionListener();
 
@@ -40,14 +39,14 @@ public class TableSalaries extends AbstractTable {
         this.setFillsViewportHeight(true);
 
     }
-
-    List<SalarieDto> getDatas() {
+    
+    List<EtablissementDto> getDatas() {
         return this.model.getDatas();
     }
 
-    void setDatas(List<SalarieDto> listSalaries) {
+    void setDatas(List<EtablissementDto> listEtablissements) {
 
-        this.model.setDatas(listSalaries);
+        this.model.setDatas(listEtablissements);
     }
 
     boolean search(String search) {
@@ -55,9 +54,9 @@ public class TableSalaries extends AbstractTable {
         if (result) {
             this.getSelectionModel().clearSelection();
             if (this.model.getRowCount() == 1) {
-                this.salarieListener.onSalarieSelected(this.model.getSalarie(0));
+                this.etablissementListener.onEtablissementSelected(this.model.getEtablissement(0));
             } else {
-                this.salarieListener.onSalarieSelected(null);
+                this.etablissementListener.onEtablissementSelected(null);
             }
         }
         return result;
@@ -65,9 +64,8 @@ public class TableSalaries extends AbstractTable {
 
     void reinitSearch() {
         this.model.reinitSearch();
-        this.salarieListener.onSalarieSelected(null);
+        this.etablissementListener.onEtablissementSelected(null);
     }
-
     // ---------------------------------- private methods
     private void buildListSelectionListener() {
 
@@ -77,10 +75,10 @@ public class TableSalaries extends AbstractTable {
             @Override
             public void valueChanged(ListSelectionEvent e) {
 
-                int[] selectedRows = TableSalaries.this.getSelectedRows();
+                int[] selectedRows = TableEtablissement.this.getSelectedRows();
                 if (selectedRows != null && selectedRows.length == 1) {
-                    SalarieDto salarie = model.getSalarie(selectedRows[0]);
-                    salarieListener.onSalarieSelected(salarie);
+                    EtablissementDto etablissement = model.getEtablissement(selectedRows[0]);
+                    etablissementListener.onEtablissementSelected(etablissement);
                 }
             }
         });

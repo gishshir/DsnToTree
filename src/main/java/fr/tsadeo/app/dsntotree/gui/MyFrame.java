@@ -7,6 +7,7 @@ import java.awt.Cursor;
 import java.awt.dnd.DropTarget;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -27,12 +28,14 @@ import javax.swing.border.BevelBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.TreePath;
 
+import fr.tsadeo.app.dsntotree.business.EtablissementDto;
 import fr.tsadeo.app.dsntotree.business.SalarieDto;
 import fr.tsadeo.app.dsntotree.gui.action.SaveDsnAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowJdbcFrameAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowOpenDialogAction;
 import fr.tsadeo.app.dsntotree.gui.component.SearchPanel;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
+import fr.tsadeo.app.dsntotree.gui.etabliss.EtablissementFrame;
 import fr.tsadeo.app.dsntotree.gui.salarie.SalariesFrame;
 import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.Dsn;
@@ -68,6 +71,7 @@ public class MyFrame extends AbstractFrame
     private MyPanelBloc myPanelBloc;
     private JdbcFrame jdbcFrame;
     private SalariesFrame salariesFrame;
+    private EtablissementFrame etablissementsFrame;
 
     private StateButton btOpen, btSave,  btShowJdbc;
     private int searchNoResult = Integer.MAX_VALUE;
@@ -336,7 +340,21 @@ public class MyFrame extends AbstractFrame
     }
 
     @Override
-    public void actionShowSalarieDialog() {
+    public void actionShowEtablissementsDialog() {
+    	if (this.etablissementsFrame== null) {
+            this.etablissementsFrame = new EtablissementFrame(this);
+        }
+        GuiApplication.centerFrame(this.etablissementsFrame, 0.45f, 0.35f);
+
+        List<EtablissementDto> listEtablissements =  
+        		ServiceFactory.getDsnService().buildListEtablissementDtos(this.dsn);
+        this.etablissementsFrame.setDatas(listEtablissements);
+
+        this.etablissementsFrame.setVisible(true);
+    	
+    }
+    @Override
+    public void actionShowSalariesDialog() {
 
         if (this.salariesFrame == null) {
             this.salariesFrame = new SalariesFrame(this);

@@ -1,4 +1,4 @@
-package fr.tsadeo.app.dsntotree.gui.salarie;
+package fr.tsadeo.app.dsntotree.gui.etabliss;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -12,27 +12,25 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import fr.tsadeo.app.dsntotree.business.SalarieDto;
+import fr.tsadeo.app.dsntotree.business.EtablissementDto;
 import fr.tsadeo.app.dsntotree.gui.AbstractFrame;
 import fr.tsadeo.app.dsntotree.gui.GuiUtils;
 import fr.tsadeo.app.dsntotree.gui.IMainActionListener;
 import fr.tsadeo.app.dsntotree.gui.ISearchActionListener;
-import fr.tsadeo.app.dsntotree.gui.action.EditSalarieAction;
-import fr.tsadeo.app.dsntotree.gui.action.ShowSalarieAction;
+import fr.tsadeo.app.dsntotree.gui.action.EditEtablissementAction;
+import fr.tsadeo.app.dsntotree.gui.action.ShowEtablissementAction;
 import fr.tsadeo.app.dsntotree.gui.component.SearchPanel;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
 
-public class SalariesFrame extends AbstractFrame implements ISalarieListener,
-  ISearchActionListener{
-
-    /**
+public class EtablissementFrame extends AbstractFrame implements IEtablissementListener, ISearchActionListener {
+	  /**
      * 
      */
     private static final long serialVersionUID = 1L;
 
     private IMainActionListener mainActionListener;
-    private TableSalaries tableSalaries;
-    private SalarieStateButton btShowRubriques, btEditSalarie;
+    private TableEtablissement tableEtablissement;
+    private EtablissementStateButton btShowRubriques, btEditEtablissement;
 
 //    private StateTextField tfSearch;
     private int searchNoResult = Integer.MAX_VALUE;
@@ -42,20 +40,20 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener,
 
     // ------------------------------------- implementing ISalarieListener
     @Override
-    public void onSalarieSelected(SalarieDto salarie) {
+    public void onEtablissementSelected(EtablissementDto etablissement) {
 
-        if (salarie != null) {
+        if (etablissement != null) {
             this.btShowRubriques.setEnabled(true);
-            this.btEditSalarie.setEnabled(true);
-            this.btShowRubriques.setToolTipText("voir les rubriques du salarie " + salarie.getNom());
-            this.btShowRubriques.setSalarie(salarie);
-            this.btEditSalarie.setSalarie(salarie);
+            this.btEditEtablissement.setEnabled(true);
+            this.btShowRubriques.setToolTipText("voir les rubriques de l'établissement " + etablissement.toString());
+            this.btShowRubriques.setEtablissement(etablissement);
+            this.btEditEtablissement.setEtablissement(etablissement);
         } else {
             this.btShowRubriques.setEnabled(false);
-            this.btEditSalarie.setEnabled(false);
+            this.btEditEtablissement.setEnabled(false);
             this.btShowRubriques.setToolTipText("");
-            this.btShowRubriques.setSalarie(null);
-            this.btEditSalarie.setSalarie(null);
+            this.btShowRubriques.setEtablissement(null);
+            this.btEditEtablissement.setEtablissement(null);
         }
     }
 
@@ -68,8 +66,8 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener,
 
 
     // ----------------------------------- constructor
-    public SalariesFrame(IMainActionListener mainActionListener) {
-        super("Liste des salaries", JFrame.DISPOSE_ON_CLOSE);
+    public EtablissementFrame(IMainActionListener mainActionListener) {
+        super("Liste des établissements", JFrame.DISPOSE_ON_CLOSE);
         this.mainActionListener = mainActionListener;
 
         // Set up the content pane.
@@ -77,9 +75,9 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener,
     }
 
     // ------------------------------- public methods
-    public void setDatas(List<SalarieDto> listSalaries) {
+    public void setDatas(List<EtablissementDto> listEtablissements) {
 
-        this.tableSalaries.setDatas(listSalaries);
+        this.tableEtablissement.setDatas(listEtablissements);
     }
 
     //------------------------------------- implementing ISearchActionListener
@@ -98,7 +96,7 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener,
         String search = this.searchPanel.getSearchText();
         int searchLenght = search != null ? search.length() : 0;
         if (searchLenght > 3 && searchLenght < this.searchNoResult) {
-            if (this.tableSalaries.search(search)) {
+            if (this.tableEtablissement.search(search)) {
                 this.searchNoResult = Integer.MAX_VALUE;
                 this.searchPanel.setSearchColor(SEARCH_SUCCESS_COLOR);
 
@@ -110,7 +108,7 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener,
             if (searchLenght <= 3) {
             	this.searchPanel.setDefaultBackground();
                 this.searchNoResult = Integer.MAX_VALUE;
-                this.tableSalaries.reinitSearch();
+                this.tableEtablissement.reinitSearch();
             }
         }
     }
@@ -126,8 +124,8 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener,
     }
 
     private void createPanelMiddle(Container container, String layout) {
-        tableSalaries = new TableSalaries(this);
-        JScrollPane scrollPanel = new JScrollPane(this.tableSalaries);
+    	tableEtablissement = new TableEtablissement(this);
+        JScrollPane scrollPanel = new JScrollPane(this.tableEtablissement);
 
         container.add(scrollPanel, layout);
     }
@@ -150,25 +148,25 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener,
         panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.X_AXIS));
 
         panelButton.add(Box.createHorizontalGlue());
-        this.createButtonShowSalaries(panelButton, BorderLayout.CENTER);
+        this.createButtonShowEtablissement(panelButton, BorderLayout.CENTER);
         panelButton.add(Box.createRigidArea(DIM_HOR_RIGID_AREA_10));
-        this.createButtonEditSalaries(panelButton, BorderLayout.CENTER);
+        this.createButtonEditEtablissement(panelButton, BorderLayout.CENTER);
         panelButton.add(Box.createHorizontalGlue());
 
         container.add(panelButton, layout);
     }
 
-    private void createButtonShowSalaries(Container container, String layout) {
+    private void createButtonShowEtablissement(Container container, String layout) {
 
-        this.btShowRubriques = new SalarieStateButton();
-        GuiUtils.createButton(this.btShowRubriques, new ShowSalarieAction(this.mainActionListener), SHOW_SALARIE_ACTION,
-                KeyEvent.VK_R, PATH_SHOW_BLOC_ICO, null, "Voir les rubriques du salarié", false, container, layout);
+        this.btShowRubriques = new EtablissementStateButton();
+        GuiUtils.createButton(this.btShowRubriques, new ShowEtablissementAction(this.mainActionListener), SHOW_ETAB_ACTION,
+                KeyEvent.VK_R, PATH_SHOW_BLOC_ICO, null, "Voir les rubriques de l'établissement", false, container, layout);
     }
 
-    private void createButtonEditSalaries(Container container, String layout) {
+    private void createButtonEditEtablissement(Container container, String layout) {
 
-        this.btEditSalarie = new SalarieStateButton();
-        GuiUtils.createButton(this.btEditSalarie, new EditSalarieAction(this.mainActionListener), EDIT_SALARIE_ACTION,
+        this.btEditEtablissement = new EtablissementStateButton();
+        GuiUtils.createButton(this.btEditEtablissement, new EditEtablissementAction(this.mainActionListener), EDIT_SALARIE_ACTION,
                 KeyEvent.VK_E, PATH_EDIT_ITEM_ICO, null, "Editer les rubriques du salarié", false, container,
                 layout);
     }
@@ -180,24 +178,23 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener,
     }
 
     // ======================================== INNER CLASS
-    public static class SalarieStateButton extends StateButton {
+    public static class EtablissementStateButton extends StateButton {
 
         /**
          * 
          */
         private static final long serialVersionUID = 1L;
 
-        private SalarieDto salarie;
+        private EtablissementDto etablissement;
 
-        public SalarieDto getSalarie() {
-            return salarie;
+        public EtablissementDto  getEtablissement() {
+            return this.etablissement;
         }
 
-        public void setSalarie(SalarieDto salarie) {
-            this.salarie = salarie;
+        public void setEtablissement(EtablissementDto etablissement) {
+            this.etablissement = etablissement;
         }
 
     }
 
-	
 }

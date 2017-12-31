@@ -43,7 +43,8 @@ public interface IGuiConstants {
     public static final String PATH_SQL_FILE_ICO = PATH_IMAGES + "sqlrequest.png";
     public static final String PATH_SQL_REQUEST_ICO = PATH_IMAGES + "sqlrequest.png";
     public static final String PATH_SALARIES_ICO = PATH_IMAGES + "salaries.png";
-    public static final String PATH_EDIT_SALARIE_ICO = PATH_IMAGES + "smalledit.png";
+    public static final String PATH_ETABS_ICO = PATH_IMAGES + "etabs.png";
+    public static final String PATH_EDIT_ITEM_ICO = PATH_IMAGES + "smalledit.png";
 
     public static final Font FONT = new Font("SansSerif", Font.PLAIN, 14);
 
@@ -74,6 +75,9 @@ public interface IGuiConstants {
     public final static String SHOW_SALARIES_ACTION = "show-salaries";
     public final static String SHOW_SALARIE_ACTION = "show-salarie";
     public final static String EDIT_SALARIE_ACTION = "edit-salarie";
+    public final static String SHOW_ETABS_ACTION = "show-etablissements";
+    public final static String SHOW_ETAB_ACTION = "show-etablissement";
+    public final static String EDIT_ETAB_ACTION = "edit-etablissement";
 
     public final static String LIRE_BDD_MSG_ACTION = "lire-bdd-msg";
     public final static String EDIT_BDD_MSG_ACTION = "edit-bdd-msg";

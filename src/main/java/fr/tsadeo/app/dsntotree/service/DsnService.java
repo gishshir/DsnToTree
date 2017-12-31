@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import fr.tsadeo.app.dsntotree.bdd.model.DataDsn;
+import fr.tsadeo.app.dsntotree.business.EtablissementDto;
 import fr.tsadeo.app.dsntotree.business.SalarieDto;
 import fr.tsadeo.app.dsntotree.dico.KeyAndLibelle;
 import fr.tsadeo.app.dsntotree.dto.BlocChildDto;
@@ -57,6 +58,20 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
         return listBloc05 == null ? 0 : listBloc05.size();
     }
 
+    public List<EtablissementDto> buildListEtablissementDtos(Dsn dsn) {
+    	
+    	List<EtablissementDto> listEtablissements = new ArrayList<>();
+    	
+    	List<ItemBloc> listItemBlocs = this.findListItemBlocByBlocLabel(dsn, BLOC_11);
+    	if (!Objects.isNull(listItemBlocs)) {
+    		
+    		listEtablissements = IntStream.range(0, listItemBlocs.size())
+            		.mapToObj(index -> this.createEtablissementDto(index, listItemBlocs.get(index)))
+            		.collect(Collectors.toList());
+    	}
+    	
+    	return listEtablissements;
+    }
     public List<SalarieDto> buildListSalarieDtos(Dsn dsn) {
 
         List<SalarieDto> listSalaries = new ArrayList<>();
@@ -124,6 +139,31 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
         return false;
     }
 
+    private EtablissementDto createEtablissementDto(int index, ItemBloc blocEtablissement) {
+    	EtablissementDto etablissementDto = new EtablissementDto(index, blocEtablissement);
+    	
+    	ItemRubrique nicEtabRubrique = 
+        		this.findOneRubrique(blocEtablissement.getListRubriques(), blocEtablissement.getBlocLabel(), RUB_001);
+    	etablissementDto.setNicEtab(nicEtabRubrique == null?null:nicEtabRubrique.getValue());
+    	
+    	ItemRubrique nicLocaliteRubrique = 
+        		this.findOneRubrique(blocEtablissement.getListRubriques(), blocEtablissement.getBlocLabel(), RUB_005);
+    	etablissementDto.setLocaliteEtab(nicLocaliteRubrique == null?null:nicLocaliteRubrique.getValue());
+
+    	ItemBloc blocEntreprise = blocEtablissement.getParent();
+    	if (!Objects.isNull(blocEntreprise)) {
+    		
+    		ItemRubrique sirenSiegeRubrique = 
+            		this.findOneRubrique(blocEntreprise.getListRubriques(), blocEntreprise.getBlocLabel(), RUB_001);
+        	etablissementDto.setSirenSiege(sirenSiegeRubrique== null?null:sirenSiegeRubrique.getValue());
+        	
+    		ItemRubrique nicSiegeRubrique = 
+            		this.findOneRubrique(blocEntreprise.getListRubriques(), blocEntreprise.getBlocLabel(), RUB_002);
+        	etablissementDto.setNicSiege(nicSiegeRubrique == null?null:nicSiegeRubrique.getValue());
+    	}
+    	
+    	return etablissementDto;
+    }
     private SalarieDto createSalarieDto(int index, ItemBloc blocSalarie) {
         SalarieDto salarieDto = new SalarieDto(index, blocSalarie);
 

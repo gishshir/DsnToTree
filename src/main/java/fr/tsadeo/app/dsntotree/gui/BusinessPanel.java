@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 
 import fr.tsadeo.app.dsntotree.gui.action.ShowDsnNormeAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowErrorAction;
+import fr.tsadeo.app.dsntotree.gui.action.ShowEtablissementsFrameAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowSalariesFrameAction;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
 
@@ -24,7 +25,7 @@ public class BusinessPanel extends JPanel implements IGuiConstants {
 
 
     private final IMainActionListener mainActionListener;
-    private StateButton btShowSalaries, btShowDsnNorme, btShowErrors;
+    private StateButton btShowEtabs, btShowSalaries, btShowDsnNorme, btShowErrors;
 
     private final GridBagLayout layout;
 
@@ -42,6 +43,7 @@ public class BusinessPanel extends JPanel implements IGuiConstants {
     void waitEndAction() {
 
         this.btShowSalaries.waitEndAction();
+        this.btShowEtabs.waitEndAction();
         this.btShowDsnNorme.waitEndAction();
         this.btShowErrors.waitEndAction();
     }
@@ -49,6 +51,7 @@ public class BusinessPanel extends JPanel implements IGuiConstants {
     void currentActionEnded() {
 
         this.btShowSalaries.actionEnded();
+        this.btShowEtabs.actionEnded();
         this.btShowDsnNorme.actionEnded();
         this.btShowErrors.actionEnded();
     }
@@ -63,7 +66,7 @@ public class BusinessPanel extends JPanel implements IGuiConstants {
 
     void activeButtons(boolean active) {
         this.btShowSalaries.setEnabled(active);
-//        this.btShowDsnNorme.setEnabled(active);
+        this.btShowEtabs.setEnabled(active);
     }
 
     // --------------------------------------- private methods
@@ -76,6 +79,8 @@ public class BusinessPanel extends JPanel implements IGuiConstants {
         constraints.fill = GridBagConstraints.BOTH;
         constraints.insets = new Insets(10, 5, 10, 5);
 
+        this.createButtonShowEtablissements(this, constraints);
+        this.add(Box.createRigidArea(DIM_VER_RIGID_AREA_15));
         this.createButtonShowSalaries(this, constraints);
         this.add(Box.createRigidArea(DIM_VER_RIGID_AREA_15));
         this.createButtonShowNorme(this, constraints);
@@ -105,6 +110,14 @@ public class BusinessPanel extends JPanel implements IGuiConstants {
         this.btShowSalaries = new StateButton("Salariés");
         GuiUtils.createButton(this.btShowSalaries, new ShowSalariesFrameAction(this.mainActionListener),
                 SHOW_SALARIES_ACTION, KeyEvent.VK_A, PATH_SALARIES_ICO, "Salariés", "Voir la liste des salariés", false,
+                container, constraints, layout);
+    }
+    
+    private void createButtonShowEtablissements(Container container, GridBagConstraints constraints) {
+
+        this.btShowEtabs = new StateButton("Etabliss.");
+        GuiUtils.createButton(this.btShowEtabs, new ShowEtablissementsFrameAction(this.mainActionListener),
+                SHOW_ETABS_ACTION, KeyEvent.VK_A, PATH_ETABS_ICO, "Etabliss.", "Voir la liste des établissements", false,
                 container, constraints, layout);
     }
 
