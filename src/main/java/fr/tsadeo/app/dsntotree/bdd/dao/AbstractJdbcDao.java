@@ -91,6 +91,7 @@ public abstract class AbstractJdbcDao<T extends EntiteBase> {
 
     protected abstract T mapToEntity(int numline, ResultSet rs) throws SQLException;
 
+
     // ========================================= INNER CLASS
     private static class JdbcContainer {
 

@@ -35,6 +35,13 @@ public class WriteDsn implements IConstants {
 			itemRubrique.setModified(true);
 		}
 
+        // Rubrique portant le nombre de declaration
+        itemRubrique = this.dsnService.findOneRubrique(dsn.getRubriques(), BLOC_90, RUB_002);
+        if (itemRubrique != null) {
+            itemRubrique.setValue(this.dsnService.countDeclarations(dsn) + "");
+            itemRubrique.setModified(true);
+        }
+
         return this.writeDsnFile(dsn.getRubriques(), this.getDsnSaveFile(dsn));
 
     }

@@ -47,6 +47,16 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
         return libelle == null ? "non connu..." : libelle;
     }
 
+    /**
+     * Comptabilise le nombre de déclaration dans le fichier DSN Nombre de
+     * 15.001
+     */
+    public int countDeclarations(Dsn dsn) {
+
+        List<ItemBloc> listBloc05 = this.findListItemBlocByBlocLabel(dsn, BLOC_05);
+        return listBloc05 == null ? 0 : listBloc05.size();
+    }
+
     public List<SalarieDto> buildListSalarieDtos(Dsn dsn) {
 
         List<SalarieDto> listSalaries = new ArrayList<>();

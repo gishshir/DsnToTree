@@ -17,9 +17,11 @@ public class Dsn implements IConstants {
 
     private String phase;
 
-    private String nature;
+    private List<Declaration> listDeclarations = new ArrayList<>();
 
-    private String type;
+    // private String nature;
+    //
+    // private String type;
 
     private ItemBloc itemRoot;
     private BlocTree treeRoot;
@@ -140,23 +142,28 @@ public class Dsn implements IConstants {
     }
 
 
-    public String getNature() {
-        return nature;
-    }
+    public void addDeclaration(String nature, String type) {
 
-    public void setNature(String nature) {
-        this.nature = nature;
+        this.listDeclarations.add(new Declaration(nature, type));
         this.phaseNatureType.setNature(NatureDsn.getNatureDsn(nature));
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
         this.phaseNatureType.setType(TypeDsn.getNatureDsn(type));
     }
+
+    public String getNature() {
+        if (this.listDeclarations == null || listDeclarations.isEmpty()) {
+            return null;
+        }
+        return this.listDeclarations.get(0).getNature();
+    }
+
+
+    public String getType() {
+        if (this.listDeclarations == null || listDeclarations.isEmpty()) {
+            return null;
+        }
+        return this.listDeclarations.get(0).getType();
+    }
+
 
     private String displayPhase() {
         if (this.phaseNatureType.getPhase() != null) {
@@ -169,19 +176,46 @@ public class Dsn implements IConstants {
         if (this.phaseNatureType.getNature() != null) {
             return this.phaseNatureType.getNature().toString();
         }
-        return StringUtils.concat("nature: NON CONNUE (", this.nature, ")");
+        return StringUtils.concat("nature: NON CONNUE (", this.getNature(), ")");
     }
 
     private String displayType() {
         if (this.phaseNatureType.getType() != null) {
             return this.phaseNatureType.getType().toString();
         }
-        return StringUtils.concat("type: NON CONNU (", this.type, ")");
+        return StringUtils.concat("type: NON CONNU (", this.getType(), ")");
     }
 
     @Override
     public String toString() {
-        return StringUtils.concat(this.displayPhase(), " - ", this.displayNature(), " ", this.displayType());
+        String declarations = this.listDeclarations.size() > 1 ? "- Nbr déclarations: " + this.listDeclarations.size()
+                : "";
+        return StringUtils.concat(this.displayPhase(), " - ", this.displayNature(), " ", this.displayType(), " ",
+                declarations);
+
+    }
+
+    // ================================= INNER CLASS
+    private class Declaration {
+
+        private final String nature;
+
+        private final String type;
+
+        private Declaration(String nature, String type) {
+            this.nature = nature;
+            this.type = type;
+        }
+
+        public String getNature() {
+            return nature;
+        }
+
+
+        public String getType() {
+            return type;
+        }
+
 
     }
 

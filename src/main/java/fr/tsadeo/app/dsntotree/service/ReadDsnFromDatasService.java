@@ -47,8 +47,7 @@ public class ReadDsnFromDatasService extends AbstractReadDsn {
             if (phase != null && nature != null) {
                 dsn = new Dsn(new File(dsnName));
                 dsn.setPhase(phase);
-                dsn.setNature(nature);
-                dsn.setType(groupBlocs.extractDsnType());
+                dsn.addDeclaration(nature, groupBlocs.extractDsnType());
 
                 // contruire l'arbre des ItemBloc avec leur rubriques
                 this.buildDsnTreeFromDatas(dsn, groupBlocs);
