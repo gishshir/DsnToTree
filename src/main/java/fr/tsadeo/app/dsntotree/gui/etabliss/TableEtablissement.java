@@ -7,8 +7,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import fr.tsadeo.app.dsntotree.business.EtablissementDto;
 import fr.tsadeo.app.dsntotree.gui.component.AbstractTable;
+import fr.tsadeo.app.dsntotree.gui.table.common.Column;
+import fr.tsadeo.app.dsntotree.gui.table.common.IItemListener;
+import fr.tsadeo.app.dsntotree.gui.table.dto.EtablissementDto;
 
 public class TableEtablissement extends AbstractTable {
 
@@ -25,9 +27,9 @@ public class TableEtablissement extends AbstractTable {
             new Column(4, 50, "Localite")}; 
 
     private final EtablissementTableModel model;
-    private final IEtablissementListener etablissementListener;
+    private final IItemListener<EtablissementDto> etablissementListener;
 
-    TableEtablissement(IEtablissementListener etablissementListener) {
+    TableEtablissement(IItemListener<EtablissementDto> etablissementListener) {
 
         super(new EtablissementTableModel(tabColumns), new MyColumnModel(tabColumns));
         this.model = (EtablissementTableModel) super.getModel();
@@ -54,9 +56,9 @@ public class TableEtablissement extends AbstractTable {
         if (result) {
             this.getSelectionModel().clearSelection();
             if (this.model.getRowCount() == 1) {
-                this.etablissementListener.onEtablissementSelected(this.model.getEtablissement(0));
+                this.etablissementListener.onItemSelected(this.model.getEtablissement(0));
             } else {
-                this.etablissementListener.onEtablissementSelected(null);
+                this.etablissementListener.onItemSelected(null);
             }
         }
         return result;
@@ -64,7 +66,7 @@ public class TableEtablissement extends AbstractTable {
 
     void reinitSearch() {
         this.model.reinitSearch();
-        this.etablissementListener.onEtablissementSelected(null);
+        this.etablissementListener.onItemSelected(null);
     }
     // ---------------------------------- private methods
     private void buildListSelectionListener() {
@@ -78,7 +80,7 @@ public class TableEtablissement extends AbstractTable {
                 int[] selectedRows = TableEtablissement.this.getSelectedRows();
                 if (selectedRows != null && selectedRows.length == 1) {
                     EtablissementDto etablissement = model.getEtablissement(selectedRows[0]);
-                    etablissementListener.onEtablissementSelected(etablissement);
+                    etablissementListener.onItemSelected(etablissement);
                 }
             }
         });

@@ -7,7 +7,6 @@ import java.awt.Cursor;
 import java.awt.dnd.DropTarget;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -28,8 +27,6 @@ import javax.swing.border.BevelBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.TreePath;
 
-import fr.tsadeo.app.dsntotree.business.EtablissementDto;
-import fr.tsadeo.app.dsntotree.business.SalarieDto;
 import fr.tsadeo.app.dsntotree.gui.action.SaveDsnAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowJdbcFrameAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowOpenDialogAction;
@@ -37,6 +34,8 @@ import fr.tsadeo.app.dsntotree.gui.component.SearchPanel;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
 import fr.tsadeo.app.dsntotree.gui.etabliss.EtablissementFrame;
 import fr.tsadeo.app.dsntotree.gui.salarie.SalariesFrame;
+import fr.tsadeo.app.dsntotree.gui.table.dto.EtablissementDto;
+import fr.tsadeo.app.dsntotree.gui.table.dto.SalarieDto;
 import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
@@ -106,7 +105,7 @@ public class MyFrame extends AbstractFrame
                 BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
         versionPanel.add(Box.createHorizontalGlue());
 
-        JLabel labVersion = new JLabel("mise à jour le 28 décembre 2017");
+        JLabel labVersion = new JLabel("mise à jour le 4 janvier 2018");
         labVersion.setForeground(Color.gray);
         versionPanel.add(labVersion);
 
@@ -387,7 +386,6 @@ public class MyFrame extends AbstractFrame
         if (dsn == null || dsn.getFile() == null) {
             return;
         }
-        this.processTextArea.setText(null);
         this.dnsSavedOneTime = false;
         if (this.isDsnModified()) {
 
@@ -426,7 +424,6 @@ public class MyFrame extends AbstractFrame
                         myTree.createNodes(dsn.getRoot(), true);
                         myTree.expandBloc(BLOC_11, true);
 
-                        // filterPanel.buildListBlocCheckbox(dsn);
 
                     } else {
                         myTree.showListRubriques(dsn.getRoot(), dsn.getRubriques());

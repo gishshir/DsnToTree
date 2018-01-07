@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import fr.tsadeo.app.dsntotree.business.SalarieDto;
+import fr.tsadeo.app.dsntotree.gui.table.dto.SalarieDto;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 

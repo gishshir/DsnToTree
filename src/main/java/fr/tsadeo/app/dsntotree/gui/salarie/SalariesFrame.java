@@ -12,17 +12,18 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import fr.tsadeo.app.dsntotree.business.SalarieDto;
 import fr.tsadeo.app.dsntotree.gui.AbstractFrame;
 import fr.tsadeo.app.dsntotree.gui.GuiUtils;
 import fr.tsadeo.app.dsntotree.gui.IMainActionListener;
 import fr.tsadeo.app.dsntotree.gui.ISearchActionListener;
-import fr.tsadeo.app.dsntotree.gui.action.EditSalarieAction;
-import fr.tsadeo.app.dsntotree.gui.action.ShowSalarieAction;
+import fr.tsadeo.app.dsntotree.gui.action.EditItemAction;
+import fr.tsadeo.app.dsntotree.gui.action.ShowItemAction;
 import fr.tsadeo.app.dsntotree.gui.component.SearchPanel;
-import fr.tsadeo.app.dsntotree.gui.component.StateButton;
+import fr.tsadeo.app.dsntotree.gui.table.common.IItemListener;
+import fr.tsadeo.app.dsntotree.gui.table.common.ItemStateButton;
+import fr.tsadeo.app.dsntotree.gui.table.dto.SalarieDto;
 
-public class SalariesFrame extends AbstractFrame implements ISalarieListener,
+public class SalariesFrame extends AbstractFrame implements IItemListener<SalarieDto>,
   ISearchActionListener{
 
     /**
@@ -32,30 +33,28 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener,
 
     private IMainActionListener mainActionListener;
     private TableSalaries tableSalaries;
-    private SalarieStateButton btShowRubriques, btEditSalarie;
+    private ItemStateButton<SalarieDto> btShowRubriques, btEditSalarie;
 
-//    private StateTextField tfSearch;
     private int searchNoResult = Integer.MAX_VALUE;
-//    private Color tfSearchBg;
     
     private SearchPanel searchPanel;
 
     // ------------------------------------- implementing ISalarieListener
     @Override
-    public void onSalarieSelected(SalarieDto salarie) {
+    public void onItemSelected(SalarieDto salarie) {
 
         if (salarie != null) {
             this.btShowRubriques.setEnabled(true);
             this.btEditSalarie.setEnabled(true);
             this.btShowRubriques.setToolTipText("voir les rubriques du salarie " + salarie.getNom());
-            this.btShowRubriques.setSalarie(salarie);
-            this.btEditSalarie.setSalarie(salarie);
+            this.btShowRubriques.setItem(salarie);
+            this.btEditSalarie.setItem(salarie);
         } else {
             this.btShowRubriques.setEnabled(false);
             this.btEditSalarie.setEnabled(false);
             this.btShowRubriques.setToolTipText("");
-            this.btShowRubriques.setSalarie(null);
-            this.btEditSalarie.setSalarie(null);
+            this.btShowRubriques.setItem(null);
+            this.btEditSalarie.setItem(null);
         }
     }
 
@@ -98,7 +97,7 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener,
         String search = this.searchPanel.getSearchText();
         int searchLenght = search != null ? search.length() : 0;
         if (searchLenght > 3 && searchLenght < this.searchNoResult) {
-            if (this.tableSalaries.search(search)) {
+            if (this.tableSalaries.filter(search)) {
                 this.searchNoResult = Integer.MAX_VALUE;
                 this.searchPanel.setSearchColor(SEARCH_SUCCESS_COLOR);
 
@@ -160,15 +159,15 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener,
 
     private void createButtonShowSalaries(Container container, String layout) {
 
-        this.btShowRubriques = new SalarieStateButton();
-        GuiUtils.createButton(this.btShowRubriques, new ShowSalarieAction(this.mainActionListener), SHOW_SALARIE_ACTION,
+        this.btShowRubriques = new ItemStateButton<SalarieDto>();
+        GuiUtils.createButton(this.btShowRubriques, new ShowItemAction<SalarieDto>(this.mainActionListener), SHOW_SALARIE_ACTION,
                 KeyEvent.VK_R, PATH_SHOW_BLOC_ICO, null, "Voir les rubriques du salarié", false, container, layout);
     }
 
     private void createButtonEditSalaries(Container container, String layout) {
 
-        this.btEditSalarie = new SalarieStateButton();
-        GuiUtils.createButton(this.btEditSalarie, new EditSalarieAction(this.mainActionListener), EDIT_SALARIE_ACTION,
+        this.btEditSalarie = new ItemStateButton<SalarieDto>();
+        GuiUtils.createButton(this.btEditSalarie, new EditItemAction<SalarieDto>(this.mainActionListener), EDIT_SALARIE_ACTION,
                 KeyEvent.VK_E, PATH_EDIT_ITEM_ICO, null, "Editer les rubriques du salarié", false, container,
                 layout);
     }
@@ -177,26 +176,6 @@ public class SalariesFrame extends AbstractFrame implements ISalarieListener,
 
         this.searchPanel = new SearchPanel(this);
         container.add(this.searchPanel, layout);
-    }
-
-    // ======================================== INNER CLASS
-    public static class SalarieStateButton extends StateButton {
-
-        /**
-         * 
-         */
-        private static final long serialVersionUID = 1L;
-
-        private SalarieDto salarie;
-
-        public SalarieDto getSalarie() {
-            return salarie;
-        }
-
-        public void setSalarie(SalarieDto salarie) {
-            this.salarie = salarie;
-        }
-
     }
 
 	

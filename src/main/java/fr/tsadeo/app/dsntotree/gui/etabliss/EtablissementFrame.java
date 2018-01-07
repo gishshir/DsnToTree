@@ -12,7 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import fr.tsadeo.app.dsntotree.business.EtablissementDto;
 import fr.tsadeo.app.dsntotree.gui.AbstractFrame;
 import fr.tsadeo.app.dsntotree.gui.GuiUtils;
 import fr.tsadeo.app.dsntotree.gui.IMainActionListener;
@@ -21,8 +20,11 @@ import fr.tsadeo.app.dsntotree.gui.action.EditEtablissementAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowEtablissementAction;
 import fr.tsadeo.app.dsntotree.gui.component.SearchPanel;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
+import fr.tsadeo.app.dsntotree.gui.table.common.IItemListener;
+import fr.tsadeo.app.dsntotree.gui.table.dto.EtablissementDto;
 
-public class EtablissementFrame extends AbstractFrame implements IEtablissementListener, ISearchActionListener {
+public class EtablissementFrame extends AbstractFrame
+        implements IItemListener<EtablissementDto>, ISearchActionListener {
 	  /**
      * 
      */
@@ -40,7 +42,7 @@ public class EtablissementFrame extends AbstractFrame implements IEtablissementL
 
     // ------------------------------------- implementing ISalarieListener
     @Override
-    public void onEtablissementSelected(EtablissementDto etablissement) {
+    public void onItemSelected(EtablissementDto etablissement) {
 
         if (etablissement != null) {
             this.btShowRubriques.setEnabled(true);

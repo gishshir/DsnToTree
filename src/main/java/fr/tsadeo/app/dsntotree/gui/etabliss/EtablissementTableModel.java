@@ -7,8 +7,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.table.AbstractTableModel;
 
-import fr.tsadeo.app.dsntotree.business.EtablissementDto;
-import fr.tsadeo.app.dsntotree.gui.component.AbstractTable.Column;
+import fr.tsadeo.app.dsntotree.gui.table.common.Column;
+import fr.tsadeo.app.dsntotree.gui.table.dto.EtablissementDto;
 
 public class EtablissementTableModel extends AbstractTableModel {
 

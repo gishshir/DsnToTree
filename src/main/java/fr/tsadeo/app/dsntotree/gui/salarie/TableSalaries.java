@@ -1,16 +1,14 @@
 package fr.tsadeo.app.dsntotree.gui.salarie;
 
-import java.awt.Dimension;
-import java.util.List;
+import fr.tsadeo.app.dsntotree.gui.table.common.AbstractMyTable;
+import fr.tsadeo.app.dsntotree.gui.table.common.Column;
+import fr.tsadeo.app.dsntotree.gui.table.common.IItemListener;
+import fr.tsadeo.app.dsntotree.gui.table.common.MyColumnModel;
+import fr.tsadeo.app.dsntotree.gui.table.common.MyTableModel;
+import fr.tsadeo.app.dsntotree.gui.table.common.RowMapper;
+import fr.tsadeo.app.dsntotree.gui.table.dto.SalarieDto;
 
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import fr.tsadeo.app.dsntotree.business.SalarieDto;
-import fr.tsadeo.app.dsntotree.gui.component.AbstractTable;
-
-public class TableSalaries extends AbstractTable {
+public class TableSalaries extends AbstractMyTable<SalarieDto> {
 
     /**
      * 
@@ -25,65 +23,38 @@ public class TableSalaries extends AbstractTable {
             new Column(4, 50, "Nom"), 
             new Column(5, 75, "Prénoms") };
 
-    private final SalariesTableModel model;
-    private final ISalarieListener salarieListener;
 
-    TableSalaries(ISalarieListener salarieListener) {
+    public TableSalaries(IItemListener<SalarieDto> salarieListener) {
 
-        super(new SalariesTableModel(tabColumns), new MyColumnModel(tabColumns));
-        this.model = (SalariesTableModel) super.getModel();
-        this.salarieListener = salarieListener;
+        super(new MyTableModel<SalarieDto>(tabColumns, new RowMapper<SalarieDto>() {
 
-        this.buildListSelectionListener();
+			@Override
+			public String getValue(SalarieDto salarie, int columnIndex) {
+			     if (salarie == null) {
+			            return "";
+			        }
+			        switch (columnIndex) {
+			        case 0:
+			            return (salarie.getIndex() + 1) + "";
+			        case 1:
+			            return salarie.getSiren();
+			        case 2:
+			            return salarie.getNic();
+			        case 3:
+			            return salarie.getNir();
+			        case 4:
+			            return salarie.getNom();
+			        case 5:
+			            return salarie.getPrenom();
 
-        this.setPreferredScrollableViewportSize(new Dimension(300, 70));
-        this.setFillsViewportHeight(true);
+			        default:
+			            return "";
 
-    }
+			        }
+			}
+        	
+        }), new MyColumnModel(tabColumns), salarieListener);
 
-    List<SalarieDto> getDatas() {
-        return this.model.getDatas();
-    }
-
-    void setDatas(List<SalarieDto> listSalaries) {
-
-        this.model.setDatas(listSalaries);
-    }
-
-    boolean search(String search) {
-        boolean result = this.model.search(search);
-        if (result) {
-            this.getSelectionModel().clearSelection();
-            if (this.model.getRowCount() == 1) {
-                this.salarieListener.onSalarieSelected(this.model.getSalarie(0));
-            } else {
-                this.salarieListener.onSalarieSelected(null);
-            }
-        }
-        return result;
-    }
-
-    void reinitSearch() {
-        this.model.reinitSearch();
-        this.salarieListener.onSalarieSelected(null);
-    }
-
-    // ---------------------------------- private methods
-    private void buildListSelectionListener() {
-
-        this.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        this.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-
-                int[] selectedRows = TableSalaries.this.getSelectedRows();
-                if (selectedRows != null && selectedRows.length == 1) {
-                    SalarieDto salarie = model.getSalarie(selectedRows[0]);
-                    salarieListener.onSalarieSelected(salarie);
-                }
-            }
-        });
     }
 
 }

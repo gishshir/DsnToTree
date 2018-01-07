@@ -6,7 +6,6 @@ import javax.swing.AbstractAction;
 
 import fr.tsadeo.app.dsntotree.gui.IMainActionListener;
 import fr.tsadeo.app.dsntotree.gui.etabliss.EtablissementFrame.EtablissementStateButton;
-import fr.tsadeo.app.dsntotree.gui.salarie.SalariesFrame.SalarieStateButton;
 
 public class ShowEtablissementAction extends AbstractAction {
 

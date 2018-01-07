@@ -8,6 +8,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
+import fr.tsadeo.app.dsntotree.gui.table.common.Column;
+
 public abstract class AbstractTable extends JTable {
 
 	/**
@@ -31,36 +33,27 @@ public abstract class AbstractTable extends JTable {
         public MyColumnModel(Column[] tabColumns) {
 
             Stream.of(tabColumns).forEachOrdered(column -> {
-                TableColumn tableColumn = new TableColumn(column.index, column.width);
-                tableColumn.setHeaderValue(column.title);
+                TableColumn tableColumn = new TableColumn(column.getIndex(), column.getWidth());
+                tableColumn.setHeaderValue(column.getTitle());
                 this.addColumn(tableColumn);
             });
         }
     }
 
-    public static class Column {
-
-        private final int index;
-        private final int width;
-        private final String title;
-
-        int getIndex() {
-            return index;
-        }
-
-        int getWidth() {
-            return width;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public Column(int index, int width, String title) {
-            this.index = index;
-            this.width = width;
-            this.title = title;
-        }
-    }
+    /*
+     * public static class Column {
+     * 
+     * private final int index; private final int width; private final String
+     * title;
+     * 
+     * int getIndex() { return index; }
+     * 
+     * int getWidth() { return width; }
+     * 
+     * public String getTitle() { return title; }
+     * 
+     * public Column(int index, int width, String title) { this.index = index;
+     * this.width = width; this.title = title; } }
+     */
 
 }
