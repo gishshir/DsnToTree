@@ -301,18 +301,34 @@ public class ReadDsnFromFileService extends AbstractReadDsn {
         }
     }
 
+    /*
+     * Il peut y avoir plusieurs déclarations dans une meme DSN
+     */
     private void extractNatureTypeDsn(Dsn dsn) {
-        ItemRubrique rubNature = this.dsnService.findOneRubrique(dsn.getRubriques(), BLOC_05, RUB_001);
-        if (rubNature != null) {
-            dsn.setNature(rubNature.getValue());
-        } else {
+        List<ItemRubrique> listRubNature = this.dsnService.findRubriques(dsn.getRubriques(), BLOC_05, RUB_001);
+        List<ItemRubrique> listRubType = this.dsnService.findRubriques(dsn.getRubriques(), BLOC_05, RUB_002);
+        int nbrNatures = 0;
+        int nbrTypes = 0;
+        if (listRubNature == null || listRubNature.isEmpty()) {
             dsn.getDsnState().addErrorMessage(new ErrorMessage("Impossible de déterminer la nature de la DSN!"));
-        }
-        ItemRubrique rubType = this.dsnService.findOneRubrique(dsn.getRubriques(), BLOC_05, RUB_002);
-        if (rubType != null) {
-            dsn.setType(rubType.getValue());
         } else {
+            nbrNatures = listRubNature.size();
+        }
+        if (listRubType == null || listRubType.isEmpty()) {
             dsn.getDsnState().addErrorMessage(new ErrorMessage("Impossible de déterminer le type de la DSN!"));
+        } else {
+            nbrTypes = listRubType.size();
+        }
+        if (nbrNatures != nbrTypes) {
+            dsn.getDsnState().addErrorMessage(new ErrorMessage("Incohérence entre natures et types des déclarations!"));
+        }
+
+        for (int i = 0; i < listRubNature.size(); i++) {
+            ItemRubrique rubNature = listRubNature.get(i);
+            ItemRubrique rubType = listRubType.get(i);
+
+            dsn.addDeclaration(rubNature.getValue(), rubType.getValue());
+
         }
     }
 

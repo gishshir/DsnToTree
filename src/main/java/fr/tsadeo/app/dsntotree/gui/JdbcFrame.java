@@ -236,6 +236,10 @@ IBddConnectionListener, DocumentListener {
 
                         currentActionEnded();
                         if (dsn != null) {
+                            mainActionListener.actionDisplayProcessMessage(
+                                    "Chargement depuis la BDD du chrono message: " + message.getNumeroChronoMessage()
+                                            + SAUT_LIGNE,
+                                    false);
                             mainActionListener.actionShowDsnTreeWithConfirmation(dsn, "Chargement depuis BDD terminé!");
                             JdbcFrame.this.setVisible(false);
                         } else {
@@ -435,6 +439,7 @@ IBddConnectionListener, DocumentListener {
                 processTextArea.append(RC);
                 processTextArea.append(errorMessage == null ? "" : errorMessage);
                 populateMessageDatas();
+                btChargerMsg.setEnabled(false);
                 searchActionEnded(listDatas != null);
             }
 

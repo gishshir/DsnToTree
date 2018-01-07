@@ -24,7 +24,9 @@ public interface IMainActionListener {
 
     public void actionEditBlocItem(ItemBloc itemBloc, boolean selectInTree);
 
-    public void actionShowSalarieDialog();
+    public void actionShowSalariesDialog();
+    
+    public void actionShowEtablissementsDialog();
 
     public void actionDisplayProcessMessage(String message, boolean append);
 

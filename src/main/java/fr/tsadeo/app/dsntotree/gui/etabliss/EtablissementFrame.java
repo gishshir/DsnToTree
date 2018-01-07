@@ -1,12 +1,12 @@
-package fr.tsadeo.app.dsntotree.gui.salarie;
+package fr.tsadeo.app.dsntotree.gui.etabliss;
 
 import fr.tsadeo.app.dsntotree.gui.IMainActionListener;
 import fr.tsadeo.app.dsntotree.gui.table.common.AbstractItemFrame;
 import fr.tsadeo.app.dsntotree.gui.table.common.AbstractMyTable;
 import fr.tsadeo.app.dsntotree.gui.table.common.IItemListener;
-import fr.tsadeo.app.dsntotree.gui.table.dto.SalarieTableDto;
+import fr.tsadeo.app.dsntotree.gui.table.dto.EtablissementTableDto;
 
-public class SalariesFrame extends AbstractItemFrame<SalarieTableDto> {
+public class EtablissementFrame extends AbstractItemFrame<EtablissementTableDto> {
 
     /**
      * 
@@ -16,8 +16,8 @@ public class SalariesFrame extends AbstractItemFrame<SalarieTableDto> {
 
 
     // ----------------------------------- constructor
-    public SalariesFrame(IMainActionListener mainActionListener) {
-        super("Liste des salaries", mainActionListener);
+    public EtablissementFrame(IMainActionListener mainActionListener) {
+        super("Liste des établissement", mainActionListener);
     }
 
     //------------------------------------- implementing ISearchActionListener
@@ -29,7 +29,8 @@ public class SalariesFrame extends AbstractItemFrame<SalarieTableDto> {
 
     //------------------------- implementing AbstractItemFrame
 	@Override
-	protected AbstractMyTable<SalarieTableDto> createTable(IItemListener<SalarieTableDto> itemListener) {
-		return new TableSalaries(this);
+	protected AbstractMyTable<EtablissementTableDto> createTable(IItemListener<EtablissementTableDto> itemListener) {
+		return new TableEtablissement(this);
 	}
+
 }

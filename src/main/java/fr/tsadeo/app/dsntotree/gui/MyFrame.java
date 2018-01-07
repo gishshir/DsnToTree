@@ -27,14 +27,15 @@ import javax.swing.border.BevelBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.TreePath;
 
-import fr.tsadeo.app.dsntotree.business.SalarieDto;
 import fr.tsadeo.app.dsntotree.gui.action.SaveDsnAction;
-import fr.tsadeo.app.dsntotree.gui.action.ShowErrorAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowJdbcFrameAction;
 import fr.tsadeo.app.dsntotree.gui.action.ShowOpenDialogAction;
 import fr.tsadeo.app.dsntotree.gui.component.SearchPanel;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
+import fr.tsadeo.app.dsntotree.gui.etabliss.EtablissementFrame;
 import fr.tsadeo.app.dsntotree.gui.salarie.SalariesFrame;
+import fr.tsadeo.app.dsntotree.gui.table.dto.EtablissementTableDto;
+import fr.tsadeo.app.dsntotree.gui.table.dto.SalarieTableDto;
 import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
@@ -69,8 +70,9 @@ public class MyFrame extends AbstractFrame
     private MyPanelBloc myPanelBloc;
     private JdbcFrame jdbcFrame;
     private SalariesFrame salariesFrame;
+    private EtablissementFrame etablissementsFrame;
 
-    private StateButton btOpen, btSave, btShowErrors, btShowJdbc;
+    private StateButton btOpen, btSave,  btShowJdbc;
     private int searchNoResult = Integer.MAX_VALUE;
     
     private SearchPanel searchPanel;
@@ -103,7 +105,7 @@ public class MyFrame extends AbstractFrame
                 BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
         versionPanel.add(Box.createHorizontalGlue());
 
-        JLabel labVersion = new JLabel("mise à jour le 13 décembre 2017");
+        JLabel labVersion = new JLabel("mise à jour le 4 janvier 2018");
         labVersion.setForeground(Color.gray);
         versionPanel.add(labVersion);
 
@@ -153,7 +155,6 @@ public class MyFrame extends AbstractFrame
         JPanel panelButton = new JPanel();
         this.createButtonOpen(panelButton, BorderLayout.CENTER);
         this.createButtonSave(panelButton, BorderLayout.CENTER);
-        this.createButtonShowErrors(panelButton, BorderLayout.CENTER);
         this.createButtonShowJdbc(panelButton, BorderLayout.CENTER);
 
         container.add(panelButton, layout);
@@ -182,12 +183,12 @@ public class MyFrame extends AbstractFrame
                 "Accéder BDD", "Récupérer un message depuis la base", active, container, layout);
     }
 
-    private void createButtonShowErrors(Container container, String layout) {
-
-        btShowErrors = new StateButton();
-        GuiUtils.createButton(btShowErrors, new ShowErrorAction(this), SHOW_ERROR_DIALOG_ACTION, KeyEvent.VK_R,
-                PATH_ERROR_ICO, "erreurs", "Voir la liste des erreurs", false, container, layout);
-    }
+//    private void createButtonShowErrors(Container container, String layout) {
+//
+//        btShowErrors = new StateButton();
+//        GuiUtils.createButton(btShowErrors, new ShowErrorAction(this), SHOW_ERROR_DIALOG_ACTION, KeyEvent.VK_R,
+//                PATH_ERROR_ICO, "erreurs", "Voir la liste des erreurs", false, container, layout);
+//    }
 
     private void createSearchPanel(Container container, String layout) {
     	
@@ -338,14 +339,28 @@ public class MyFrame extends AbstractFrame
     }
 
     @Override
-    public void actionShowSalarieDialog() {
+    public void actionShowEtablissementsDialog() {
+    	if (this.etablissementsFrame== null) {
+            this.etablissementsFrame = new EtablissementFrame(this);
+        }
+        GuiApplication.centerFrame(this.etablissementsFrame, 0.45f, 0.35f);
+
+        List<EtablissementTableDto> listEtablissements =  
+        		ServiceFactory.getDsnService().buildListEtablissementDtos(this.dsn);
+        this.etablissementsFrame.setDatas(listEtablissements);
+
+        this.etablissementsFrame.setVisible(true);
+    	
+    }
+    @Override
+    public void actionShowSalariesDialog() {
 
         if (this.salariesFrame == null) {
             this.salariesFrame = new SalariesFrame(this);
         }
-        GuiApplication.centerFrame(this.salariesFrame, 0.35f, 0.35f);
+        GuiApplication.centerFrame(this.salariesFrame, 0.45f, 0.35f);
 
-        List<SalarieDto> listSalaries = ServiceFactory.getDsnService().buildListSalarieDtos(this.dsn);
+        List<SalarieTableDto> listSalaries = ServiceFactory.getDsnService().buildListSalarieDtos(this.dsn);
         this.salariesFrame.setDatas(listSalaries);
 
         this.salariesFrame.setVisible(true);
@@ -371,7 +386,6 @@ public class MyFrame extends AbstractFrame
         if (dsn == null || dsn.getFile() == null) {
             return;
         }
-        this.processTextArea.setText(null);
         this.dnsSavedOneTime = false;
         if (this.isDsnModified()) {
 
@@ -394,7 +408,7 @@ public class MyFrame extends AbstractFrame
         this.actionCancelSearch();
         this.myPanelBloc.clear();
         this.myTree.clearTree();
-        this.btShowErrors.setEnabled(false);
+        this.businessPanel.activeErrorButton(false);
 
         this.dsn = dsn;
         this.actionCancelSearch();
@@ -410,7 +424,6 @@ public class MyFrame extends AbstractFrame
                         myTree.createNodes(dsn.getRoot(), true);
                         myTree.expandBloc(BLOC_11, true);
 
-                        // filterPanel.buildListBlocCheckbox(dsn);
 
                     } else {
                         myTree.showListRubriques(dsn.getRoot(), dsn.getRubriques());
@@ -421,7 +434,7 @@ public class MyFrame extends AbstractFrame
                     processTextArea.append(getPhaseNatureType().concat(SAUT_LIGNE));
 
                     btSave.setEnabled(dsn.getDsnState().isModified());
-                    btShowErrors.setEnabled(dsn.getDsnState().isError());
+                    businessPanel.activeErrorButton(dsn.getDsnState().isError());
                     currentActionEnded();
 
                     setFocusOnSearch();
@@ -758,12 +771,11 @@ public class MyFrame extends AbstractFrame
 
         this.btOpen.waitEndAction();
         this.btSave.waitEndAction();
-        this.btShowErrors.waitEndAction();
+        
         this.btShowJdbc.waitEndAction();
         this.searchPanel.waitEndAction();
 
         this.myPanelBloc.waitEndAction();
-        // this.filterPanel.waitEndAction();
         this.businessPanel.waitEndAction();
 
     }
@@ -772,12 +784,10 @@ public class MyFrame extends AbstractFrame
 
         this.btOpen.actionEnded();
         this.btSave.actionEnded();
-        this.btShowErrors.actionEnded();
         this.btShowJdbc.actionEnded();
         this.searchPanel.actionEnded();
 
         this.myPanelBloc.currentActionEnded();
-        // this.filterPanel.currentActionEnded();
         this.businessPanel.currentActionEnded();
 
         this.setCursor(Cursor.getDefaultCursor());

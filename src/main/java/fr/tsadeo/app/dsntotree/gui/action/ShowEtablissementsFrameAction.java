@@ -6,7 +6,7 @@ import javax.swing.AbstractAction;
 
 import fr.tsadeo.app.dsntotree.gui.IMainActionListener;
 
-public class ShowSalariesFrameAction extends AbstractAction {
+public class ShowEtablissementsFrameAction extends AbstractAction {
 
     private static final long serialVersionUID = 1L;
 
@@ -18,13 +18,13 @@ public class ShowSalariesFrameAction extends AbstractAction {
     /**
      * @param myFrame
      */
-    public ShowSalariesFrameAction(IMainActionListener listener) {
+    public ShowEtablissementsFrameAction(IMainActionListener listener) {
         this.listener = listener;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        this.listener.actionShowSalariesDialog();
+        this.listener.actionShowEtablissementsDialog();
 
     }
 

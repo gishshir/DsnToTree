@@ -1,4 +1,4 @@
-package fr.tsadeo.app.dsntotree.business;
+package fr.tsadeo.app.dsntotree.gui.table.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -6,23 +6,20 @@ import java.util.Objects;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.util.StringUtils;
 
-public class SalarieDto implements Serializable {
+public class SalarieTableDto extends AbstractTableItemDto implements Serializable {
 
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
 
-    private final ItemBloc itemBloc;
 
-    private final int index;
     private String siren;
     private String nic;
     private String nir;
     private String nom;
     private String prenom;
 
-    private boolean visible = true;
 
     // ------------------------------------- accessors
 
@@ -46,13 +43,6 @@ public class SalarieDto implements Serializable {
 		this.nic = nic;
 	}
 
-	public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
 
     public void setNir(String nir) {
         this.nir = nir;
@@ -74,13 +64,8 @@ public class SalarieDto implements Serializable {
         this.prenom = prenom;
     }
 
-    public ItemBloc getItemBloc() {
-        return itemBloc;
-    }
+ 
 
-    public int getIndex() {
-        return index;
-    }
 
     // ------------------------------------ public methods
     public String getValueForSearch() {
@@ -89,9 +74,8 @@ public class SalarieDto implements Serializable {
     }
 
     // ------------------------------------ constructor
-    public SalarieDto(int index, ItemBloc itemBloc) {
-        this.index = index;
-        this.itemBloc = itemBloc;
+    public SalarieTableDto(int index, ItemBloc itemBloc) {
+        super(index, itemBloc);
     }
 
     @Override

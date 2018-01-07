@@ -10,15 +10,15 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import fr.tsadeo.app.dsntotree.bdd.model.DataDsn;
-import fr.tsadeo.app.dsntotree.business.SalarieDto;
 import fr.tsadeo.app.dsntotree.dico.KeyAndLibelle;
 import fr.tsadeo.app.dsntotree.dto.BlocChildDto;
 import fr.tsadeo.app.dsntotree.dto.BlocChildrenDto;
+import fr.tsadeo.app.dsntotree.gui.table.dto.EtablissementTableDto;
+import fr.tsadeo.app.dsntotree.gui.table.dto.SalarieTableDto;
 import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ErrorMessage;
@@ -27,6 +27,8 @@ import fr.tsadeo.app.dsntotree.model.ItemRubrique;
 import fr.tsadeo.app.dsntotree.util.IConstants;
 import fr.tsadeo.app.dsntotree.util.IJsonConstants;
 import fr.tsadeo.app.dsntotree.util.IRegexConstants;
+import fr.tsadeo.app.dsntotree.util.RegexUtils;
+import fr.tsadeo.app.dsntotree.util.RegexUtils.CapturingGroups;
 
 public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
 
@@ -47,17 +49,41 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
         return libelle == null ? "non connu..." : libelle;
     }
 
-    public List<SalarieDto> buildListSalarieDtos(Dsn dsn) {
+    /**
+     * Comptabilise le nombre de déclaration dans le fichier DSN Nombre de
+     * 05.001
+     */
+    public int countDeclarations(Dsn dsn) {
 
-        List<SalarieDto> listSalaries = new ArrayList<>();
+        List<ItemBloc> listBloc05 = this.findListItemBlocByBlocLabel(dsn, BLOC_05);
+        return listBloc05 == null ? 0 : listBloc05.size();
+    }
+
+    public List<EtablissementTableDto> buildListEtablissementDtos(Dsn dsn) {
+    	
+    	List<EtablissementTableDto> listEtablissements = new ArrayList<>();
+    	
+    	List<ItemBloc> listItemBlocs = this.findListItemBlocByBlocLabel(dsn, BLOC_11);
+    	if (!Objects.isNull(listItemBlocs)) {
+    		
+    		listEtablissements = IntStream.range(0, listItemBlocs.size())
+            		.mapToObj(index -> this.createEtablissementDto(index, listItemBlocs.get(index)))
+            		.collect(Collectors.toList());
+    	}
+    	
+    	return listEtablissements;
+    }
+    public List<SalarieTableDto> buildListSalarieDtos(Dsn dsn) {
+
+        List<SalarieTableDto> listSalaries = new ArrayList<>();
 
         List<ItemBloc> listItemBlocs = this.findListItemBlocByBlocLabel(dsn, BLOC_30);
         if (listItemBlocs != null) {
-
-            int index = 0;
-            for (ItemBloc itemBloc : listItemBlocs) {
-                listSalaries.add(this.createSalarieDto(index++, itemBloc));
-            }
+        	
+        	listSalaries = IntStream.range(0, listItemBlocs.size())
+        		.mapToObj(index -> this.createSalarieDto(index, listItemBlocs.get(index)))
+        		.collect(Collectors.toList());
+        		
         }
 
         return listSalaries;
@@ -114,11 +140,36 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
         return false;
     }
 
-    private SalarieDto createSalarieDto(int index, ItemBloc itemBloc) {
-        SalarieDto salarieDto = new SalarieDto(index, itemBloc);
+    private EtablissementTableDto createEtablissementDto(int index, ItemBloc blocEtablissement) {
+    	EtablissementTableDto etablissementDto = new EtablissementTableDto(index, blocEtablissement);
+    	
+    	ItemRubrique nicEtabRubrique = 
+        		this.findOneRubrique(blocEtablissement.getListRubriques(), blocEtablissement.getBlocLabel(), RUB_001);
+    	etablissementDto.setNicEtab(nicEtabRubrique == null?null:nicEtabRubrique.getValue());
+    	
+    	ItemRubrique nicLocaliteRubrique = 
+        		this.findOneRubrique(blocEtablissement.getListRubriques(), blocEtablissement.getBlocLabel(), RUB_005);
+    	etablissementDto.setLocaliteEtab(nicLocaliteRubrique == null?null:nicLocaliteRubrique.getValue());
 
-        if (itemBloc.hasRubriques()) {
-            for (ItemRubrique itemRubrique : itemBloc.getListRubriques()) {
+    	ItemBloc blocEntreprise = blocEtablissement.getParent();
+    	if (!Objects.isNull(blocEntreprise)) {
+    		
+    		ItemRubrique sirenSiegeRubrique = 
+            		this.findOneRubrique(blocEntreprise.getListRubriques(), blocEntreprise.getBlocLabel(), RUB_001);
+        	etablissementDto.setSirenSiege(sirenSiegeRubrique== null?null:sirenSiegeRubrique.getValue());
+        	
+    		ItemRubrique nicSiegeRubrique = 
+            		this.findOneRubrique(blocEntreprise.getListRubriques(), blocEntreprise.getBlocLabel(), RUB_002);
+        	etablissementDto.setNicSiege(nicSiegeRubrique == null?null:nicSiegeRubrique.getValue());
+    	}
+    	
+    	return etablissementDto;
+    }
+    private SalarieTableDto createSalarieDto(int index, ItemBloc blocSalarie) {
+        SalarieTableDto salarieDto = new SalarieTableDto(index, blocSalarie);
+
+        if (blocSalarie.hasRubriques()) {
+            for (ItemRubrique itemRubrique : blocSalarie.getListRubriques()) {
                 if (itemRubrique.getRubriqueLabel().equals(RUB_001)) {
                     salarieDto.setNir(itemRubrique.getValue());
                 } else if (itemRubrique.getRubriqueLabel().equals(RUB_002)) {
@@ -128,6 +179,20 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
                 } else if (itemRubrique.getRubriqueLabel().equals(RUB_004)) {
                     salarieDto.setPrenom(itemRubrique.getValue());
                 }
+            }
+        }
+        ItemBloc blocEtablissement = blocSalarie.getParent();
+        if (!Objects.isNull(blocEtablissement)) {
+        	
+            ItemRubrique nicEtabRubrique = 
+            		this.findOneRubrique(blocEtablissement.getListRubriques(), blocEtablissement.getBlocLabel(), RUB_001);
+            salarieDto.setNic(nicEtabRubrique == null?null:nicEtabRubrique.getValue());
+            
+            ItemBloc blocEntreprise = blocEtablissement.getParent();
+            if (!Objects.isNull(blocEntreprise)) {
+            	ItemRubrique sirenRubrique = this.findOneRubrique(blocEntreprise.getListRubriques(),
+            			blocEntreprise.getBlocLabel(), RUB_001);
+            	salarieDto.setSiren(sirenRubrique == null?null:sirenRubrique.getValue());
             }
         }
 
@@ -184,11 +249,10 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
         List<ItemBloc> listItemBlocs = new ArrayList<>();
 
         if (dsn != null && blocLabel != null) {
-            for (ItemBloc itemBloc : dsn.getBlocs()) {
-                if (itemBloc.getBlocLabel().equals(blocLabel)) {
-                    listItemBlocs.add(itemBloc);
-                }
-            }
+        	
+        	listItemBlocs = dsn.getBlocs().stream()
+        	  .filter(itemBloc -> itemBloc.getBlocLabel().equals(blocLabel))
+        	  .collect(Collectors.toList());
         }
 
         return listItemBlocs;
@@ -205,14 +269,19 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
     public ItemBloc findItemBlocEquivalent(Dsn dsn, ItemBloc itemBlocToFind) {
 
         if (dsn != null && itemBlocToFind != null) {
-            for (ItemBloc itemBloc : dsn.getBlocs()) {
-                if (itemBloc == itemBlocToFind) {
-                    return itemBloc;
-                }
-                if (itemBloc.hashCode() == itemBlocToFind.hashCode()) {
-                    return itemBloc;
-                }
-            }
+        	
+        	return dsn.getBlocs().stream()
+        		.filter(itemBloc -> {
+        			 if (itemBloc == itemBlocToFind) {
+                         return true;
+                     }
+                     if (itemBloc.hashCode() == itemBlocToFind.hashCode()) {
+                         return true;
+                     }	
+                     return false;
+        		})
+        		.findFirst().orElseGet(null);
+        	
         }
         return null;
     }
@@ -387,21 +456,21 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
             if (withRubriques) {
                 if (blocSibling.hasRubriques()) {
 
-                    for (ItemRubrique itemRubrique : blocSibling.getListRubriques()) {
+                    blocSibling.getListRubriques().stream().forEach(itemRubrique -> {
                         ItemRubrique newRubrique = this.createNewRubrique(blocChild, itemRubrique.getRubriqueLabel());
                         newRubrique.setValue(itemRubrique.getValue());
                         blocChild.addRubrique(newRubrique);
-                    }
+                    });
                 }
             }
             if (withChildrens) {
 
                 if (blocSibling.hasChildren()) {
 
-                    for (ItemBloc childOfSibling : blocSibling.getChildrens()) {
+                    blocSibling.getChildrens().stream().forEach(childOfSibling -> {
                         ItemBloc newChildForChild = this.createNewChild(childOfSibling, withRubriques, withChildrens);
                         blocChild.addChild(newChildForChild);
-                    }
+                    });
                 }
             }
         }
@@ -465,9 +534,8 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
 
         dsn.clearListRubriques();
         if (dsn.getBlocs() != null) {
-            for (ItemBloc itemBloc : dsn.getBlocs()) {
-                dsn.addAllRubriques(itemBloc.getListRubriques());
-            }
+
+            dsn.getBlocs().stream().forEach(itemBloc -> dsn.addAllRubriques(itemBloc.getListRubriques()));
         }
     }
 
@@ -505,9 +573,8 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
         LOG.config("bloc " + itemBloc.getBlocLabel() + " - index: " + compteur.get());
         dsn.addBloc(compteur.getAndIncrement(), itemBloc);
         if (itemBloc.hasChildren()) {
-            for (ItemBloc childBloc : itemBloc.getChildrens()) {
-                this.addBlocItemToList(dsn, childBloc, compteur);
-            }
+
+            itemBloc.getChildrens().stream().forEach(childBloc -> this.addBlocItemToList(dsn, childBloc, compteur));
         }
 
     }
@@ -573,7 +640,7 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
         return itemRubrique;
     }
 
-    ItemRubrique findOneRubrique(List<ItemRubrique> listRubriques, String blocLabel, String rubriqueLabel) {
+    ItemRubrique findOneRubrique(List<ItemRubrique> listRubriques, String blocLabel, final String rubriqueLabel) {
 
         List<ItemRubrique> listRub = this.findRubriques(listRubriques, blocLabel, rubriqueLabel);
         if (listRub != null && listRub.size() == 1) {
@@ -588,13 +655,9 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
 
         if (listRubriques != null && blocLabel != null && rubriqueLabel != null) {
 
-            for (ItemRubrique itemRubrique : listRubriques) {
-                if (blocLabel.equals(itemRubrique.getBlocLabel())
-                        && rubriqueLabel.equals(itemRubrique.getRubriqueLabel())) {
+            result = listRubriques.stream().filter(itemRubrique -> blocLabel.equals(itemRubrique.getBlocLabel())
+                    && rubriqueLabel.equals(itemRubrique.getRubriqueLabel())).collect(Collectors.toList());
 
-                    result.add(itemRubrique);
-                }
-            }
         }
 
         return result;
@@ -603,18 +666,16 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
     private KeyAndValue getKeyAndValue(String line) {
 
         KeyAndValue keyAndValue = null;
-        Matcher m = PATTERN_KEY_VALUE.matcher(line);
-        if (m.matches()) {
-            int count = m.groupCount();
-            if (count == 2) {
+        CapturingGroups capturingGroups = new CapturingGroups(1, 2);
+        RegexUtils.get().extractsGroups(line, PATTERN_KEY_VALUE, capturingGroups);
+        if (capturingGroups.isSuccess()) {
 
-                // scinder key/value (key: S21.G00.30.001 / value:
-                // 2750564102107)
-                keyAndValue = new KeyAndValue(m.group(1), m.group(2));
+            // scinder key/value (key: S21.G00.30.001 / value:
+            // 2750564102107)
+            keyAndValue = new KeyAndValue(capturingGroups.valueOf(1), capturingGroups.valueOf(2));
 
-            }
         }
-        if (keyAndValue == null) {
+        else {
             keyAndValue = new KeyAndValue(NA, line);
             keyAndValue.error = true;
         }
@@ -627,14 +688,11 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
         BlocAndRubriqueLabel blocAndRubriqueLabel = null;
 
         // déterminer bloc et rubrique (bloc: 30 / rubrique 001)
-        Matcher m = PATTERN_BLOC_RUBRIQUE.matcher(codeLabelAndRubrique);
-        if (m.matches()) {
-
-            int count = m.groupCount();
-            if (count == 2) {
-
-                blocAndRubriqueLabel = new BlocAndRubriqueLabel(null, m.group(1), m.group(2));
-            }
+        CapturingGroups capturingGroups = new CapturingGroups(1, 2);
+        RegexUtils.get().extractsGroups(codeLabelAndRubrique, PATTERN_BLOC_RUBRIQUE, capturingGroups);
+        if (capturingGroups.isSuccess()) {
+            blocAndRubriqueLabel = new BlocAndRubriqueLabel(null, capturingGroups.valueOf(1),
+                    capturingGroups.valueOf(2));
         } else {
             // Impossible de déterminer bloc et rubrique
             blocAndRubriqueLabel = new BlocAndRubriqueLabel(NA, "", codeLabelAndRubrique);
@@ -649,14 +707,12 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
         BlocAndRubriqueLabel blocAndRubriqueLabel = null;
 
         // déterminer bloc et rubrique (bloc: 30 / rubrique 001)
-        Matcher m = PATTERN_PREF_BLOC_RUBRIQUE.matcher(key);
-        if (m.matches()) {
+        CapturingGroups capturingGroups = new CapturingGroups(1, 2, 3);
+        RegexUtils.get().extractsGroups(key, PATTERN_PREF_BLOC_RUBRIQUE, capturingGroups);
+        if (capturingGroups.isSuccess()) {
 
-            int count = m.groupCount();
-            if (count == 3) {
-
-                blocAndRubriqueLabel = new BlocAndRubriqueLabel(m.group(1), m.group(2), m.group(3));
-            }
+            blocAndRubriqueLabel = new BlocAndRubriqueLabel(capturingGroups.valueOf(1), capturingGroups.valueOf(2),
+                    capturingGroups.valueOf(3));
         } else {
             // Impossible de déterminer bloc et rubrique
             blocAndRubriqueLabel = new BlocAndRubriqueLabel(NA, "", key);
