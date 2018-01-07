@@ -7,6 +7,8 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
 
+import fr.tsadeo.app.dsntotree.gui.table.dto.ITableItemDto;
+
 public abstract class AbstractMyTable<T extends ITableItemDto> extends JTable {
 
     /**

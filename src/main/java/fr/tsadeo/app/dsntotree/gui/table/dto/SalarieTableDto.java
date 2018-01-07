@@ -3,11 +3,10 @@ package fr.tsadeo.app.dsntotree.gui.table.dto;
 import java.io.Serializable;
 import java.util.Objects;
 
-import fr.tsadeo.app.dsntotree.gui.table.common.AbstractTableItemDto;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.util.StringUtils;
 
-public class SalarieDto extends AbstractTableItemDto implements Serializable {
+public class SalarieTableDto extends AbstractTableItemDto implements Serializable {
 
     /**
      * 
@@ -75,7 +74,7 @@ public class SalarieDto extends AbstractTableItemDto implements Serializable {
     }
 
     // ------------------------------------ constructor
-    public SalarieDto(int index, ItemBloc itemBloc) {
+    public SalarieTableDto(int index, ItemBloc itemBloc) {
         super(index, itemBloc);
     }
 

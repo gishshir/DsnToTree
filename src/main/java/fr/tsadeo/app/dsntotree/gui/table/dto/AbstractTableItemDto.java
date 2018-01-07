@@ -1,4 +1,4 @@
-package fr.tsadeo.app.dsntotree.gui.table.common;
+package fr.tsadeo.app.dsntotree.gui.table.dto;
 
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.util.IConstants;

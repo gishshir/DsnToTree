@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.swing.table.TableModel;
 
+import fr.tsadeo.app.dsntotree.gui.table.dto.ITableItemDto;
+
 public interface IMyTableModel<T extends ITableItemDto> extends TableModel {
 
     public List<T> getDatas();

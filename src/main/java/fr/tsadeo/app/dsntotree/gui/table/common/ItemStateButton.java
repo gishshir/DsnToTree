@@ -1,6 +1,7 @@
 package fr.tsadeo.app.dsntotree.gui.table.common;
 
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
+import fr.tsadeo.app.dsntotree.gui.table.dto.ITableItemDto;
 
 public class ItemStateButton<T extends ITableItemDto> extends StateButton {
 

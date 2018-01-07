@@ -17,8 +17,8 @@ import fr.tsadeo.app.dsntotree.bdd.model.DataDsn;
 import fr.tsadeo.app.dsntotree.dico.KeyAndLibelle;
 import fr.tsadeo.app.dsntotree.dto.BlocChildDto;
 import fr.tsadeo.app.dsntotree.dto.BlocChildrenDto;
-import fr.tsadeo.app.dsntotree.gui.table.dto.EtablissementDto;
-import fr.tsadeo.app.dsntotree.gui.table.dto.SalarieDto;
+import fr.tsadeo.app.dsntotree.gui.table.dto.EtablissementTableDto;
+import fr.tsadeo.app.dsntotree.gui.table.dto.SalarieTableDto;
 import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ErrorMessage;
@@ -59,9 +59,9 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
         return listBloc05 == null ? 0 : listBloc05.size();
     }
 
-    public List<EtablissementDto> buildListEtablissementDtos(Dsn dsn) {
+    public List<EtablissementTableDto> buildListEtablissementDtos(Dsn dsn) {
     	
-    	List<EtablissementDto> listEtablissements = new ArrayList<>();
+    	List<EtablissementTableDto> listEtablissements = new ArrayList<>();
     	
     	List<ItemBloc> listItemBlocs = this.findListItemBlocByBlocLabel(dsn, BLOC_11);
     	if (!Objects.isNull(listItemBlocs)) {
@@ -73,9 +73,9 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
     	
     	return listEtablissements;
     }
-    public List<SalarieDto> buildListSalarieDtos(Dsn dsn) {
+    public List<SalarieTableDto> buildListSalarieDtos(Dsn dsn) {
 
-        List<SalarieDto> listSalaries = new ArrayList<>();
+        List<SalarieTableDto> listSalaries = new ArrayList<>();
 
         List<ItemBloc> listItemBlocs = this.findListItemBlocByBlocLabel(dsn, BLOC_30);
         if (listItemBlocs != null) {
@@ -140,8 +140,8 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
         return false;
     }
 
-    private EtablissementDto createEtablissementDto(int index, ItemBloc blocEtablissement) {
-    	EtablissementDto etablissementDto = new EtablissementDto(index, blocEtablissement);
+    private EtablissementTableDto createEtablissementDto(int index, ItemBloc blocEtablissement) {
+    	EtablissementTableDto etablissementDto = new EtablissementTableDto(index, blocEtablissement);
     	
     	ItemRubrique nicEtabRubrique = 
         		this.findOneRubrique(blocEtablissement.getListRubriques(), blocEtablissement.getBlocLabel(), RUB_001);
@@ -165,8 +165,8 @@ public class DsnService implements IConstants, IJsonConstants, IRegexConstants {
     	
     	return etablissementDto;
     }
-    private SalarieDto createSalarieDto(int index, ItemBloc blocSalarie) {
-        SalarieDto salarieDto = new SalarieDto(index, blocSalarie);
+    private SalarieTableDto createSalarieDto(int index, ItemBloc blocSalarie) {
+        SalarieTableDto salarieDto = new SalarieTableDto(index, blocSalarie);
 
         if (blocSalarie.hasRubriques()) {
             for (ItemRubrique itemRubrique : blocSalarie.getListRubriques()) {

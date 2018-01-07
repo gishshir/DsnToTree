@@ -6,9 +6,9 @@ import fr.tsadeo.app.dsntotree.gui.table.common.IItemListener;
 import fr.tsadeo.app.dsntotree.gui.table.common.MyColumnModel;
 import fr.tsadeo.app.dsntotree.gui.table.common.MyTableModel;
 import fr.tsadeo.app.dsntotree.gui.table.common.RowMapper;
-import fr.tsadeo.app.dsntotree.gui.table.dto.SalarieDto;
+import fr.tsadeo.app.dsntotree.gui.table.dto.SalarieTableDto;
 
-public class TableSalaries extends AbstractMyTable<SalarieDto> {
+public class TableSalaries extends AbstractMyTable<SalarieTableDto> {
 
     /**
      * 
@@ -24,12 +24,12 @@ public class TableSalaries extends AbstractMyTable<SalarieDto> {
             new Column(5, 75, "Prénoms") };
 
 
-    public TableSalaries(IItemListener<SalarieDto> salarieListener) {
+    public TableSalaries(IItemListener<SalarieTableDto> salarieListener) {
 
-        super(new MyTableModel<SalarieDto>(tabColumns, new RowMapper<SalarieDto>() {
+        super(new MyTableModel<SalarieTableDto>(tabColumns, new RowMapper<SalarieTableDto>() {
 
 			@Override
-			public String getValue(SalarieDto salarie, int columnIndex) {
+			public String getValue(SalarieTableDto salarie, int columnIndex) {
 			     if (salarie == null) {
 			            return "";
 			        }

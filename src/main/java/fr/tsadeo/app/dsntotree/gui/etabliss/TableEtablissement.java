@@ -1,18 +1,14 @@
 package fr.tsadeo.app.dsntotree.gui.etabliss;
 
-import java.awt.Dimension;
-import java.util.List;
-
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import fr.tsadeo.app.dsntotree.gui.component.AbstractTable;
+import fr.tsadeo.app.dsntotree.gui.table.common.AbstractMyTable;
 import fr.tsadeo.app.dsntotree.gui.table.common.Column;
 import fr.tsadeo.app.dsntotree.gui.table.common.IItemListener;
-import fr.tsadeo.app.dsntotree.gui.table.dto.EtablissementDto;
+import fr.tsadeo.app.dsntotree.gui.table.common.MyColumnModel;
+import fr.tsadeo.app.dsntotree.gui.table.common.MyTableModel;
+import fr.tsadeo.app.dsntotree.gui.table.common.RowMapper;
+import fr.tsadeo.app.dsntotree.gui.table.dto.EtablissementTableDto;
 
-public class TableEtablissement extends AbstractTable {
+public class TableEtablissement extends AbstractMyTable<EtablissementTableDto>{
 
 	/**
 	 * 
@@ -26,64 +22,34 @@ public class TableEtablissement extends AbstractTable {
     		new Column(3, 20, "Nic etab"),
             new Column(4, 50, "Localite")}; 
 
-    private final EtablissementTableModel model;
-    private final IItemListener<EtablissementDto> etablissementListener;
+    public TableEtablissement(IItemListener<EtablissementTableDto> etablissementListener) {
 
-    TableEtablissement(IItemListener<EtablissementDto> etablissementListener) {
+        super(new MyTableModel<EtablissementTableDto>(tabColumns, new RowMapper<EtablissementTableDto>() {
 
-        super(new EtablissementTableModel(tabColumns), new MyColumnModel(tabColumns));
-        this.model = (EtablissementTableModel) super.getModel();
-        this.etablissementListener = etablissementListener;
+			@Override
+			public String getValue(EtablissementTableDto etablissement, int columnIndex) {
+				   if (etablissement == null) {
+			            return "";
+			        }
+			        switch (columnIndex) {
+			        case 0:
+			            return (etablissement.getIndex() + 1) + "";
+			        case 1:
+			            return etablissement.getSirenSiege();
+			        case 2:
+			            return etablissement.getNicSiege();
+			        case 3:
+			            return etablissement.getNicEtab();
+			        case 4:
+			            return etablissement.getLocaliteEtab();
 
-        this.buildListSelectionListener();
+			        default:
+			            return "";
 
-        this.setPreferredScrollableViewportSize(new Dimension(300, 70));
-        this.setFillsViewportHeight(true);
+			        }
+			}
+        	
+        }), new MyColumnModel(tabColumns), etablissementListener);
 
     }
-    
-    List<EtablissementDto> getDatas() {
-        return this.model.getDatas();
-    }
-
-    void setDatas(List<EtablissementDto> listEtablissements) {
-
-        this.model.setDatas(listEtablissements);
-    }
-
-    boolean search(String search) {
-        boolean result = this.model.search(search);
-        if (result) {
-            this.getSelectionModel().clearSelection();
-            if (this.model.getRowCount() == 1) {
-                this.etablissementListener.onItemSelected(this.model.getEtablissement(0));
-            } else {
-                this.etablissementListener.onItemSelected(null);
-            }
-        }
-        return result;
-    }
-
-    void reinitSearch() {
-        this.model.reinitSearch();
-        this.etablissementListener.onItemSelected(null);
-    }
-    // ---------------------------------- private methods
-    private void buildListSelectionListener() {
-
-        this.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        this.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-
-                int[] selectedRows = TableEtablissement.this.getSelectedRows();
-                if (selectedRows != null && selectedRows.length == 1) {
-                    EtablissementDto etablissement = model.getEtablissement(selectedRows[0]);
-                    etablissementListener.onItemSelected(etablissement);
-                }
-            }
-        });
-    }
-
 }

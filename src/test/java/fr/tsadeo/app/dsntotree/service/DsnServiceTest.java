@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import fr.tsadeo.app.dsntotree.gui.table.dto.SalarieDto;
+import fr.tsadeo.app.dsntotree.gui.table.dto.SalarieTableDto;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 
@@ -23,7 +23,7 @@ public class DsnServiceTest extends AbstractTest {
         Dsn dsn = readDsnService.buildTreeFromFile(this.getFile(DSN_MENSUELLE_PHASE3));
         assertNotNull(dsn);
 
-        List<SalarieDto> result = service.buildListSalarieDtos(dsn);
+        List<SalarieTableDto> result = service.buildListSalarieDtos(dsn);
         assertNotNull(result);
         assertEquals(3, result.size());
         result.stream().forEachOrdered(salarieDto -> LOG.config(salarieDto.toString()));

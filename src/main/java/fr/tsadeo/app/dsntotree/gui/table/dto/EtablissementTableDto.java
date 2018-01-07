@@ -2,11 +2,10 @@ package fr.tsadeo.app.dsntotree.gui.table.dto;
 
 import java.io.Serializable;
 
-import fr.tsadeo.app.dsntotree.gui.table.common.AbstractTableItemDto;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
 import fr.tsadeo.app.dsntotree.util.StringUtils;
 
-public class EtablissementDto extends AbstractTableItemDto implements Serializable {
+public class EtablissementTableDto extends AbstractTableItemDto implements Serializable {
 
 	/**
 	 * 
@@ -22,7 +21,7 @@ public class EtablissementDto extends AbstractTableItemDto implements Serializab
 
     
     //--------------------------------- constructor
-    public EtablissementDto(int index,ItemBloc itemBloc) {
+    public EtablissementTableDto(int index,ItemBloc itemBloc) {
         super(index, itemBloc);
     }
 
@@ -73,5 +72,12 @@ public class EtablissementDto extends AbstractTableItemDto implements Serializab
     public String toString() {
         return StringUtils.concat("Ebt: Siret siege ", this.sirenSiege, this.nicSiege, " - nic ", this.nicEtab);
     }
+
+    //-------------------------------- implementing ITableItemDto
+	@Override
+	public String getNom() {
+		// TODO Auto-generated method stub
+		return "";
+	}
 	
 }

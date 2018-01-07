@@ -34,8 +34,8 @@ import fr.tsadeo.app.dsntotree.gui.component.SearchPanel;
 import fr.tsadeo.app.dsntotree.gui.component.StateButton;
 import fr.tsadeo.app.dsntotree.gui.etabliss.EtablissementFrame;
 import fr.tsadeo.app.dsntotree.gui.salarie.SalariesFrame;
-import fr.tsadeo.app.dsntotree.gui.table.dto.EtablissementDto;
-import fr.tsadeo.app.dsntotree.gui.table.dto.SalarieDto;
+import fr.tsadeo.app.dsntotree.gui.table.dto.EtablissementTableDto;
+import fr.tsadeo.app.dsntotree.gui.table.dto.SalarieTableDto;
 import fr.tsadeo.app.dsntotree.model.BlocTree;
 import fr.tsadeo.app.dsntotree.model.Dsn;
 import fr.tsadeo.app.dsntotree.model.ItemBloc;
@@ -345,7 +345,7 @@ public class MyFrame extends AbstractFrame
         }
         GuiApplication.centerFrame(this.etablissementsFrame, 0.45f, 0.35f);
 
-        List<EtablissementDto> listEtablissements =  
+        List<EtablissementTableDto> listEtablissements =  
         		ServiceFactory.getDsnService().buildListEtablissementDtos(this.dsn);
         this.etablissementsFrame.setDatas(listEtablissements);
 
@@ -360,7 +360,7 @@ public class MyFrame extends AbstractFrame
         }
         GuiApplication.centerFrame(this.salariesFrame, 0.45f, 0.35f);
 
-        List<SalarieDto> listSalaries = ServiceFactory.getDsnService().buildListSalarieDtos(this.dsn);
+        List<SalarieTableDto> listSalaries = ServiceFactory.getDsnService().buildListSalarieDtos(this.dsn);
         this.salariesFrame.setDatas(listSalaries);
 
         this.salariesFrame.setVisible(true);

@@ -5,17 +5,17 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import fr.tsadeo.app.dsntotree.gui.IMainActionListener;
-import fr.tsadeo.app.dsntotree.gui.table.common.ITableItemDto;
 import fr.tsadeo.app.dsntotree.gui.table.common.ItemStateButton;
+import fr.tsadeo.app.dsntotree.gui.table.dto.ITableItemDto;
 
-public class ShowItemAction<T extends ITableItemDto> extends AbstractAction {
+public class EditTableItemAction<T extends ITableItemDto> extends AbstractAction {
 
 	private final IMainActionListener listener;
 
 	/**
 	 * @param myPanelBloc
 	 */
-	public ShowItemAction(IMainActionListener listener) {
+	public EditTableItemAction(IMainActionListener listener) {
 		this.listener = listener;
 	}
 
@@ -27,9 +27,9 @@ public class ShowItemAction<T extends ITableItemDto> extends AbstractAction {
 			Object src = ev.getSource();
 			if (src instanceof ItemStateButton) {
 				
-				ItemStateButton<T> btSalarie = (ItemStateButton<T>) src;
-				if (btSalarie.getItem() != null) {
-				listener.actionShowBlocFrame(btSalarie.getItem().getItemBloc());
+				ItemStateButton<T> btItem = (ItemStateButton<T>) src;
+				if (btItem.getItem() != null) {
+				listener.actionEditBlocItem(btItem.getItem().getItemBloc(), true);
 				}
 			}
 		}

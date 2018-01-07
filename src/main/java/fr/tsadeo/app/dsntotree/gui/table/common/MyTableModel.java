@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.table.AbstractTableModel;
 
 import fr.tsadeo.app.dsntotree.gui.IGuiConstants;
+import fr.tsadeo.app.dsntotree.gui.table.dto.ITableItemDto;
 
 public  class MyTableModel<T extends ITableItemDto> extends AbstractTableModel
         implements IMyTableModel<T>, IGuiConstants {
