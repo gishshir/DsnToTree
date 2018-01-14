@@ -105,7 +105,7 @@ public class MyFrame extends AbstractFrame
                 BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
         versionPanel.add(Box.createHorizontalGlue());
 
-        JLabel labVersion = new JLabel("mise à jour le 4 janvier 2018");
+        JLabel labVersion = new JLabel("mise à jour le 12 janvier 2018");
         labVersion.setForeground(Color.gray);
         versionPanel.add(labVersion);
 

@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -63,8 +64,10 @@ public class OracleConnectComponent extends JPanel
             	KeyAndLibelle keyAndLibelle = (KeyAndLibelle) item;
             TnsOracleInstanceDto dto = keyAndLibelle == null || this.mapKeyAndLibelleToDto == null ? null
                     : this.mapKeyAndLibelleToDto.get(keyAndLibelle);
-            this.populateWithSelectedInstance(dto);
-            this.listener.instanceChanged(dto.getService());
+            if (dto != null) {
+                this.populateWithSelectedInstance(dto);
+                this.listener.instanceChanged(dto.getService());
+            }
             }
 	}
 
@@ -221,13 +224,12 @@ public class OracleConnectComponent extends JPanel
 
     private Searchable getSearchable() {
 
-        return new Searchable() {
-
-            @Override
-            public List<KeyAndLibelle> search(String search) {
-                List<TnsOracleInstanceDto> listDto = service.filterInstances(search);
-                return mapToListKeyAndLibelle(listDto);
-            }
+        return search -> {
+            List<TnsOracleInstanceDto> listDto = service.filterInstances(search);
+            List<KeyAndLibelle> list = new ArrayList<>();
+            list.add(new KeyAndLibelle(null, ""));
+            list.addAll(mapToListKeyAndLibelle(listDto));
+            return list;
         };
     }
     private void createSearchComboBox() {

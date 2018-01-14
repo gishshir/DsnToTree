@@ -222,16 +222,12 @@ public class AutocompleteComboBox extends StateComboBox<KeyAndLibelle> implement
         resultCount = listItems == null ? 0 : listItems.size();
         if (listItems != null) {
 
-            System.out.println("nbr instances: " + resultCount);
 
             DefaultComboBoxModel<KeyAndLibelle> model = getDefaultComboboxModel();
             model.removeAllElements();
 
-            for (KeyAndLibelle keyAndLibelle : listItems) {
-                model.addElement(keyAndLibelle);
-            }
+            listItems.stream().forEach(keyAndLibelle -> model.addElement(keyAndLibelle));
 
-            System.out.println("model rempli!");
         }
     }
 
