@@ -39,9 +39,13 @@ public interface IConstants {
     public static final String PREFIX_PHASE_2 = "P02";
     public static final String PREFIX_PHASE_3 = "P03";
     public static final String PREFIX_PHASE_18 = "P18";
+    public static final String PREFIX_PHASE_19 = "P19";
+    public static final String PREFIX_PHASE_20 = "P20";
 
     public static final String JSON_PHASE2_PATH = "phase2";
     public static final String JSON_PHASE3_PATH = "phase3";
+    public static final String JSON_PHASE19_PATH = "phase19";
+    public static final String JSON_PHASE20_PATH = "phase20";
 
 
 

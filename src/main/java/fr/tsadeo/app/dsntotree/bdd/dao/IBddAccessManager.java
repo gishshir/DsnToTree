@@ -27,5 +27,7 @@ public interface IBddAccessManager {
     public void setCurrentBddConnexionDto(BddConnexionDto bddConnexionDto);
     
     public boolean createOrUpdateBddConnexion(BddConnexionDto bddConnexionDto);
+    
+    public BddConnexionDto getBddConnectionByName(String name);
 
 }

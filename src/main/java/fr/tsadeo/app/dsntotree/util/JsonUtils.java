@@ -59,7 +59,10 @@ public class JsonUtils implements IJsonConstants, IConstants {
         case PHASE_3:
         case PHASE_2018:
             return JSON_FOLDER_PHASE_03;
-
+        case PHASE_19:
+            return JSON_FOLDER_PHASE_19;
+        case PHASE_20:
+            return JSON_FOLDER_PHASE_20;
         }
         return null;
     }

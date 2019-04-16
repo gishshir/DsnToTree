@@ -1,0 +1,51 @@
+{
+	"bloc": "",
+	"sousBlocs": [
+		{
+			"bloc": "96",
+			"cardinalite": "TOUS",
+			"actif": "true",
+			"sousBlocs": []
+		},
+		{
+			"bloc": "06",
+			"cardinalite": "UN",
+			"actif": "true",
+			"sousBlocs": [
+				{
+					"bloc": "11",
+					"cardinalite": "UN",
+					"actif": "true",
+					"sousBlocs": [
+						{
+							"bloc": "15",
+							"cardinalite": "AU_MOINS_UN",
+							"actif": "true",
+							"sousBlocs": []
+						},
+						{
+							"bloc": "30",
+							"cardinalite": "UN",
+							"actif": "true",
+							"sousBlocs": [
+								{
+									"bloc": "40",
+									"cardinalite": "UN",
+									"actif": "true",
+									"sousBlocs": [
+										{
+											"bloc": "62",
+											"cardinalite": "UN",
+											"actif": "true",
+											"sousBlocs": []
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

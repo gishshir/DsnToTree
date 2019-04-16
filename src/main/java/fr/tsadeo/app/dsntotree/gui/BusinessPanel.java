@@ -1,6 +1,7 @@
 package fr.tsadeo.app.dsntotree.gui;
 
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -8,6 +9,9 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import fr.tsadeo.app.dsntotree.gui.action.ShowDsnNormeAction;
@@ -26,6 +30,8 @@ public class BusinessPanel extends JPanel implements IGuiConstants {
 
     private final IMainActionListener mainActionListener;
     private StateButton btShowEtabs, btShowSalaries, btShowDsnNorme, btShowErrors;
+    
+    private JPanel panelDrop;
 
     private final GridBagLayout layout;
 
@@ -68,6 +74,16 @@ public class BusinessPanel extends JPanel implements IGuiConstants {
         this.btShowSalaries.setEnabled(active);
         this.btShowEtabs.setEnabled(active);
     }
+    
+    void enterDropPanel() {
+    	this.panelDrop.setBackground(TREE_BACKGROUND_DROPPABLE_COLOR);
+    	this.labelDrop.setForeground(DRAG_START_COLOR);
+    }
+    
+    void exitDropPanel() {
+    	this.panelDrop.setBackground(null);
+    	this.labelDrop.setForeground(this.getBackground());
+    }
 
     // --------------------------------------- private methods
     private void createButtonPanel() {
@@ -86,7 +102,32 @@ public class BusinessPanel extends JPanel implements IGuiConstants {
         this.createButtonShowNorme(this, constraints);
         this.add(Box.createRigidArea(DIM_VER_RIGID_AREA_15));
         this.createButtonShowErrors(this, constraints);
+        this.add(Box.createRigidArea(DIM_VER_RIGID_AREA_15));
+        this.createPanelDrop(this, constraints);
         this.add(Box.createVerticalGlue());
+    }
+    
+    private JLabel labelDrop;
+    private void createPanelDrop(Container container, GridBagConstraints constraints) {
+    	
+    	this.panelDrop = new JPanel();
+    	this.labelDrop = new JLabel("drop file");
+    	this.labelDrop.setSize(60,  20);
+    	
+    	this.panelDrop.setLayout(new BoxLayout(this.panelDrop, BoxLayout.Y_AXIS));
+//      	this.panelDrop.setPreferredSize(new Dimension(60, 300));
+      	
+    	this.labelDrop.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+
+    	this.panelDrop.add(Box.createVerticalGlue());
+    	this.panelDrop.add(this.labelDrop);
+    	this.panelDrop.add(Box.createVerticalGlue());
+
+
+    	layout.setConstraints(this.panelDrop, constraints);
+    	container.add(this.panelDrop);
+    	
+    	this.exitDropPanel();
     }
     
     private void createButtonShowErrors(Container container, GridBagConstraints constraints) {

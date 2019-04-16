@@ -53,6 +53,10 @@ public class DatabaseManager {
         return BddAccessManagerFactory.get(Type.Oracle).getDefaultBddConnexionDto();
 
     }
+    
+    public BddConnexionDto getBddConnectionDtoByName(String name) {
+    	return BddAccessManagerFactory.get(Type.Oracle).getBddConnectionByName(name);
+    }
 
     public boolean testerConnexion(BddConnexionDto connexionDto) {
 

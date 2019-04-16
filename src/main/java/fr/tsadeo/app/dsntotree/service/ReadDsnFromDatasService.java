@@ -4,7 +4,15 @@ import java.io.File;
 import java.util.List;
 import java.util.logging.Logger;
 
+import fr.tsadeo.app.dsntotree.bdd.dao.BddAccessManagerFactory;
+import fr.tsadeo.app.dsntotree.bdd.dao.DatabaseManager;
+import fr.tsadeo.app.dsntotree.bdd.dao.IDataDsnDao;
+import fr.tsadeo.app.dsntotree.bdd.dao.IMessageDsnDao;
+import fr.tsadeo.app.dsntotree.bdd.dao.impl.JdbcDataDsnDao;
+import fr.tsadeo.app.dsntotree.bdd.dao.impl.JdbcMessageDsnDao;
 import fr.tsadeo.app.dsntotree.bdd.model.DataDsn;
+import fr.tsadeo.app.dsntotree.bdd.model.MessageDsn;
+import fr.tsadeo.app.dsntotree.dto.BddConnexionDto;
 import fr.tsadeo.app.dsntotree.dto.BlocDatasDto;
 import fr.tsadeo.app.dsntotree.dto.GroupBlocDatasDto;
 import fr.tsadeo.app.dsntotree.model.BlocTree;
@@ -15,6 +23,41 @@ import fr.tsadeo.app.dsntotree.model.ItemBloc;
 public class ReadDsnFromDatasService extends AbstractReadDsn {
 
     private static final Logger LOG = Logger.getLogger(ReadDsnFromDatasService.class.getName());
+    
+    private final IMessageDsnDao messageDao = new JdbcMessageDsnDao();
+    private final IDataDsnDao datasDao = new JdbcDataDsnDao();
+    
+    /**
+     * Chargement d'un message Dsn et constitution de l'arbre à partir d'un numero chrono
+     * en BDD
+     * @param chronoMessage
+     * @return
+     */
+    public Dsn buildTreeFromChrono(Long chronoMessage, String bddConnectionName) {
+    	
+    	try {
+			if (bddConnectionName != null) {
+				BddConnexionDto bddConnexionDto = DatabaseManager.get().getBddConnectionDtoByName(bddConnectionName);
+				boolean success = bddConnexionDto == null ? false
+						: DatabaseManager.get().testerConnexion(bddConnexionDto);
+				if (success) {
+					BddAccessManagerFactory.get().setCurrentBddConnexionDto(bddConnexionDto);
+				} else {
+					throw new RuntimeException("Connexion impossible à " + bddConnectionName);
+				}
+			}
+    		
+    	MessageDsn messageDsn = messageDao.getMessageDsn(chronoMessage);
+    	List<DataDsn> listDatas = messageDsn == null?null: datasDao.getListDataDsnForMessage(chronoMessage);
+    	
+    	 return messageDsn == null? null:ServiceFactory.getReadDsnFromDatasService().buildTreeFromDatas(messageDsn.getName(),
+                 listDatas);
+    	 
+    	}
+    	catch (Exception ex) {
+    		throw new RuntimeException ("Impossible de récupérer une DSN à partir du numéro chrono: " + chronoMessage);
+    	}
+    }
 
     /**
      * Prerequis la liste des datas est triée par bloc, seq_bloc, seq_sup,

@@ -1,35 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <settings>
-	<dsn>
-		<encoding>ISO-8859-1</encoding>
-	</dsn>
-	<bdd>
-		<bddAccesses>
-			<oracleBdd>
-				<defaut>true</defaut>
-				<host>host.ext</host>
-				<port>1521</port>
-				<instance>INSTANCE</instance>
-				<credentials>
-					<credential>
-						<user>TOTO_USER</user>
-						<password>TOTO_PWD</password>
-					</credential>
-					<credential>
-						<user>TITI_USER</user>
-						<password>TITI_PWD</password>
-					</credential>
-				</credentials>
-			</oracleBdd>
-		</bddAccesses>
-		<sqls />
-		<services>
-			<oracleServices>doc/tnsnames.ora</oracleServices>
-			<actif>false</actif>
-		</services>
-	</bdd>
-	<norme>
-		<dsnnormefile>doc/dsn_cahier_technique_p3_2018.1.2.pdf</dsnnormefile>
-		<actif>true</actif>
-	</norme>
+    <bdd>
+        <bddAccesses>
+            <oracleBdd>
+                <host>test.ext</host>
+                <port>1521</port>
+                <instance>INSTANCE</instance>
+                <credentials>
+                    <credential>
+                        <user>TOTO_USER</user>
+                        <password>TOTO_USER</password>
+                    </credential>
+					 <credential>
+                        <user>TITI_USER</user>
+                        <password>TITI_USER</password>
+                    </credential>
+                </credentials>
+                <defaut>true</defaut>
+            </oracleBdd>
+        </bddAccesses>
+        <sqls/>
+        <services>
+            <oracleServices>doc/tnsnames.ora</oracleServices>
+            <actif>true</actif>
+        </services>
+    </bdd>
+    <norme>
+        <dsnnormefile>norme/dsn-cahier-technique-2020_V10122019.pdf</dsnnormefile>
+        <actif>true</actif>
+    </norme>
 </settings>

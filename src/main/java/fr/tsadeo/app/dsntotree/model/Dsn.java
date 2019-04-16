@@ -19,9 +19,6 @@ public class Dsn implements IConstants {
 
     private List<Declaration> listDeclarations = new ArrayList<>();
 
-    // private String nature;
-    //
-    // private String type;
 
     private ItemBloc itemRoot;
     private BlocTree treeRoot;

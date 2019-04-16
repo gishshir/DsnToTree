@@ -4,7 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.List;
@@ -105,7 +109,7 @@ public class MyFrame extends AbstractFrame
                 BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
         versionPanel.add(Box.createHorizontalGlue());
 
-        JLabel labVersion = new JLabel("mise à jour le 12 janvier 2018");
+        JLabel labVersion = new JLabel("mise à jour le 9 avril 2019");
         labVersion.setForeground(Color.gray);
         versionPanel.add(labVersion);
 
@@ -143,6 +147,7 @@ public class MyFrame extends AbstractFrame
 
     private void createBusinessPanel(Container container, String layout) {
         this.businessPanel = new BusinessPanel(this);
+        this.businessPanel.setPreferredSize(new Dimension(120, 200));
 
         JScrollPane scrollPane = new JScrollPane(this.businessPanel);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -214,7 +219,40 @@ public class MyFrame extends AbstractFrame
         addComponentsToPane(this.getContentPane());
         this.fc.setFileFilter(this.fileFilter);
 
-        new DropTarget(this, new FileDropper(this));
+        this.createDropFileTarget();
+    }
+    
+    private void createDropFileTarget() {
+    	
+    	new DropTarget(this, new FileDropper(this)) {
+
+			/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+			@Override
+			public synchronized void dragEnter(DropTargetDragEvent arg0) {
+				businessPanel.enterDropPanel();
+				super.dragEnter(arg0);
+			}
+
+			@Override
+			public synchronized void dragExit(DropTargetEvent arg0) {
+				businessPanel.exitDropPanel();
+				super.dragExit(arg0);
+			}
+
+			@Override
+			public synchronized void drop(DropTargetDropEvent arg0) {
+				businessPanel.exitDropPanel();
+				super.drop(arg0);
+			}
+        	
+        	
+        	
+        };
+
     }
 
     @Override
@@ -309,7 +347,7 @@ public class MyFrame extends AbstractFrame
         GuiApplication.centerFrame(dnsNormeFrame, 0.35f, 0.65f);
 
         PhaseNatureType phaseNatureType = this.dsn != null ? this.dsn.getPhaseNatureType()
-                : new PhaseNatureType(PhaseDsn.PHASE_3, NatureDsn.DSN_MENSUELLE, TypeDsn.NORMALE);
+                : new PhaseNatureType(PhaseDsn.getDefaut(), NatureDsn.DSN_MENSUELLE, TypeDsn.NORMALE);
         dnsNormeFrame.setPhaseNaturePhase(phaseNatureType);
         dnsNormeFrame.setVisible(true);
     }
@@ -367,6 +405,51 @@ public class MyFrame extends AbstractFrame
 
     }
 
+    /**
+     * Chargement automatique d'un fichier DSN à l'ouverture de la frame
+     * @param file
+     */
+    public void loadFileDsnAtOpening(File file) {
+    	
+    	if (file != null && file.isFile() && file.canRead()) {
+    		this.actionReadFileAndShowTree(file, false, null);
+    		processTextArea.setText("Chargement automatique du fichier: " + file.getAbsolutePath() + "\n");
+    	}
+    }
+    
+    public void loadChronoMessageAtOpening(Long chronoMessage, String bddConnexionName) {
+    	
+    	processTextArea.append("Chargement de la DSN depuis la BDD à partir du numéro chrono " + chronoMessage);
+    	processTextArea.append("\nEnvironnement: " + ((bddConnexionName == null)?"defaut":bddConnexionName));
+    	processTextArea.append("....");
+    	SwingWorker<Dsn, Void> worker = new SwingWorker<Dsn, Void>() {
+
+            Dsn dsn = null;
+
+            @Override
+            protected Dsn doInBackground() throws Exception {
+
+                waitEndAction();
+                this.dsn = ServiceFactory.getReadDsnFromDatasService().buildTreeFromChrono(chronoMessage, bddConnexionName);
+                return this.dsn;
+            }
+
+            @Override
+            protected void done() {
+
+                processTextArea.append(RC);
+                processTextArea.append(dsn != null ? "Dsn chargée" : "Echec de chargement!");
+                processTextArea.append(RC);
+                
+                if (this.dsn != null) {
+                	actionShowDsnTree(dsn, null);
+                } else {       
+                   currentActionEnded();
+                } 
+            }
+        };
+        worker.execute();
+    }
     private void actionReadFileAndShowTree(File file, boolean reload, String messageDialog) {
 
         try {

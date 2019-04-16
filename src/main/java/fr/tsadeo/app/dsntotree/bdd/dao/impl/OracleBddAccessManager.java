@@ -2,7 +2,9 @@ package fr.tsadeo.app.dsntotree.bdd.dao.impl;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import fr.tsadeo.app.dsntotree.bdd.dao.IBddAccessManager;
@@ -42,7 +44,7 @@ public class OracleBddAccessManager implements IBddAccessManager {
     	  List<OracleBddAccess> list = SettingsUtils.get().getListOracleBddAccess();
           if (list != null) {
               for (OracleBddAccess oracleBddAccess : list) {
-                  if (oracleBddAccess.getDefaut()) {
+                  if (oracleBddAccess.isDefaut()) {
                     return this.mapOracleBddAccessToDtoWithFirstCredential(oracleBddAccess);
                   }
               }
@@ -125,6 +127,30 @@ public class OracleBddAccessManager implements IBddAccessManager {
     public void setCurrentBddConnexionDto(BddConnexionDto bddConnexionDto) {
         this.bddConnexionDto = bddConnexionDto;
     }
+
+    @Override
+	public BddConnexionDto getBddConnectionByName(String name) {
+
+		List<OracleBddAccess> list =  SettingsUtils.get().getListOracleBddAccess();
+		
+		if (list != null) {
+
+			for (OracleBddAccess oracleBddAccess : list) {
+
+				List<BddConnexionDto> listBddConnection = this.mapOracleBddAccessToDto(oracleBddAccess);
+				if (listBddConnection != null && !listBddConnection.isEmpty()) {
+
+					for (BddConnexionDto bddConnexionDto : listBddConnection) {
+						if (bddConnexionDto.getUser().startsWith(name)) {
+							return bddConnexionDto;
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 
     // ----------------------------------------------- private methods
 
@@ -270,5 +296,6 @@ public class OracleBddAccessManager implements IBddAccessManager {
     }
 
 
+	
 
 }

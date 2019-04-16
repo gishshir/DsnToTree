@@ -1,0 +1,329 @@
+{
+	"bloc": "",
+	"sousBlocs": [
+		{
+			"bloc": "07",
+			"cardinalite": "TOUS",
+			"actif": "true",
+			"sousBlocs": []
+		},
+		{
+			"bloc": "08",
+			"cardinalite": "TOUS",
+			"actif": "true",
+			"sousBlocs": []
+		},
+		{
+			"bloc": "96",
+			"cardinalite": "TOUS",
+			"actif": "true",
+			"sousBlocs": []
+		},
+		{
+			"bloc": "06",
+			"cardinalite": "UN",
+			"actif": "true",
+			"sousBlocs": [
+				{
+					"bloc": "11",
+					"cardinalite": "UN",
+					"actif": "true",
+					"sousBlocs": [
+						{
+							"bloc": "15",
+							"cardinalite": "AU_MOINS_UN",
+							"actif": "true",
+							"sousBlocs": [
+								{
+									"bloc": "16",
+									"cardinalite": "TOUS",
+									"actif": "true",
+									"sousBlocs": []
+								}
+							]
+						},
+						{
+							"bloc": "82",
+							"cardinalite": "TOUS",
+							"actif": "true",
+							"sousBlocs": []
+						},
+						{
+							"bloc": "20",
+							"cardinalite": "TOUS",
+							"actif": "true",
+							"sousBlocs": [
+								{
+									"bloc": "55",
+									"cardinalite": "TOUS",
+									"actif": "true",
+									"sousBlocs": []
+								}
+							]
+						},
+						{
+							"bloc": "22",
+							"cardinalite": "TOUS",
+							"actif": "true",
+							"sousBlocs": [
+								{
+									"bloc": "23",
+									"cardinalite": "TOUS",
+									"actif": "true",
+									"sousBlocs": []
+								}
+							]
+						},
+						{
+							"bloc": "42",
+							"cardinalite": "TOUS",
+							"actif": "true",
+							"sousBlocs": []
+						},
+						{
+							"bloc": "44",
+							"cardinalite": "TOUS",
+							"actif": "true",
+							"sousBlocs": []
+						},
+						{
+							"bloc": "30",
+							"cardinalite": "TOUS",
+							"actif": "true",
+							"sousBlocs": [
+								{
+									"bloc": "31",
+									"cardinalite": "TOUS",
+									"actif": "true",
+									"sousBlocs": []
+								},
+								{
+									"bloc": "34",
+									"cardinalite": "TOUS",
+									"actif": "true",
+									"sousBlocs": []
+								},
+								{
+									"bloc": "40",
+									"cardinalite": "AU_MOINS_UN",
+									"actif": "true",
+									"sousBlocs": [
+										{
+											"bloc": "41",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": []
+										},
+										{
+											"bloc": "60",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": [
+												{
+													"bloc": "66",
+													"cardinalite": "TOUS",
+													"actif": "true",
+													"sousBlocs": []
+												}
+											]
+										},
+										{
+											"bloc": "62",
+											"cardinalite": "ZERO_OU_UN",
+											"actif": "true",
+											"sousBlocs": []
+										},
+										{
+											"bloc": "65",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": []
+										},
+										{
+											"bloc": "70",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": [
+												{
+													"bloc": "73",
+													"cardinalite": "TOUS",
+													"actif": "true",
+													"sousBlocs": []
+												}
+											]
+										},
+										{
+											"bloc": "71",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": [
+												{
+													"bloc": "72",
+													"cardinalite": "TOUS",
+													"actif": "true",
+													"sousBlocs": []
+												}
+											]
+										}
+									]
+								},
+								{
+									"bloc": "50",
+									"cardinalite": "AU_MOINS_UN",
+									"actif": "true",
+									"sousBlocs": [
+										{
+											"bloc": "51",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": [
+												{
+													"bloc": "53",
+													"cardinalite": "TOUS",
+													"actif": "true",
+													"sousBlocs": []
+												}
+											]
+										},
+										{
+											"bloc": "52",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": []
+										},
+										{
+											"bloc": "54",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": []
+										},
+										{
+											"bloc": "78",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": [
+												{
+													"bloc": "79",
+													"cardinalite": "TOUS",
+													"actif": "true",
+													"sousBlocs": []
+												},
+												{
+													"bloc": "81",
+													"cardinalite": "TOUS",
+													"actif": "true",
+													"sousBlocs": []
+												}
+											]
+										},
+                                        {
+                                            "bloc": "83",
+                                            "cardinalite": "TOUS",
+                                            "actif": "true",
+                                            "sousBlocs": [
+                                                {
+                                                    "bloc": "84",
+                                                    "cardinalite": "TOUS",
+                                                    "actif": "true",
+                                                    "sousBlocs": []
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "bloc": "95",
+                                            "cardinalite": "TOUS",
+                                            "actif": "true",
+                                            "sousBlocs": []
+                                        }
+									]
+								},
+								{
+									"bloc": "86",
+									"cardinalite": "TOUS",
+									"actif": "true",
+									"sousBlocs": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"bloc": "85",
+			"cardinalite": "TOUS",
+			"actif": "true",
+			"sousBlocs": []
+		},
+		{
+			"bloc": "32",
+			"cardinalite": "TOUS",
+			"actif": "true",
+			"sousBlocs": [
+				{
+					"bloc": "33",
+					"cardinalite": "TOUS",
+					"actif": "true",
+					"sousBlocs": []
+				},
+				{
+					"bloc": "35",
+					"cardinalite": "TOUS",
+					"actif": "true",
+					"sousBlocs": []
+				},
+				{
+					"bloc": "43",
+					"cardinalite": "TOUS",
+					"actif": "true",
+					"sousBlocs": []
+				}
+			]
+		},
+		{
+			"bloc": "87",
+			"cardinalite": "TOUS",
+			"actif": "true",
+			"sousBlocs": []
+		},
+		{
+			"bloc": "88",
+			"cardinalite": "TOUS",
+			"actif": "true",
+			"sousBlocs": []
+		},
+		{
+			"bloc": "89",
+			"cardinalite": "TOUS",
+			"actif": "true",
+			"sousBlocs": []
+		},
+		{
+			"bloc": "91",
+			"cardinalite": "TOUS",
+			"actif": "true",
+			"sousBlocs": [
+				{
+					"bloc": "92",
+					"cardinalite": "AU_MOINS_UN",
+					"actif": "true",
+					"sousBlocs": [
+                        {
+                            "bloc": "93",
+                            "cardinalite": "TOUS",
+                            "actif": "true",
+                            "sousBlocs": []
+                        },
+                        {
+                            "bloc": "94",
+                            "cardinalite": "TOUS",
+                            "actif": "true",
+                            "sousBlocs": []
+                        }
+                    ]
+				}
+			]
+		}
+	]
+}
+		

@@ -2,8 +2,14 @@
 	"bloc": "",
 	"sousBlocs": [
 		{
-			"bloc": "96",
+			"bloc": "07",
 			"cardinalite": "TOUS",
+			"actif": "true",
+			"sousBlocs": []
+		},
+		{
+			"bloc": "96",
+			"cardinalite": "UN",
 			"actif": "true",
 			"sousBlocs": []
 		},
@@ -34,25 +40,42 @@
 									"actif": "true",
 									"sousBlocs": [
 										{
-											"bloc": "62",
-											"cardinalite": "UN",
+											"bloc": "65",
+											"cardinalite": "ZERO_OU_UN",
 											"actif": "true",
-											"sousBlocs": [
-												{
-													"bloc": "63",
-													"cardinalite": "TOUS",
-													"actif": "true",
-													"sousBlocs": []
-												}
-											]
+											"sousBlocs": []
+										},
+										{
+											"bloc": "70",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": []
 										}
 									]
+								},
+								{
+									"bloc": "86",
+									"cardinalite": "TOUS",
+									"actif": "true",
+									"sousBlocs": []
 								}
 							]
 						}
 					]
 				}
 			]
+		},
+		{
+			"bloc": "85",
+			"cardinalite": "ZERO_OU_UN",
+			"actif": "true",
+			"sousBlocs": []
+		},
+		{
+			"bloc": "91",
+			"cardinalite": "ZERO_OU_UN",
+			"actif": "true",
+			"sousBlocs": []
 		}
 	]
 }

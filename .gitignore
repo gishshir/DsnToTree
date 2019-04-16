@@ -13,7 +13,9 @@
 log/
 target/
 target/classes/
+bin/
 
 #divers
 *.pdf
 Thumbs.db
+TresGrosFichierDSN.txt

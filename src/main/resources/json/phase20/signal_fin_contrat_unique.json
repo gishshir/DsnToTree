@@ -1,9 +1,15 @@
 {
 	"bloc": "",
-	"sousBlocs": [
+	"sousBlocs": [	
+		{
+			"bloc": "07",
+			"cardinalite": "TOUS",
+			"actif": "true",
+			"sousBlocs": []
+		},
 		{
 			"bloc": "96",
-			"cardinalite": "TOUS",
+			"cardinalite": "UN",
 			"actif": "true",
 			"sousBlocs": []
 		},
@@ -18,6 +24,12 @@
 					"actif": "true",
 					"sousBlocs": [
 						{
+							"bloc": "15",
+							"cardinalite": "AU_MOINS_UN",
+							"actif": "true",
+							"sousBlocs": []
+						},
+						{
 							"bloc": "30",
 							"cardinalite": "UN",
 							"actif": "true",
@@ -28,69 +40,55 @@
 									"actif": "true",
 									"sousBlocs": [
 										{
+											"bloc": "60",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": []
+										},
+										{
 											"bloc": "62",
 											"cardinalite": "UN",
 											"actif": "true",
-											"sousBlocs": [
-												{
-													"bloc": "63",
-													"cardinalite": "TOUS",
-													"actif": "true",
-													"sousBlocs": []
-												}
-											]
+											"sousBlocs": []
+										},
+										{
+											"bloc": "65",
+											"cardinalite": "TOUS",
+											"actif": "true",
+											"sousBlocs": []
 										},
 										{
 											"bloc": "70",
-											"cardinalite": "TOUS",
-											"actif": "true",
-											"sousBlocs": []
-										},
-										{
-											"bloc": "71",
-											"cardinalite": "TOUS",
-											"actif": "true",
-											"sousBlocs": []
-										}
-									]
-								},
-								{
-									"bloc": "50",
-									"cardinalite": "TOUS",
-									"actif": "true",
-									"sousBlocs": [
-										{
-											"bloc": "51",
-											"cardinalite": "TOUS",
+											"cardinalite": "AU_MOINS_UN",
 											"actif": "true",
 											"sousBlocs": [
 												{
-													"bloc": "53",
+													"bloc": "73",
 													"cardinalite": "TOUS",
 													"actif": "true",
 													"sousBlocs": []
 												}
 											]
-										},
-										{
-											"bloc": "52",
-											"cardinalite": "TOUS",
-											"actif": "true",
-											"sousBlocs": []
-										},
-										{
-											"bloc": "54",
-											"cardinalite": "TOUS",
-											"actif": "true",
-											"sousBlocs": []
 										}
 									]
+								},								
+								{
+									"bloc": "86",
+									"cardinalite": "TOUS",
+									"actif": "true",
+									"sousBlocs": []
 								}
 							]
 						}
 					]
 				}
 			]
+		},
+		{
+			"bloc": "85",
+			"cardinalite": "TOUS",
+			"actif": "true",
+			"sousBlocs": []
 		}
 	]
 }

@@ -76,7 +76,7 @@ public class DsnNormeFrame extends AbstractFrame implements ActionListener, ISea
 
         if (phaseNatureType != null) {
 
-            this.cbListPhases.setSelectedIndex(phaseNatureType.getPhase() == null ? PhaseDsn.PHASE_3.ordinal()
+            this.cbListPhases.setSelectedIndex(phaseNatureType.getPhase() == null ? PhaseDsn.getDefaut().ordinal()
                     : phaseNatureType.getPhase().ordinal());
             this.cbListNatures.setSelectedIndex(phaseNatureType.getNature() == null ? NatureDsn.DSN_MENSUELLE.ordinal()
                     : phaseNatureType.getNature().ordinal());

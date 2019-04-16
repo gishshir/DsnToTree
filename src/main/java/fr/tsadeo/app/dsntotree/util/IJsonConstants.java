@@ -34,6 +34,12 @@ public interface IJsonConstants {
 
     /** The Constant JSON_FOLDER_PHASE_02. */
     public static final String JSON_FOLDER_PHASE_02 = "json/phase2/";
+    
+    /** The Constant JSON_FOLDER_PHASE_19. */
+    public static final String JSON_FOLDER_PHASE_19 = "json/phase19/";
+    
+    /** The Constant JSON_FOLDER_PHASE_20. */
+    public static final String JSON_FOLDER_PHASE_20 = "json/phase20/";
 
     /** The Constant JSON_FILE_DSN_ENTETE. */
     public static final String JSON_FILE_DSN_ENTETE = "entete.json";

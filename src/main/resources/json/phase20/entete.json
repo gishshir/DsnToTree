@@ -19,12 +19,6 @@
 					"sousBlocs": []
 				},
 				{
-					"bloc": "03",
-					"cardinalite": "ZERO_OU_UN",
-					"actif": "true",
-					"sousBlocs": []
-				},
-				{
 					"bloc": "95",
 					"cardinalite": "TOUS",
 					"actif": "true",
